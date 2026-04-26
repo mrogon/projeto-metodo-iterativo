@@ -1,0 +1,525 @@
+---
+title: "Aplicação do Método Intercensal Interativo"
+author: "Marcos R. Gonzaga (UFRN)"
+date: "20-04-2026"
+output:
+  html_document:
+    toc: true
+    toc_float:
+      collapsed: true
+      smooth_scroll: true
+    encoding: "UTF-8"
+    theme: flatly
+    highlight: tango
+    df_print: paged
+  pdf_document: default
+  word_document: default
+bibliography: referencias.bib
+editor_options:
+  chunk_output_type: console
+markdown:
+  wrap: 72
+---
+
+<style>
+body {
+  text-align: justify;
+}
+
+/* Reduz apenas o MathJax que não está em blocos de destaque (display mode) */
+.MathJax:not(.MathJax_Display) {
+  font-size: 0.85em;
+  margin-right: 0.20em; /* Adiciona um pequeno respiro à direita de cada fórmula */
+  margin-left: 0.15em;  /* Adiciona um pequeno respiro à esquerda */
+}
+
+/* Define a largura e centraliza todos os contêineres de dygraphs */
+  .dygraphs-scroll-container {
+    width: 90% !important;   /* Ajuste a porcentagem conforme desejar */
+    height: 350px !important; /* Ajuste a altura fixa desejada */
+    margin: 0 auto !important; /* Centraliza o gráfico na página */
+  }
+
+  /* Garante que o widget interno acompanhe o tamanho do contêiner */
+  .html-widget.dygraphs {
+    width: 90% !important;
+    height: 350px !important;
+    margin: 0 auto !important;
+  }
+  
+/* 1. Alvo padrão para estilos CSL */
+.csl-entry {
+  margin-bottom: 1.5em !important;
+}
+
+/* 2. Alvo para versões que usam identação suspensa */
+div.hanging-indent {
+  margin-bottom: 1.5em !important;
+}
+
+/* 3. Alvo genérico para o ID de referências do Pandoc */
+#refs div {
+  margin-bottom: 1.5em !important;
+}
+
+#marcadores de numeração com letras:
+.lista-letras, .lista-numeros {
+  list-style: none !important;
+  padding-left: 20px;
+  counter-reset: li-counter; 
+}
+
+.lista-letras li, .lista-numeros li {
+  display: flex !important;
+  align-items: flex-start;
+  margin-bottom: 5px;
+  counter-increment: li-counter;
+}
+
+.lista-letras li::before, .lista-numeros li::before {
+  font-weight: bold;
+  margin-right: 8px;
+  flex-shrink: 0;
+}
+
+.lista-letras li::before {
+  content: counter(li-counter, lower-alpha) ") ";
+}
+
+.lista-numeros li::before {
+  content: counter(li-counter, decimal) ") ";
+}
+</style>
+
+
+```{r setup, include=FALSE}
+# 1. Definir opções globais para os blocos de código
+knitr::opts_chunk$set(
+  echo = TRUE,          # Mostra o código R no documento final
+  warning = FALSE,       # Esconde avisos (warnings) chatos no PDF/HTML
+  message = FALSE,       # Esconde mensagens de carregamento de pacotes
+  fig.width = 8,         # Define a largura padrão das imagens
+  fig.height = 5         # Define a altura padrão das imagens
+)
+
+Sys.setlocale("LC_ALL", "Portuguese_Brazil.1252")
+
+options(scipen = 999)
+
+# 2. Carregar todas as bibliotecas necessárias de uma vez
+library(dygraphs)
+library(forecast)
+library(ggplot2)
+library(stats)
+library(htmltools)
+library(kableExtra)
+
+```
+
+### **Introdução**
+
+Este documento explica como implementar o Método Interativo Intercensal no R tendo por base os detalhes do método apresentados por @muniz2023iterative.
+
+<br>
+
+
+### **1. Census-based method - Preston and Bennett (1983)**
+
+Este método, também conhecido como _r-method_, requer duas distribuições etárias sucessivas
+e um conjunto de taxas de crescimento específicas por idade derivadas para medir as condições de mortalidade. Abaixo os cálculso das funções para obteção da tábua de vida.
+
+<br>
+
+**ALGORITMO 1: cálculo do Census-based method**
+<div style="border: 2px solid #2c3e50; padding: 15px; border-radius: 5px;">
+
+**1.** Taxa média anual de crescimento exponencial por idade por grupo etário $x,x+n\hspace{0.5cm}$ entre os anos $t_1$ e $t_2$:
+
+$$r_x(t_1,t_2)=\frac{log \left[\frac{N_x(t_2)}{N_x(t_1)}\right]}{t_2-t_1}\hspace{3cm}(1.1)$$
+<br>
+
+**2.** Acúmulo das taxas de crescimento por idade até o ponto médio do intervalo etário $x,x+n\hspace{0.5cm}$:
+
+$$S_x=\frac{n}{2}r_x+n\sum_{a=0}^{x-5}r_a \hspace{3cm}(1.2)$$
+<br>
+
+**3.** Cálculo da média geometrica das populações por etário $x,x+n\hspace{0.5cm}$ entre $t_1$ e $t_2$:
+
+$$N_x^*=\sqrt{N_x(t_1)N_x(t_2)} \hspace{3cm}(1.3)$$
+<br>
+
+**4.** Cáculo do número de pessoa-anos vividos entre $x\hspace{0.3cm}$ e $x+n$:
+
+$$L_x=N_x^*e^{S_x} \hspace{3cm}(1.4)$$
+<br>
+
+**5.** Número de indivíduos sobrevivente à idade $x$:
+
+$$l_x=\frac{L_x+L_{x-5}}{2n}\hspace{1cm}\forall x > 0 \hspace{3cm}(1.5)$$
+<br>
+
+**6.** Número de anos-pessoa vividos acima da idade $x$:
+
+$$T_x=\sum_{a\geq x}^{\infty}L_a \hspace{3cm}(1.6)$$
+<br>
+
+**7.** Expectativa de vida na idade $x$:
+
+$$e_x=\frac{T_x}{l_x}\hspace{1cm}\forall x > 0 \hspace{3cm}(1.7)$$
+</div>
+
+<br>
+
+As equações $(1.1)$ a $(1.7)$ foram operacionalizadas no R conforme exposição a seguir. 
+
+<br>
+
+**Dados de input e parâmetros:**
+
+Os dados de entrada devem ser estruturados conforme apresentado por [@muniz2023iterative].
+Carregue o dataframe no R conforme código abaixo:
+
+
+```{r}
+data <- read.csv('data.csv', sep=',')
+names(data)
+```
+
+Onde:
+
+* **age_x** = limite inferior do grupo etário
+
+* **N_t1** = População do tempo $t_1$
+
+* **N_t2** = População do tempo $t_2$
+
+* **D** = número médio de óbitos entre $t_1$ e $t_2$
+
+
+Defina os indicadores para os anos incial e final e para o tamanho do intervalo etário:
+
+```{r}
+t1 <- 1979
+t2 <- 1989
+n <- 5
+```
+
+**Função criada para implementação do _r-method_:**
+
+```{r}
+CBM <- function(df, t1, t2, n = 5) {
+  
+  #Garantindo que as colunas sejam numéricas (evita erro de leitura):
+  df$N_t1 <- as.numeric(df$N_t1)
+  df$N_t2 <- as.numeric(df$N_t2)
+  
+  # 1.1 Taxa média anual:
+  df$r_x <- log(df$N_t2 / df$N_t1) / (t2 - t1)
+  
+  # 1.2 Acumulo das taxas de crescimento por idade até o ponto médio do intervalo etário:
+  df$S_x <- n * cumsum(ifelse(is.na(df$r_x), 0, df$r_x)) - (n/2) * df$r_x
+  
+  # 1.3 Média geométrica:
+  df$N_x_star <- sqrt(df$N_t1 * df$N_t2)
+  
+  # 1.4 Pessoas-ano vividos:
+  df$L_x <- df$N_x_star * exp(df$S_x)
+  
+  # 1.5 Sobreviventes na coorte:
+  L_x_anterior <- c(NA, df$L_x[-nrow(df)])
+  df$l_x <- (df$L_x + L_x_anterior) / (2 * n)
+  
+  # 1.6 Pessoas-ano vividos acima da idade x:
+  df$T_x <- rev(cumsum(rev(ifelse(is.na(df$L_x), 0, df$L_x))))
+  
+  # 1.7 Expectativa de vida na idade x:
+  df$e_x <- df$T_x / df$l_x
+  
+  return(df)
+}
+
+# Aplica a funcão:
+CBM_life_table <- CBM(data, 1979, 1989, 5)
+```
+
+<br>
+
+### **2. Death-Distribution Method - Preston et al. (1996)**
+
+Este método estima tábuas de vida em situações de subregistro no número de óbitos e imprecisão na informação sobre a idade. Seguindo a exposição feita por @muniz2023iterative, o algoritimo abaixo detalhas os cálculos por este método.
+
+<br>
+
+**ALGORITMO 2: cálculos do Death-Distribution Method**
+<div style="border: 2px solid #2c3e50; padding: 15px; border-radius: 5px;">
+
+**1.** O número de óbitos entre as idades $x$ e $x+n$ na tábua de vida para grupos etários quinquenaus é uma função do número de óbitos registrados e da acumulação das taxas de crescimento específicas por idade:
+
+$$d_x=D_xexp\left[\frac{n}{2}\left(\sum_{a=0}^{x}r_a+\sum_{a=5}^{x-5}r_a\right)\right] \hspace{3cm}(2.1)$$
+<br>
+
+Na equação $(2.1)$ assume-se que $d_0=D_0 \hspace{0.5cm}$ e $d_5=D_5exp\left[(n/2)(r_0+r_5)\right]\hspace{1cm}$.
+
+<br>
+
+**2.** O número de anos-pessoa vividos pela coorte entre as idades $x$ e $x+n$ é dado por:
+
+$$L_x=nl_{x+n}+\frac{n}{2}d_x\hspace{1cm} \forall \hspace{0.5cm} x > 0 \hspace{0.5cm} and \hspace{0.5cm} x \leqslant 75\hspace{3cm}(2.2)$$
+Para o primeiro grupo etário considere $L_0=nl_5+0.78d_0 \hspace{0.5cm}$. Já para o último grupo etário faça $L_{80+}=l_{80}log_{10}(l_{80}) \hspace{0.5cm}$.
+
+<br>
+
+**3.** A probabilidade de morte entre a idade $x$ e $x+n$ é igual à razão entre o número de óbitos entre $x$ e $x+n$ e os sobreviventes à idade exata $x$:
+
+$$q_x=\frac{d_x}{l_x}=\frac{l_x-l_{x+n}}{l_x} \hspace{3cm}(2.3)$$
+<br>
+
+**4.** Número de anos-pessoa vividos acima da idade $x$ é dado por:
+
+$$T_x=\sum_{a\geq x}^{\infty}L_a \hspace{3cm}(2.4)$$
+<br>
+
+**5.** Por fim, a expectativa de vida na idade $x$ é:
+
+$$e_x=\frac{T_x}{l_x}\hspace{1cm}\forall x > 0 \hspace{3cm}(2.5)$$
+</div>
+
+<br>
+
+**Função criada para implementação do Death-Distribution Method:**
+
+```{r}
+DDM <- function(df, t1, t2, n = 5) {
+  
+  # Preparação dos dados:
+  df$N_t1 <- as.numeric(df$N_t1)
+  df$N_t2 <- as.numeric(df$N_t2)
+  df$D <- as.numeric(df$D)
+  
+  # Taxa de crescimento (r_x)
+  df$r_x <- log(df$N_t2 / df$N_t1) / (t2 - t1)
+  
+  # Cálculo de d_x (Equação 2.1):
+  r <- df$r_x
+  D <- df$D
+  dx_vec <- numeric(nrow(df))
+  
+  dx_vec[1] <- D[1] # d0 = D0
+  if(nrow(df) > 1) {
+    dx_vec[2] <- D[2] * exp((n/2) * (r[1] + r[2])) # d5
+  }
+  
+  if(nrow(df) > 2) {
+    for(i in 3:nrow(df)) {
+      # Soma de r_a de 0 até x (index 1 até i)
+      sum_0_x <- sum(r[1:i])
+      # Soma de r_a de 5 até x-5 (index 2 até i-1)
+      sum_5_xm5 <- sum(r[2:(i-1)])
+      
+      dx_vec[i] <- D[i] * exp((n/2) * (sum_0_x + sum_5_xm5))
+    }
+  }
+  df$d_x <- dx_vec
+  
+  # Cálculo de l_x (Sobreviventes)
+  # Soma reversa: quem sobrevive à idade x é a soma de todos que morrerão no futuro
+  df$l_x <- rev(cumsum(rev(df$d_x)))
+  
+  # Cálculo de L_x:
+  Lx_vec <- numeric(nrow(df))
+  lx <- df$l_x
+  dx <- df$d_x
+  
+  # L0 (Primeira linha):
+  Lx_vec[1] <- n * lx[2] + 0.78 * dx[1]
+  
+  # L_last (Última linha - Grupo aberto 80+)
+  last <- nrow(df)
+  Lx_vec[last] <- lx[last] * log10(lx[last])
+  
+  # Lx para 0 < x <= 75 (grupos etários intermediários):
+  for(i in 2:(last-1)) {
+    Lx_vec[i] <- n * lx[i+1] + (n/2) * dx[i]
+  }
+  df$L_x <- Lx_vec
+  
+  # Probabilidade de morte (q_x)
+  df$q_x <- df$d_x / df$l_x
+  
+  # Anos vividos acima da idade x:
+  df$T_x <- rev(cumsum(rev(df$L_x)))
+  
+  # Expectativa de vida na idade x:
+  df$e_x <- df$T_x / df$l_x
+  
+  return(df)
+}
+
+# Aplica a funcão:
+DDM_life_table <- DDM(data, 1979, 1989, 5)
+```
+
+<br>
+
+### **3. Iterative Intercensal Method - Giovanna Merli (1998) and Muniz (2023)**
+
+O método proposto por Merli (1998) é a evolução lógica para lidar com resíduos de migração e erros de cobertura, "corrigindo" a população do segundo censo através de projeções sucessivas baseadas nas razões de sobrevivência estimadas. Trata-se de um método iterativo em duas etapas que busca conciliar os métodos anteriores.
+
+Este método permite comparar as expectativas de vida pelos três métodos, permitindo observar como a iteração tende a suavizar anomalias causadas por fluxos migratórios não registrados entre os censos e subregistro de óbitos nos registros vitais.
+
+<br>
+
+**ALGORITMO 3: cálculos do Iterative Intercensal Method**
+<div style="border: 2px solid #2c3e50; padding: 15px; border-radius: 5px;">
+
+**1.** Como primeiro passo, projeta-se a população do ano baseline - $P(t_1)$ utilizando as razões de sobrevivência da tábua de vida produzida Death-Distribution Method. As razões de sobrevivência da tábua de vida $(p_x)$ entre as idades $x$ e $x+n$ representam as proporções de sobreviventes no período intercensitário. Ao se utilizar intervalos etários de 5 anos, essas razões de sobrevivência são obtidas por:
+
+$$p_x=\frac{L_{x+5}}{L_x} \hspace{1cm} \forall \hspace{0.5cm} x < 0 \hspace{3cm}(3.1)$$
+<br>
+
+Para a penúltima faixa etária aberta (75 anos) a razão de sobrevivência é:
+
+$$p_{75}=\frac{L_{80}}{L_{75}+L_{80}}$$
+
+A multiplicação dessas razões pela população do baseline $P(t_1)$ projeta essa população 5 anos à frente. Em sequência, multiplicando essa população projetada 5 anos à frente novamente pelas respectivas razões de sobrevivência projeta essa populacão por mais 5 anos à frente, ou seja, para $t_2$. Essas projeções em sequência são operacionalizadas por:
+
+$$N_{x+10}(t_2)^{proj}=N_x(t_1)p_xp_{x+5}\hspace{1cm} para \hspace{0.5cm} x\ge10 \hspace{3cm}(3.2)$$
+Essa equação projeta o número de pessoas do baseline $[P(t_1)]$ na idade $x$ para a idade $x+10$ dez anos à frente $[P(t_2)]$.
+
+Para o primeiro grupo etário Merli (1998) sugere o uso da equação:
+
+$$N_0(t_1+5)^{proj}=N_0(t_1)p_0exp\left[ -\frac{n}{2}(r_0+r_5)\frac{L_0}{L_5}\right]\hspace{3cm}(3.3)$$
+E para o último grupo etário:
+
+$$N_{80+}(t_1+5)^{proj}=N_{75}(t_1)p_{75}+N_{80+}(t_1)p_{75}\hspace{3cm}(3.4)$$
+As equações $(3.3)$ e $(3.4)$ precisam ser aplicadas novamente sobre as respectivas populações projetadas para $t_1+5$ para projetá-las para $t_1+10$ resultado na população projetada para $t_2$. Um passo adicional é necessário para se chegar à população projetada no último grupo etário em $t_2$. É necessário projetar a população no grupo etário 70 a 74 anos $(N_{70})$ para $t_1+5$, fazendo $N_{70}(t_1)p_{70}$, para se chegar à projeção da população do último grupo etário $(N_{80})$, conforme equação $(3.4)$.
+
+A função IMM apreentada no código abaixo segue o propostos nas Equações $(3.3)$ e $(3.4)$. No caso dos nascimentos,  a Equação $(3.3)$ é aplicada recursivamente para estimar o volume populacional do primeiro grupo etário, que não existia no censo base. Já para a população no grupo aberto, a função implementa a Equação $(3.4)$, onde a população com 80 anos ou mais em $t+5$ é composta pelos sobreviventes do grupo 75-79 e pelos sobreviventes do grupo que já tinha $80+$ no período anterior.
+
+
+
+</div>
+
+<br>
+
+**Função criada para implementação das equações (3.1) a (3.4):**
+
+```{r}
+IIM <- function(df, t1, t2, n = 5, tol = 1e-6, max_iter = 100) {
+  
+  # Preparação inicial
+  df_iter <- df
+  df_iter$N_t1 <- as.numeric(df_iter$N_t1)
+  df_iter$N_t2 <- as.numeric(df_iter$N_t2)
+  
+  # Guarda a população observada original para o dataframe de comparação
+  N_t2_original <- df_iter$N_t2
+  
+  e0_prev <- 0
+  num_ages <- nrow(df_iter)
+  
+  # Loop Iterativo (Processo de Conciliação)
+  for (i in 1:max_iter) {
+    
+    # STAGE 1: Gera tábua de vida via DDM (usa N_t2 projetado das iterações anteriores)
+    lt_ddm <- DDM(df_iter, t1, t2, n)
+    
+    # Critério de convergência (estabilidade de e0)
+    if (abs(lt_ddm$e_x[1] - e0_prev) < tol) {
+      message(paste("Convergência atingida na iteração:", i))
+      break
+    }
+    e0_prev <- lt_ddm$e_x[1]
+    
+    # Parâmetros para projeção
+    L <- lt_ddm$L_x
+    r <- lt_ddm$r_x
+    N_t1 <- df_iter$N_t1
+    
+    # STAGE 2: Cálculo das razões de sobrevivência (px)
+    p <- numeric(num_ages)
+    for(j in 1:(num_ages-2)) {
+      p[j] <- L[j+1] / L[j] # p0 até p70
+    }
+    p[num_ages-1] <- L[num_ages] / (L[num_ages-1] + L[num_ages]) # p75
+    
+    # Termo exponencial para correção de N0 (Equação 3.3)
+    term_exp <- exp(-(n/2) * (r[1] + r[2]) * (L[1]/L[2]))
+    
+    # Projeção t1 -> t1+5
+    N_5 <- numeric(num_ages)
+    N_5[1] <- N_t1[1] * p[1] * term_exp
+    for(j in 1:(num_ages-1)) {
+      N_5[j+1] <- N_t1[j] * p[j]
+    }
+    N_5[num_ages] <- N_5[num_ages] + (N_t1[num_ages] * p[num_ages-1])
+    
+    # Projeção t1+5 -> t2 (t1+10)
+    N_10 <- numeric(num_ages)
+    N_10[1] <- N_5[1] * p[1] * term_exp
+    for(j in 1:(num_ages-1)) {
+      N_10[j+1] <- N_5[j] * p[j]
+    }
+    N_10[num_ages] <- N_10[num_ages] + (N_5[num_ages] * p[num_ages-1])
+    
+    # STAGE 3 & 4: Atualiza N_t2 com a projeção (o DDM na próxima volta usará estas taxas)
+    df_iter$N_t2 <- N_10
+  }
+  
+  # --- Construção dos Objetos de Retorno ---
+  
+  # 1. Tábua DDM final (já calculada no loop)
+  tabua_ddm_final <- lt_ddm
+  
+  # 2. Tábua CBM final (usando a população projetada que convergiu)
+  tabua_cbm_final <- CBM(df_iter, t1, t2, n)
+  
+  # 3. Dataframe de comparação das populações
+  df_comparacao <- data.frame(
+    age_x          = df$age_x,
+    N_t2_observada = N_t2_original,
+    N_t2_projetada = df_iter$N_t2,
+    diferenca      = N_t2_original - df_iter$N_t2,
+    razao          = N_t2_original / df_iter$N_t2
+  )
+  
+  # Retorna a lista com os três objetos
+  return(list(
+    DDM_Final  = tabua_ddm_final,
+    CBM_Final  = tabua_cbm_final,
+    Comparacao = df_comparacao
+  ))
+}
+
+# --- Execução ---
+resultados <- IIM(data, 1979, 1989, 5)
+```
+
+A função IIM inicia gerando a tábua de vida pelo DDM com base nas taxas de crescimento populacionaal $(r_x)$, geradas pelo CBM, utilizando as populações recenseadas em $N(t_1)$ e $N(t_2)$ (estágio 1, descrito por Muniz(2023)). A cada iteração, ela projeta $N(t_1)$ para frente e substitui o valor de $N(t_2)$ pelo valor projetado como entrada para a próxima rodada do CBM (estágis 2 e 3 descritos por Muniz (2023)). Nesse processo iterativo novas taxas de crescimento $r_x$ são geradas pelo CBM considerando a diferença entre o censo real em $t_1$ e a projeção teórica em $t_2$. Isso "limpa" a taxa de crescimento de erros de enumeração diferencial entre os dois censos reais. No estágio final (estágio 4), a tábua de vida pelo DDM é atualizada considerando as novas taxas de crescimento ("limpas do efeito da migração e do subregistro de óbitos). Essa tábua de vida atualizada gera novas razões de sobrevivência, reiniciando o ciclo até a estabilidade. O processo para quando a diferença na expectativa de vida entre duas iterações é  insignificante (menor que $0.000001$). No exemplo em questão, foram necessárias 50 iterações para atingir a convergência.
+
+O código abaixo extrai os resultados da função IIM:
+
+* **ddm_lt_final:** tábua de vida pelo DDM atualizada (com taxas de crescimento corrigidas) pelo metodo interativo.
+
+* **cbm_lt_final:** tábua de vida pelo CBM atualizada (com taxas de crescimento corrigidas) pelo metodo interativo.
+
+* **comparacao:** dataframe contendo as populações observada e projetada para $t_2$, assim como as direrenças e as razões entre essas duas populações. Essa comparação é essencial para identificar em quais faixas etárias o censo observado mais se distanciou da dinâmica demográfica esperada (por exemplo, faixas etárias com razões muito diferentes de 1 indicam forte presença de migração ou erro de enumeração).
+
+```{r}
+# 1. Acessar a Tábua DDM (após convergência)
+ddm_lt_final <- resultados$DDM_Final
+
+# 2. Acessar a Tábua CBM (após convergência)
+cbm_lt_final <- resultados$CBM_Final
+
+# 3. Analisar a comparação entre populações (Observado vs Projetado)
+comparacao <- resultados$Comparacao
+
+# Exemplo: Ver a diferença total de cobertura/migração
+total_residual <- sum(resultados$Comparacao$diferenca)
+print(paste("Resíduo total intercensitário:", round(total_residual, 2)))
+```
+
+
+### **Referências**
+
