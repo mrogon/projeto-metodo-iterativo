@@ -1,5 +1,5 @@
 ---
-title: "Aplicação do Método Intercensal Interativo"
+title: "Aplicação do Método Iterativo Intercensal para estimativas de tábuas de vida por sexo e raça: solução em Ambiente R"
 author: "Marcos R. Gonzaga (UFRN)"
 date: "20-04-2026"
 output:
@@ -16,7 +16,7 @@ output:
   word_document: default
 bibliography: referencias.bib
 editor_options:
-  chunk_output_type: console
+  chunk_output_type: inline
 markdown:
   wrap: 72
 ---
@@ -107,30 +107,37 @@ Sys.setlocale("LC_ALL", "Portuguese_Brazil.1252")
 options(scipen = 999)
 
 # 2. Carregar todas as bibliotecas necessárias de uma vez
-library(dygraphs)
-library(forecast)
+#library(dygraphs)
+#library(forecast)
+library(dplyr)
 library(ggplot2)
 library(stats)
 library(htmltools)
+library(knitr)
 library(kableExtra)
+#library(kableExtra)
 
 ```
 
 ### **Introdução**
 
-Este documento explica como implementar o Método Interativo Intercensal no R tendo por base os detalhes do método apresentados por @muniz2023iterative.
+Este documento descreve a implementação, em ambiente R, do Método Iterativo Intercensal proposto por @merli1998mortality, fundamentando-se no detalhamento metodológico apresentado por @muniz2023iterative. O trabalho de @muniz2023iterative operacionaliza esse método, o qual reconcilia abordagens baseadas em censos e em métodos de distribuição de mortes (DDM), corrigindo distorções provenientes do sub-registro de óbitos, de erros de cobertura censitária e da migração residual. O autor disponibiliza, originalmente, uma rotina em Stata que automatiza tais técnicas, oferecendo uma solução robusta para que demógrafos e pesquisadores obtenham estimativas de mortalidade e expectativa de vida mais precisas em países em desenvolvimento, prescindindo do uso de tábuas de vida modelo.
+
+O propósito deste documento técnico é fornecer uma função que viabilize a aplicação do Método Iterativo Intercensal para usuários de R. Com isso, busca-se ampliar as possibilidades de emprego desta técnica na construção de tábuas de vida por cor/raça, especialmente em contextos onde a reclassificação racial entre censos demográficos impõe desafios analíticos significativos à pesquisa demográfica.
+
+Primeiramente, apresenta-se uma exposição sucinta dos cálculos inerentes a cada método. Em seguida, descrevem-se as funções desenvolvidas em R para a aplicação de cada técnica, utilizando-se os dados de entrada fornecidos por @muniz2023iterative. Por fim, apresenta-se uma aplicação dessas funções para a estimação de tábuas de vida por sexo e cor/raça para o Brasil, fundamentada nos dados dos censos demográficos de 2010 e 2022 e nos óbitos registrados ao longo do período intercensitário. 
 
 <br>
 
+### **1. Método Integrado de Preston (r-method)**
 
-### **1. Census-based method - Preston and Bennett (1983)**
+Este método, proposto por @preston1983integrated e também denominado _r-method_, oferece uma abordagem alternativa para estimar tábuas de vida fundamentada em duas distribuições etárias censitárias. A técnica vincula-se à família dos métodos de distribuição de óbitos (DDM), guardando estreita relação com o Método das Coortes Sintéticas Extintas (Synthetic Extinct Generations – SEG), proposto por @bennett1981estimating, e sendo frequentemente associada aos trabalhos de Preston, Coale, Bennett e Horiuchi.
 
-Este método, também conhecido como _r-method_, requer duas distribuições etárias sucessivas
-e um conjunto de taxas de crescimento específicas por idade derivadas para medir as condições de mortalidade. Abaixo os cálculso das funções para obteção da tábua de vida.
+O r-method requer duas distribuições etárias sucessivas e um conjunto de taxas de crescimento específicas por idade para mensurar as condições de mortalidade. Apresentam-se, a seguir, os cálculos das funções para a obtenção da tábua de vida.
 
 <br>
 
-**ALGORITMO 1: cálculo do Census-based method**
+**ALGORITMO 1: cálculo do r-method**
 <div style="border: 2px solid #2c3e50; padding: 15px; border-radius: 5px;">
 
 **1.** Taxa média anual de crescimento exponencial por idade por grupo etário $x,x+n\hspace{0.5cm}$ entre os anos $t_1$ e $t_2$:
@@ -170,44 +177,12 @@ $$e_x=\frac{T_x}{l_x}\hspace{1cm}\forall x > 0 \hspace{3cm}(1.7)$$
 
 <br>
 
-As equações $(1.1)$ a $(1.7)$ foram operacionalizadas no R conforme exposição a seguir. 
+O código abaixo implementa uma função para a aplicação do r-method em R.
 
-<br>
-
-**Dados de input e parâmetros:**
-
-Os dados de entrada devem ser estruturados conforme apresentado por [@muniz2023iterative].
-Carregue o dataframe no R conforme código abaixo:
-
+**Função implementada para o _r-method_:**
 
 ```{r}
-data <- read.csv('data.csv', sep=',')
-names(data)
-```
-
-Onde:
-
-* **age_x** = limite inferior do grupo etário
-
-* **N_t1** = População do tempo $t_1$
-
-* **N_t2** = População do tempo $t_2$
-
-* **D** = número médio de óbitos entre $t_1$ e $t_2$
-
-
-Defina os indicadores para os anos incial e final e para o tamanho do intervalo etário:
-
-```{r}
-t1 <- 1979
-t2 <- 1989
-n <- 5
-```
-
-**Função criada para implementação do _r-method_:**
-
-```{r}
-CBM <- function(df, t1, t2, n = 5) {
+r_method <- function(df, t1, t2, n = 5) {
   
   #Garantindo que as colunas sejam numéricas (evita erro de leitura):
   df$N_t1 <- as.numeric(df$N_t1)
@@ -237,20 +212,53 @@ CBM <- function(df, t1, t2, n = 5) {
   
   return(df)
 }
+```
 
-# Aplica a funcão:
-CBM_life_table <- CBM(data, 1979, 1989, 5)
+Aplica-se a função`r_method` aos dados de entrada fornecidos por @muniz2023iterative. Esses dados, referentes à população masculina do Vietnã recenseada em 1979 e 1989 e aos óbitos registrados ao longo do período intercensitário, apresentam a seguinte estrutura:
+
+```{r}
+data.viet <- read.csv("C:/Projetos_R/projeto-metodo-iterativo/data/data.csv")
+print(data.viet)
+```
+
+Onde:
+
+* **age_x** = limite inferior do grupo etário
+
+* **N_t1** = População do tempo $t_1$
+
+* **N_t2** = População do tempo $t_2$
+
+* **D** = número médio de óbitos entre $t_1$ e $t_2$
+
+Inicialmente, definem-se os argumentos de entrada da função `r_method` com base nos dados da população masculina do Vietnã. Em seguida, a função é aplicada utilizando-se esses argumentos:
+
+```{r}
+t1 <- 1979
+t2 <- 1989
+n <- 5
+
+r_method_lt <- r_method(data.viet, 1979, 1989, 5)
+```
+
+A tábua de vida estimada é condizente com os resultados apresentados por @muniz2023iterative:
+
+```{r}
+print(r_method_lt)
 ```
 
 <br>
 
-### **2. Death-Distribution Method - Preston et al. (1996)**
+### **2. Método de Distribuição dos Óbitos (DDM)**
 
-Este método estima tábuas de vida em situações de subregistro no número de óbitos e imprecisão na informação sobre a idade. Seguindo a exposição feita por @muniz2023iterative, o algoritimo abaixo detalhas os cálculos por este método.
+Igualmente ao r-method, este método, proposto por @bennett1984mortality, pertence a uma classificação mais ampla, que é a dos métodos de Método de Distribuição dos Óbitos, como o Growth Balance [@brass1975methods], o General Growth Balance de [@hill1987estimating] e o Synthetic Extinct Generation [@bennett1981estimating]. 
+
+
+Trata-se de uma técnica de estimação de mortalidade voltada para contextos marcados pelo sub-registro de óbitos e por imprecisões na declaração da idade [@bennett1984mortality]. O método consiste em derivar o número de mortes da tábua de vida ($d_x$) a partir da média anual de óbitos observados na população ($D_x$) entre dois pontos no tempo ($t_1$ e $t_2$). Para tanto, a distribuição dos óbitos registrados é convertida na distribuição correspondente da tábua de vida por meio das taxas de crescimento específicas por idade do período intercensitário. A premissa central dessa abordagem é que a magnitude do sub-registro de óbitos permanece constante em todas as faixas etárias.
 
 <br>
 
-**ALGORITMO 2: cálculos do Death-Distribution Method**
+**ALGORITMO 2: cálculos do Método de Distribuição dos Óbitos **
 <div style="border: 2px solid #2c3e50; padding: 15px; border-radius: 5px;">
 
 **1.** O número de óbitos entre as idades $x$ e $x+n$ na tábua de vida para grupos etários quinquenaus é uma função do número de óbitos registrados e da acumulação das taxas de crescimento específicas por idade:
@@ -286,7 +294,9 @@ $$e_x=\frac{T_x}{l_x}\hspace{1cm}\forall x > 0 \hspace{3cm}(2.5)$$
 
 <br>
 
-**Função criada para implementação do Death-Distribution Method:**
+O código abaixo implementa uma função para a aplicação do Método de Distribuição dos Óbitos em R.
+
+**Função implementada para o Método de Distribuição dos Óbitos**
 
 ```{r}
 DDM <- function(df, t1, t2, n = 5) {
@@ -354,58 +364,67 @@ DDM <- function(df, t1, t2, n = 5) {
   
   return(df)
 }
+```
 
-# Aplica a funcão:
-DDM_life_table <- DDM(data, 1979, 1989, 5)
+Aplica-se a função`DDM` aos dados da população masculina do Vietnã :
+
+```{r}
+DDM_lt <- DDM(data.viet, 1979, 1989, 5)
+```
+
+Assim como nos resultados para o _r-method_, a tábua de vida estimada pelo Método de Distribuição dos Óbitos é condizente com os resultados apresentados por @muniz2023iterative:
+
+```{r}
+print(DDM_lt)
 ```
 
 <br>
 
-### **3. Iterative Intercensal Method - Giovanna Merli (1998) and Muniz (2023)**
+### **3. Método Iterativo Intercensal (MII)**
 
-O método proposto por Merli (1998) é a evolução lógica para lidar com resíduos de migração e erros de cobertura, "corrigindo" a população do segundo censo através de projeções sucessivas baseadas nas razões de sobrevivência estimadas. Trata-se de um método iterativo em duas etapas que busca conciliar os métodos anteriores.
+O método proposto por @merli1998mortality é a evolução lógica para lidar com resíduos de migração e erros de cobertura, "corrigindo" a população do segundo censo através de projeções sucessivas baseadas nas razões de sobrevivência estimadas pelo método DDM. Trata-se de um método iterativo em duas etapas que busca conciliar os métodos anteriores.
 
 Este método permite comparar as expectativas de vida pelos três métodos, permitindo observar como a iteração tende a suavizar anomalias causadas por fluxos migratórios não registrados entre os censos e subregistro de óbitos nos registros vitais.
 
 <br>
 
-**ALGORITMO 3: cálculos do Iterative Intercensal Method**
+**ALGORITMO 3: cálculos do Método Iterativo Intercensal**
 <div style="border: 2px solid #2c3e50; padding: 15px; border-radius: 5px;">
 
-**1.** Como primeiro passo, projeta-se a população do ano baseline - $P(t_1)$ utilizando as razões de sobrevivência da tábua de vida produzida Death-Distribution Method. As razões de sobrevivência da tábua de vida $(p_x)$ entre as idades $x$ e $x+n$ representam as proporções de sobreviventes no período intercensitário. Ao se utilizar intervalos etários de 5 anos, essas razões de sobrevivência são obtidas por:
+**1.** Como etapa inicial, projeta-se a população do ano base — $P(t_1)$ — utilizando-se as razões de sobrevivência da tábua de vida obtida pelo Método de Distribuição de Óbitos (DDM). As razões de sobrevivência da tábua de vida ($p_x$) entre as idades $x$ e $x+n$ representam a proporção de indivíduos que sobrevivem ao longo do período intercensitário. Ao adotar intervalos etários de cinco anos, essas razões são calculadas da seguinte forma:
 
 $$p_x=\frac{L_{x+5}}{L_x} \hspace{1cm} \forall \hspace{0.5cm} x < 0 \hspace{3cm}(3.1)$$
 <br>
 
-Para a penúltima faixa etária aberta (75 anos) a razão de sobrevivência é:
+Para a penúltima faixa etária (75 a 79 anos), a razão de sobrevivência é definida por:
 
 $$p_{75}=\frac{L_{80}}{L_{75}+L_{80}}$$
 
-A multiplicação dessas razões pela população do baseline $P(t_1)$ projeta essa população 5 anos à frente. Em sequência, multiplicando essa população projetada 5 anos à frente novamente pelas respectivas razões de sobrevivência projeta essa populacão por mais 5 anos à frente, ou seja, para $t_2$. Essas projeções em sequência são operacionalizadas por:
+A multiplicação dessas razões pela população do ano base — $P(t_1)$ — projeta essa população para cinco anos à frente. Subsequentemente, ao aplicar novamente as respectivas razões de sobrevivência sobre essa população projetada, obtém-se a projeção para mais cinco anos, atingindo-se o tempo $t_2$. Esse encadeamento de projeções é operacionalizado da seguinte forma:
 
 $$N_{x+10}(t_2)^{proj}=N_x(t_1)p_xp_{x+5}\hspace{1cm} para \hspace{0.5cm} x\ge10 \hspace{3cm}(3.2)$$
-Essa equação projeta o número de pessoas do baseline $[P(t_1)]$ na idade $x$ para a idade $x+10$ dez anos à frente $[P(t_2)]$.
+Esta equação projeta o contingente populacional do ano base — $P(t_1)$ — da idade $x$ para a idade $x+10$, dez anos à frente, correspondendo a $P(t_2)$.
 
-Para o primeiro grupo etário Merli (1998) sugere o uso da equação:
+Para o primeiro grupo etário, @merli1998mortality sugere o emprego da seguinte equação:
 
 $$N_0(t_1+5)^{proj}=N_0(t_1)p_0exp\left[ -\frac{n}{2}(r_0+r_5)\frac{L_0}{L_5}\right]\hspace{3cm}(3.3)$$
 E para o último grupo etário:
 
 $$N_{80+}(t_1+5)^{proj}=N_{75}(t_1)p_{75}+N_{80+}(t_1)p_{75}\hspace{3cm}(3.4)$$
-As equações $(3.3)$ e $(3.4)$ precisam ser aplicadas novamente sobre as respectivas populações projetadas para $t_1+5$ para projetá-las para $t_1+10$ resultado na população projetada para $t_2$. Um passo adicional é necessário para se chegar à população projetada no último grupo etário em $t_2$. É necessário projetar a população no grupo etário 70 a 74 anos $(N_{70})$ para $t_1+5$, fazendo $N_{70}(t_1)p_{70}$, para se chegar à projeção da população do último grupo etário $(N_{80})$, conforme equação $(3.4)$.
-
-A função IMM apreentada no código abaixo segue o propostos nas Equações $(3.3)$ e $(3.4)$. No caso dos nascimentos,  a Equação $(3.3)$ é aplicada recursivamente para estimar o volume populacional do primeiro grupo etário, que não existia no censo base. Já para a população no grupo aberto, a função implementa a Equação $(3.4)$, onde a população com 80 anos ou mais em $t+5$ é composta pelos sobreviventes do grupo 75-79 e pelos sobreviventes do grupo que já tinha $80+$ no período anterior.
-
-
-
 </div>
 
 <br>
 
-**Função criada para implementação das equações (3.1) a (3.4):**
+As equações $(3.3)$ e $(3.4)$ devem ser aplicadas novamente sobre as populações projetadas para $t_1+5$, visando deslocá-las para $t_1+10$ e obtendo-se, assim, a população projetada para $t_2$. Um passo adicional é requerido para estimar a população projetada no último grupo etário em $t_2$. Especificamente, deve-se projetar a população da faixa de 70 a 74 anos — $N_{70}(t_1)$ — para $t_1+5$, utilizando o produto $N_{70}(t_1)p_{70}$, a fim de compor a projeção do grupo etário aberto ($N_{80+}$), conforme estabelecido na equação $(3.4)$.
+
+A função `MII`, apresentada no código abaixo, segue as especificações das Equações $(3.3)$ e $(3.4)$. No caso dos nascimentos, a Equação $(3.3)$ é aplicada de forma recursiva para estimar o contingente populacional do primeiro grupo etário, o qual não estava presente no censo base ($t_1$). Já para o grupo aberto, a função implementa a Equação $(3.4)$, na qual a população com 80 anos ou mais em $t+5$ é composta pelos sobreviventes da coorte de 75-79 anos e pelos sobreviventes daqueles que já pertenciam ao grupo $80+$ no período anterior.
+
+<br>
+
+**Função implementada para o Método Iterativo Intercensal**
 
 ```{r}
-IIM <- function(df, t1, t2, n = 5, tol = 1e-6, max_iter = 100) {
+MII <- function(df, t1, t2, n = 5, tol = 1e-6, max_iter = 100) {
   
   # Preparação inicial
   df_iter <- df
@@ -472,7 +491,7 @@ IIM <- function(df, t1, t2, n = 5, tol = 1e-6, max_iter = 100) {
   tabua_ddm_final <- lt_ddm
   
   # 2. Tábua CBM final (usando a população projetada que convergiu)
-  tabua_cbm_final <- CBM(df_iter, t1, t2, n)
+  tabua_r_method_final <- r_method(df_iter, t1, t2, n)
   
   # 3. Dataframe de comparação das populações
   df_comparacao <- data.frame(
@@ -486,40 +505,51 @@ IIM <- function(df, t1, t2, n = 5, tol = 1e-6, max_iter = 100) {
   # Retorna a lista com os três objetos
   return(list(
     DDM_Final  = tabua_ddm_final,
-    CBM_Final  = tabua_cbm_final,
+    r_method_Final  = tabua_r_method_final,
     Comparacao = df_comparacao
   ))
 }
 
 # --- Execução ---
-resultados <- IIM(data, 1979, 1989, 5)
+resultados <- MII(data.viet, 1979, 1989, 5)
 ```
 
-A função IIM inicia gerando a tábua de vida pelo DDM com base nas taxas de crescimento populacionaal $(r_x)$, geradas pelo CBM, utilizando as populações recenseadas em $N(t_1)$ e $N(t_2)$ (estágio 1, descrito por Muniz(2023)). A cada iteração, ela projeta $N(t_1)$ para frente e substitui o valor de $N(t_2)$ pelo valor projetado como entrada para a próxima rodada do CBM (estágis 2 e 3 descritos por Muniz (2023)). Nesse processo iterativo novas taxas de crescimento $r_x$ são geradas pelo CBM considerando a diferença entre o censo real em $t_1$ e a projeção teórica em $t_2$. Isso "limpa" a taxa de crescimento de erros de enumeração diferencial entre os dois censos reais. No estágio final (estágio 4), a tábua de vida pelo DDM é atualizada considerando as novas taxas de crescimento ("limpas do efeito da migração e do subregistro de óbitos). Essa tábua de vida atualizada gera novas razões de sobrevivência, reiniciando o ciclo até a estabilidade. O processo para quando a diferença na expectativa de vida entre duas iterações é  insignificante (menor que $0.000001$). No exemplo em questão, foram necessárias 50 iterações para atingir a convergência.
+<br>
 
-O código abaixo extrai os resultados da função IIM:
+A função `MII` inicia-se com a geração de uma tábua de vida via função `DDM`, fundamentada nas taxas de crescimento populacional $(r_x)$, obtidas pela função `r_method` a partir das populações recenseadas em $N(t_1)$ e $N(t_2)$ (Estágio 1, conforme descrito por @muniz2023iterative). A cada iteração, a função projeta $N(t_1)$, com base nas razões de sobrevivência das tábaus de vida geradas por `DDM`, e substitui o valor observado de $N(t_2)$ pelo valor projetado, utilizando-o como entrada para a rodada seguinte do `r_method` (Estágios 2 e 3).
 
-* **ddm_lt_final:** tábua de vida pelo DDM atualizada (com taxas de crescimento corrigidas) pelo metodo interativo.
 
-* **cbm_lt_final:** tábua de vida pelo CBM atualizada (com taxas de crescimento corrigidas) pelo metodo interativo.
+Nesse processo iterativo, novas taxas de crescimento ($r_x$) são calculadas, considerando a diferença entre o censo observado em $t_1$ e a projeção teórica para $t_2$. Esse procedimento "limpa" as taxas de crescimento de erros de enumeração diferencial entre os dois levantamentos censitários. No estágio final (Estágio 4), a tábua de vida pelo DDM é atualizada com base nessas novas taxas — agora livres dos efeitos da migração e do sub-registro de óbitos. Essa tábua gera novas razões de sobrevivência, reiniciando o ciclo até que a estabilidade seja alcançada. O processo converge quando a variação na expectativa de vida entre duas iterações torna-se insignificante (inferior a $0,000001$). No exemplo em questão, com os dados do Vietnã, foram necessárias 50 iterações para atingir a convergência.
 
-* **comparacao:** dataframe contendo as populações observada e projetada para $t_2$, assim como as direrenças e as razões entre essas duas populações. Essa comparação é essencial para identificar em quais faixas etárias o censo observado mais se distanciou da dinâmica demográfica esperada (por exemplo, faixas etárias com razões muito diferentes de 1 indicam forte presença de migração ou erro de enumeração).
+A função `MII` gera os seguintes objetos:
+
+* **DDM_Final:** Tábua de vida obtida via DDM, atualizada pelo método iterativo com taxas de crescimento corrigidas.
+
+* **r_method_Final:** Tábua de vida obtida via _r-method_, atualizada pelo método iterativo com taxas de crescimento corrigidas.
+
+* **comparacao:** _Dataframe_ contendo as populações observada e projetada para $t_2$, bem como as diferenças e as razões entre ambas. Essa comparação é fundamental para identificar em quais faixas etárias o censo observado mais se distanciou da dinâmica demográfica esperada. Por exemplo, razões significativamente diferentes de 1 indicam forte presença de fluxos migratórios ou erros de enumeração.
+
+O código abaixo extrai e exibe os resultados, conforme apresentados por @muniz2023iterative:
 
 ```{r}
 # 1. Acessar a Tábua DDM (após convergência)
 ddm_lt_final <- resultados$DDM_Final
+print(ddm_lt_final)
+```
 
+```{r}
 # 2. Acessar a Tábua CBM (após convergência)
-cbm_lt_final <- resultados$CBM_Final
+r_method_lt_final <- resultados$r_method_Final
+print(r_method_lt_final)
+```
 
+```{r}
 # 3. Analisar a comparação entre populações (Observado vs Projetado)
 comparacao <- resultados$Comparacao
-
-# Exemplo: Ver a diferença total de cobertura/migração
-total_residual <- sum(resultados$Comparacao$diferenca)
-print(paste("Resíduo total intercensitário:", round(total_residual, 2)))
+print(comparacao)
 ```
 
 
-### **Referências**
+<br>
 
+### **Referências**
