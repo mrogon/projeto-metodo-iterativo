@@ -549,7 +549,6 @@ comparacao <- resultados$Comparacao
 print(comparacao)
 ```
 
-
 <br>
 
 ### **Referências**
