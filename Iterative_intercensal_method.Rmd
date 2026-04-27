@@ -115,8 +115,7 @@ library(stats)
 library(htmltools)
 library(knitr)
 library(kableExtra)
-#library(kableExtra)
-
+library(ragg)
 ```
 
 ### **Introdução**
@@ -915,9 +914,31 @@ dados_resumo %>%
 
 ```
 
+#### **4.3 Analise gráfica**
 
+A figura abaixo apresenta o logaritmo das taxas de mortalidade derivadas das tábuas de vida intercensitárias para a população feminina por raça/cor no Brasil, no período de 2012 a 2022. Observa-se que as taxas de mortalidade para mulheres pretas e pardas são superiores em praticamente todos os grupos etários, com exceção do primeiro quinquênio (0 a 4 anos), no qual a taxa para mulheres pretas apresenta-se ligeiramente inferior. Ressalta-se que o fato de as tábuas de vida não terem sido estimadas com a desagregação da mortalidade infantil (menores de 1 ano) pode estar omitindo diferenciais relevantes nesse componente específico por grupo de cor/raça.
 
+```{r}
+idade <- DDM_MII_branca$age_x
+Branca <- log(DDM_MII_branca$d_x/DDM_MII_branca$L_x)
+Parda <- log(DDM_MII_parda$d_x/DDM_MII_parda$L_x)
+Preta <- log(DDM_MII_preta$d_x/DDM_MII_preta$L_x)
 
+par(mar=c(5, 4, 4, 8), xpd=TRUE)
+
+plot(idade, Branca, type='l', col='blue', lwd=2,
+     ylim=c(-10,0), ylab='Log (qx)', xlab='Grupo etário',
+     main='Taxas de mortalidade da tábua de vida intercensitária\nMulheres, Brasil (2012:2022)',
+     bty='l')
+
+lines(idade, Parda, col='brown', lwd=2)
+lines(idade, Preta, col='black', lwd=2)
+
+legend("topleft", 
+       legend=c("Branca", "Parda", "Preta"),
+       col=c("blue", "brown", "black"), 
+       lty=1, lwd=2, bty='n', cex=0.8)
+```
 
 
 <br>
