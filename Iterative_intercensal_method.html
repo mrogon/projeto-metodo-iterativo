@@ -12,7 +12,7 @@
 <meta name="author" content="Marcos R. Gonzaga (UFRN)" />
 
 
-<title>Aplicação do Método Iterativo Intercensal para estimativas de tábuas de vida por sexo e raça: solução em Ambiente R</title>
+<title>Expectativa de vida pora raça/cor no Brasil entre 2012 e 2022: aplicação do Método Iterativo Intercensal em ambiente R</title>
 
 <script>// Pandoc 2.9 adds attributes on both header and div. We remove the former (to
 // be compatible with the behavior of Pandoc < 2.8).
@@ -2565,6 +2565,230 @@ window.onload = function() {
   PagedTableDoc.initAll();
 };
 </script>
+<script>$(document).ready(function(){
+    if (typeof $('[data-toggle="tooltip"]').tooltip === 'function') {
+        $('[data-toggle="tooltip"]').tooltip();
+    }
+    if ($('[data-toggle="popover"]').popover === 'function') {
+        $('[data-toggle="popover"]').popover();
+    }
+});
+</script>
+<style type="text/css">
+.lightable-minimal {
+border-collapse: separate;
+border-spacing: 16px 1px;
+width: 100%;
+margin-bottom: 10px;
+}
+.lightable-minimal td {
+margin-left: 5px;
+margin-right: 5px;
+}
+.lightable-minimal th {
+margin-left: 5px;
+margin-right: 5px;
+}
+.lightable-minimal thead tr:last-child th {
+border-bottom: 2px solid #00000050;
+empty-cells: hide;
+}
+.lightable-minimal tbody tr:first-child td {
+padding-top: 0.5em;
+}
+.lightable-minimal.lightable-hover tbody tr:hover {
+background-color: #f5f5f5;
+}
+.lightable-minimal.lightable-striped tbody tr:nth-child(even) {
+background-color: #f5f5f5;
+}
+.lightable-classic {
+border-top: 0.16em solid #111111;
+border-bottom: 0.16em solid #111111;
+width: 100%;
+margin-bottom: 10px;
+margin: 10px 5px;
+}
+.lightable-classic tfoot tr td {
+border: 0;
+}
+.lightable-classic tfoot tr:first-child td {
+border-top: 0.14em solid #111111;
+}
+.lightable-classic caption {
+color: #222222;
+}
+.lightable-classic td {
+padding-left: 5px;
+padding-right: 5px;
+color: #222222;
+}
+.lightable-classic th {
+padding-left: 5px;
+padding-right: 5px;
+font-weight: normal;
+color: #222222;
+}
+.lightable-classic thead tr:last-child th {
+border-bottom: 0.10em solid #111111;
+}
+.lightable-classic.lightable-hover tbody tr:hover {
+background-color: #F9EEC1;
+}
+.lightable-classic.lightable-striped tbody tr:nth-child(even) {
+background-color: #f5f5f5;
+}
+.lightable-classic-2 {
+border-top: 3px double #111111;
+border-bottom: 3px double #111111;
+width: 100%;
+margin-bottom: 10px;
+}
+.lightable-classic-2 tfoot tr td {
+border: 0;
+}
+.lightable-classic-2 tfoot tr:first-child td {
+border-top: 3px double #111111;
+}
+.lightable-classic-2 caption {
+color: #222222;
+}
+.lightable-classic-2 td {
+padding-left: 5px;
+padding-right: 5px;
+color: #222222;
+}
+.lightable-classic-2 th {
+padding-left: 5px;
+padding-right: 5px;
+font-weight: normal;
+color: #222222;
+}
+.lightable-classic-2 tbody tr:last-child td {
+border-bottom: 3px double #111111;
+}
+.lightable-classic-2 thead tr:last-child th {
+border-bottom: 1px solid #111111;
+}
+.lightable-classic-2.lightable-hover tbody tr:hover {
+background-color: #F9EEC1;
+}
+.lightable-classic-2.lightable-striped tbody tr:nth-child(even) {
+background-color: #f5f5f5;
+}
+.lightable-material {
+min-width: 100%;
+white-space: nowrap;
+table-layout: fixed;
+font-family: Roboto, sans-serif;
+border: 1px solid #EEE;
+border-collapse: collapse;
+margin-bottom: 10px;
+}
+.lightable-material tfoot tr td {
+border: 0;
+}
+.lightable-material tfoot tr:first-child td {
+border-top: 1px solid #EEE;
+}
+.lightable-material th {
+height: 56px;
+padding-left: 16px;
+padding-right: 16px;
+}
+.lightable-material td {
+height: 52px;
+padding-left: 16px;
+padding-right: 16px;
+border-top: 1px solid #eeeeee;
+}
+.lightable-material.lightable-hover tbody tr:hover {
+background-color: #f5f5f5;
+}
+.lightable-material.lightable-striped tbody tr:nth-child(even) {
+background-color: #f5f5f5;
+}
+.lightable-material.lightable-striped tbody td {
+border: 0;
+}
+.lightable-material.lightable-striped thead tr:last-child th {
+border-bottom: 1px solid #ddd;
+}
+.lightable-material-dark {
+min-width: 100%;
+white-space: nowrap;
+table-layout: fixed;
+font-family: Roboto, sans-serif;
+border: 1px solid #FFFFFF12;
+border-collapse: collapse;
+margin-bottom: 10px;
+background-color: #363640;
+}
+.lightable-material-dark tfoot tr td {
+border: 0;
+}
+.lightable-material-dark tfoot tr:first-child td {
+border-top: 1px solid #FFFFFF12;
+}
+.lightable-material-dark th {
+height: 56px;
+padding-left: 16px;
+padding-right: 16px;
+color: #FFFFFF60;
+}
+.lightable-material-dark td {
+height: 52px;
+padding-left: 16px;
+padding-right: 16px;
+color: #FFFFFF;
+border-top: 1px solid #FFFFFF12;
+}
+.lightable-material-dark.lightable-hover tbody tr:hover {
+background-color: #FFFFFF12;
+}
+.lightable-material-dark.lightable-striped tbody tr:nth-child(even) {
+background-color: #FFFFFF12;
+}
+.lightable-material-dark.lightable-striped tbody td {
+border: 0;
+}
+.lightable-material-dark.lightable-striped thead tr:last-child th {
+border-bottom: 1px solid #FFFFFF12;
+}
+.lightable-paper {
+width: 100%;
+margin-bottom: 10px;
+color: #444;
+}
+.lightable-paper tfoot tr td {
+border: 0;
+}
+.lightable-paper tfoot tr:first-child td {
+border-top: 1px solid #00000020;
+}
+.lightable-paper thead tr:last-child th {
+color: #666;
+vertical-align: bottom;
+border-bottom: 1px solid #00000020;
+line-height: 1.15em;
+padding: 10px 5px;
+}
+.lightable-paper td {
+vertical-align: middle;
+border-bottom: 1px solid #00000010;
+line-height: 1.15em;
+padding: 7px 5px;
+}
+.lightable-paper.lightable-hover tbody tr:hover {
+background-color: #F9EEC1;
+}
+.lightable-paper.lightable-striped tbody tr:nth-child(even) {
+background-color: #00000008;
+}
+.lightable-paper.lightable-striped tbody td {
+border: 0;
+}
+</style>
 
 <style type="text/css">
 code{white-space: pre-wrap;}
@@ -2861,11 +3085,11 @@ border-radius: 0px;
 
 
 
-<h1 class="title toc-ignore">Aplicação do Método Iterativo Intercensal
-para estimativas de tábuas de vida por sexo e raça: solução em Ambiente
+<h1 class="title toc-ignore">Expectativa de vida pora raça/cor no Brasil
+entre 2012 e 2022: aplicação do Método Iterativo Intercensal em ambiente
 R</h1>
 <h4 class="author">Marcos R. Gonzaga (UFRN)</h4>
-<h4 class="date">20-04-2026</h4>
+<h4 class="date">26-04-2026</h4>
 
 </div>
 
@@ -2981,16 +3205,16 @@ idade por grupo etário <span class="math inline">\(x,x+n\hspace{0.5cm}\)</span>
 \left[\frac{N_x(t_2)}{N_x(t_1)}\right]}{t_2-t_1}\hspace{3cm}(1.1)\]</span>
 <br></p>
 <p><strong>2.</strong> Acúmulo das taxas de crescimento por idade até o
-ponto médio do intervalo etário <span class="math inline">\(x,x+n\hspace{0.5cm}\)</span>:</p>
+ponto médio do intervalo etário <span class="math inline">\(x,x+n\hspace{0.3cm}\)</span>:</p>
 <p><span class="math display">\[S_x=\frac{n}{2}r_x+n\sum_{a=0}^{x-5}r_a
 \hspace{3cm}(1.2)\]</span> <br></p>
 <p><strong>3.</strong> Cálculo da média geometrica das populações por
-etário <span class="math inline">\(x,x+n\hspace{0.5cm}\)</span> entre
-<span class="math inline">\(t_1\)</span> e <span class="math inline">\(t_2\)</span>:</p>
+grupo etário <span class="math inline">\(x,x+n\hspace{0.5cm}\)</span>
+entre <span class="math inline">\(t_1\)</span> e <span class="math inline">\(t_2\)</span>:</p>
 <p><span class="math display">\[N_x^*=\sqrt{N_x(t_1)N_x(t_2)}
 \hspace{3cm}(1.3)\]</span> <br></p>
 <p><strong>4.</strong> Cáculo do número de pessoa-anos vividos entre
-<span class="math inline">\(x\hspace{0.3cm}\)</span> e <span class="math inline">\(x+n\)</span>:</p>
+<span class="math inline">\(x\hspace{0.1cm}\)</span> e <span class="math inline">\(x+n\hspace{0.3cm}\)</span>:</p>
 <p><span class="math display">\[L_x=N_x^*e^{S_x}
 \hspace{3cm}(1.4)\]</span> <br></p>
 <p><strong>5.</strong> Número de indivíduos sobrevivente à idade <span class="math inline">\(x\)</span>:</p>
@@ -3065,23 +3289,17 @@ seguinte estrutura:</p>
 ## 17    80  103773  145637 14787</code></pre>
 <p>Onde:</p>
 <ul>
-<li><p><strong>age_x</strong> = limite inferior do grupo etário</p></li>
-<li><p><strong>N_t1</strong> = População do tempo <span class="math inline">\(t_1\)</span></p></li>
-<li><p><strong>N_t2</strong> = População do tempo <span class="math inline">\(t_2\)</span></p></li>
-<li><p><strong>D</strong> = número médio de óbitos entre <span class="math inline">\(t_1\)</span> e <span class="math inline">\(t_2\)</span></p></li>
+<li><p><strong>age_x</strong> = Limite inferior do grupo
+etário.</p></li>
+<li><p><strong>N_t1</strong> = População do tempo <span class="math inline">\(t_1\)</span>.</p></li>
+<li><p><strong>N_t2</strong> = População do tempo <span class="math inline">\(t_2\)</span>.</p></li>
+<li><p><strong>D</strong> = Número médio de óbitos entre <span class="math inline">\(t_1\)</span> e <span class="math inline">\(t_2\)</span>.</p></li>
 </ul>
-<p>Inicialmente, definem-se os argumentos de entrada da função
-<code>r_method</code> com base nos dados da população masculina do
-Vietnã. Em seguida, a função é aplicada utilizando-se esses
-argumentos:</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" tabindex="-1"></a>t1 <span class="ot">&lt;-</span> <span class="dv">1979</span></span>
-<span id="cb4-2"><a href="#cb4-2" tabindex="-1"></a>t2 <span class="ot">&lt;-</span> <span class="dv">1989</span></span>
-<span id="cb4-3"><a href="#cb4-3" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="dv">5</span></span>
-<span id="cb4-4"><a href="#cb4-4" tabindex="-1"></a></span>
-<span id="cb4-5"><a href="#cb4-5" tabindex="-1"></a>r_method_lt <span class="ot">&lt;-</span> <span class="fu">r_method</span>(data.viet, <span class="dv">1979</span>, <span class="dv">1989</span>, <span class="dv">5</span>)</span></code></pre></div>
-<p>A tábua de vida estimada é condizente com os resultados apresentados
-por <span class="citation">Muniz (2023)</span>:</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" tabindex="-1"></a><span class="fu">print</span>(r_method_lt)</span></code></pre></div>
+<p>O código abaixo estima aa tábua de vida pelo r-method, é condizente
+com os resultados apresentados por <span class="citation">Muniz
+(2023)</span>.</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" tabindex="-1"></a>r_method_lt <span class="ot">&lt;-</span> <span class="fu">r_method</span>(data.viet, <span class="dv">1979</span>, <span class="dv">1989</span>, <span class="dv">5</span>)</span>
+<span id="cb4-2"><a href="#cb4-2" tabindex="-1"></a><span class="fu">print</span>(r_method_lt)</span></code></pre></div>
 <pre><code>##    age_x    N_t1    N_t2     D          r_x        S_x  N_x_star       L_x
 ## 1      0 3946224 4710423 48508  0.017701854 0.04425464 4311424.9 4506510.3
 ## 2      5 3928795 4430179  8029  0.012010723 0.11853608 4171961.8 4696992.7
@@ -3122,11 +3340,10 @@ por <span class="citation">Muniz (2023)</span>:</p>
 </div>
 <div id="método-de-distribuição-dos-óbitos-ddm" class="section level3">
 <h3><strong>2. Método de Distribuição dos Óbitos (DDM)</strong></h3>
-<p>Igualmente ao r-method, este método, proposto por <span class="citation">Bennett and Horiuchi (1984)</span>, pertence a uma
-classificação mais ampla, que é a dos métodos de Método de Distribuição
-dos Óbitos, como o Growth Balance <span class="citation">(Brass
-1975)</span>, o General Growth Balance de <span class="citation">(Hill
-1987)</span> e o Synthetic Extinct Generation <span class="citation">(Bennett and Horiuchi 1981)</span>.</p>
+<p>Este método, proposto por <span class="citation">Bennett and Horiuchi
+(1984)</span>, pertence a uma classificação mais ampla, que é a dos
+Métodos de Distribuição dos Óbitos, como o Growth Balance <span class="citation">(Brass 1975)</span>, o General Growth Balance de <span class="citation">(Hill 1987)</span> e o Synthetic Extinct Generation
+<span class="citation">(Bennett and Horiuchi 1981)</span>.</p>
 <p>Trata-se de uma técnica de estimação de mortalidade voltada para
 contextos marcados pelo sub-registro de óbitos e por imprecisões na
 declaração da idade <span class="citation">(Bennett and Horiuchi
@@ -3135,36 +3352,38 @@ de vida (<span class="math inline">\(d_x\)</span>) a partir da média
 anual de óbitos observados na população (<span class="math inline">\(D_x\)</span>) entre dois pontos no tempo (<span class="math inline">\(t_1\)</span> e <span class="math inline">\(t_2\)</span>). Para tanto, a distribuição dos
 óbitos registrados é convertida na distribuição correspondente da tábua
 de vida por meio das taxas de crescimento específicas por idade do
-período intercensitário. A premissa central dessa abordagem é que a
+período intercensitário. O pressuposto central dessa abordagem é que a
 magnitude do sub-registro de óbitos permanece constante em todas as
-faixas etárias.</p>
+faixas etárias. Apresentam-se, a seguir, os cálculos das funções para a
+obtenção da tábua de vida Método de Distribuição dos Óbitos proposto por
+<span class="citation">Bennett and Horiuchi (1984)</span>.</p>
 <p><br></p>
-<strong>ALGORITMO 2: cálculos do Método de Distribuição dos Óbitos
-</strong>
+<strong>ALGORITMO 2: cálculos do Método de Distribuição dos
+Óbitos</strong>
 <div style="border: 2px solid #2c3e50; padding: 15px; border-radius: 5px;">
-<p><strong>1.</strong> O número de óbitos entre as idades <span class="math inline">\(x\)</span> e <span class="math inline">\(x+n\)</span> na tábua de vida para grupos etários
-quinquenaus é uma função do número de óbitos registrados e da acumulação
-das taxas de crescimento específicas por idade:</p>
+<p><strong>1.</strong> O número de óbitos entre as idades <span class="math inline">\(x\)</span> e <span class="math inline">\(x+n\hspace{0.2cm}\)</span> na tábua de vida é uma
+função do número de óbitos registrados e da acumulação das taxas de
+crescimento específicas por idade:</p>
 <p><span class="math display">\[d_x=D_xexp\left[\frac{n}{2}\left(\sum_{a=0}^{x}r_a+\sum_{a=5}^{x-5}r_a\right)\right]
 \hspace{3cm}(2.1)\]</span> <br></p>
 <p>Na equação <span class="math inline">\((2.1)\)</span> assume-se que
 <span class="math inline">\(d_0=D_0 \hspace{0.5cm}\)</span> e <span class="math inline">\(d_5=D_5exp\left[(n/2)(r_0+r_5)\right]\hspace{1cm}\)</span>.</p>
 <p><br></p>
 <p><strong>2.</strong> O número de anos-pessoa vividos pela coorte entre
-as idades <span class="math inline">\(x\)</span> e <span class="math inline">\(x+n\)</span> é dado por:</p>
+as idades <span class="math inline">\(x\)</span> e <span class="math inline">\(x+n\hspace{0.5cm}\)</span> é dado por:</p>
 <p><span class="math display">\[L_x=nl_{x+n}+\frac{n}{2}d_x\hspace{1cm}
 \forall \hspace{0.5cm} x &gt; 0 \hspace{0.5cm} and \hspace{0.5cm} x
 \leqslant 75\hspace{3cm}(2.2)\]</span> Para o primeiro grupo etário
 considere <span class="math inline">\(L_0=nl_5+0.78d_0
-\hspace{0.5cm}\)</span>. Já para o último grupo etário faça <span class="math inline">\(L_{80+}=l_{80}log_{10}(l_{80})
-\hspace{0.5cm}\)</span>.</p>
+\hspace{1cm}\)</span>. Já para o último grupo etário faça <span class="math inline">\(L_{80+}=l_{80}log_{10}(l_{80})
+\hspace{1cm}\)</span>.</p>
 <p><br></p>
-<p><strong>3.</strong> A probabilidade de morte entre a idade <span class="math inline">\(x\)</span> e <span class="math inline">\(x+n\)</span> é igual à razão entre o número de
-óbitos entre <span class="math inline">\(x\)</span> e <span class="math inline">\(x+n\)</span> e os sobreviventes à idade exata
-<span class="math inline">\(x\)</span>:</p>
+<p><strong>3.</strong> A probabilidade de morte entre a idade <span class="math inline">\(x\)</span> e <span class="math inline">\(x+n\hspace{0.5cm}\)</span> é igual à razão entre o
+número de óbitos entre <span class="math inline">\(x\)</span> e <span class="math inline">\(x+n\hspace{0.5cm}\)</span> e os sobreviventes à
+idade exata <span class="math inline">\(x\)</span>:</p>
 <p><span class="math display">\[q_x=\frac{d_x}{l_x}=\frac{l_x-l_{x+n}}{l_x}
 \hspace{3cm}(2.3)\]</span> <br></p>
-<p><strong>4.</strong> Número de anos-pessoa vividos acima da idade
+<p><strong>4.</strong> O número de anos-pessoa vividos acima da idade
 <span class="math inline">\(x\)</span> é dado por:</p>
 <p><span class="math display">\[T_x=\sum_{a\geq x}^{\infty}L_a
 \hspace{3cm}(2.4)\]</span> <br></p>
@@ -3174,82 +3393,80 @@ considere <span class="math inline">\(L_0=nl_5+0.78d_0
 </div>
 <p><br></p>
 <p>O código abaixo implementa uma função para a aplicação do Método de
-Distribuição dos Óbitos em R.</p>
+Distribuição dos Óbitos.</p>
 <p><strong>Função implementada para o Método de Distribuição dos
-Óbitos</strong></p>
-<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" tabindex="-1"></a>DDM <span class="ot">&lt;-</span> <span class="cf">function</span>(df, t1, t2, <span class="at">n =</span> <span class="dv">5</span>) {</span>
-<span id="cb7-2"><a href="#cb7-2" tabindex="-1"></a>  </span>
-<span id="cb7-3"><a href="#cb7-3" tabindex="-1"></a>  <span class="co"># Preparação dos dados:</span></span>
-<span id="cb7-4"><a href="#cb7-4" tabindex="-1"></a>  df<span class="sc">$</span>N_t1 <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(df<span class="sc">$</span>N_t1)</span>
-<span id="cb7-5"><a href="#cb7-5" tabindex="-1"></a>  df<span class="sc">$</span>N_t2 <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(df<span class="sc">$</span>N_t2)</span>
-<span id="cb7-6"><a href="#cb7-6" tabindex="-1"></a>  df<span class="sc">$</span>D <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(df<span class="sc">$</span>D)</span>
-<span id="cb7-7"><a href="#cb7-7" tabindex="-1"></a>  </span>
-<span id="cb7-8"><a href="#cb7-8" tabindex="-1"></a>  <span class="co"># Taxa de crescimento (r_x)</span></span>
-<span id="cb7-9"><a href="#cb7-9" tabindex="-1"></a>  df<span class="sc">$</span>r_x <span class="ot">&lt;-</span> <span class="fu">log</span>(df<span class="sc">$</span>N_t2 <span class="sc">/</span> df<span class="sc">$</span>N_t1) <span class="sc">/</span> (t2 <span class="sc">-</span> t1)</span>
-<span id="cb7-10"><a href="#cb7-10" tabindex="-1"></a>  </span>
-<span id="cb7-11"><a href="#cb7-11" tabindex="-1"></a>  <span class="co"># Cálculo de d_x (Equação 2.1):</span></span>
-<span id="cb7-12"><a href="#cb7-12" tabindex="-1"></a>  r <span class="ot">&lt;-</span> df<span class="sc">$</span>r_x</span>
-<span id="cb7-13"><a href="#cb7-13" tabindex="-1"></a>  D <span class="ot">&lt;-</span> df<span class="sc">$</span>D</span>
-<span id="cb7-14"><a href="#cb7-14" tabindex="-1"></a>  dx_vec <span class="ot">&lt;-</span> <span class="fu">numeric</span>(<span class="fu">nrow</span>(df))</span>
-<span id="cb7-15"><a href="#cb7-15" tabindex="-1"></a>  </span>
-<span id="cb7-16"><a href="#cb7-16" tabindex="-1"></a>  dx_vec[<span class="dv">1</span>] <span class="ot">&lt;-</span> D[<span class="dv">1</span>] <span class="co"># d0 = D0</span></span>
-<span id="cb7-17"><a href="#cb7-17" tabindex="-1"></a>  <span class="cf">if</span>(<span class="fu">nrow</span>(df) <span class="sc">&gt;</span> <span class="dv">1</span>) {</span>
-<span id="cb7-18"><a href="#cb7-18" tabindex="-1"></a>    dx_vec[<span class="dv">2</span>] <span class="ot">&lt;-</span> D[<span class="dv">2</span>] <span class="sc">*</span> <span class="fu">exp</span>((n<span class="sc">/</span><span class="dv">2</span>) <span class="sc">*</span> (r[<span class="dv">1</span>] <span class="sc">+</span> r[<span class="dv">2</span>])) <span class="co"># d5</span></span>
-<span id="cb7-19"><a href="#cb7-19" tabindex="-1"></a>  }</span>
-<span id="cb7-20"><a href="#cb7-20" tabindex="-1"></a>  </span>
-<span id="cb7-21"><a href="#cb7-21" tabindex="-1"></a>  <span class="cf">if</span>(<span class="fu">nrow</span>(df) <span class="sc">&gt;</span> <span class="dv">2</span>) {</span>
-<span id="cb7-22"><a href="#cb7-22" tabindex="-1"></a>    <span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">3</span><span class="sc">:</span><span class="fu">nrow</span>(df)) {</span>
-<span id="cb7-23"><a href="#cb7-23" tabindex="-1"></a>      <span class="co"># Soma de r_a de 0 até x (index 1 até i)</span></span>
-<span id="cb7-24"><a href="#cb7-24" tabindex="-1"></a>      sum_0_x <span class="ot">&lt;-</span> <span class="fu">sum</span>(r[<span class="dv">1</span><span class="sc">:</span>i])</span>
-<span id="cb7-25"><a href="#cb7-25" tabindex="-1"></a>      <span class="co"># Soma de r_a de 5 até x-5 (index 2 até i-1)</span></span>
-<span id="cb7-26"><a href="#cb7-26" tabindex="-1"></a>      sum_5_xm5 <span class="ot">&lt;-</span> <span class="fu">sum</span>(r[<span class="dv">2</span><span class="sc">:</span>(i<span class="dv">-1</span>)])</span>
-<span id="cb7-27"><a href="#cb7-27" tabindex="-1"></a>      </span>
-<span id="cb7-28"><a href="#cb7-28" tabindex="-1"></a>      dx_vec[i] <span class="ot">&lt;-</span> D[i] <span class="sc">*</span> <span class="fu">exp</span>((n<span class="sc">/</span><span class="dv">2</span>) <span class="sc">*</span> (sum_0_x <span class="sc">+</span> sum_5_xm5))</span>
-<span id="cb7-29"><a href="#cb7-29" tabindex="-1"></a>    }</span>
-<span id="cb7-30"><a href="#cb7-30" tabindex="-1"></a>  }</span>
-<span id="cb7-31"><a href="#cb7-31" tabindex="-1"></a>  df<span class="sc">$</span>d_x <span class="ot">&lt;-</span> dx_vec</span>
-<span id="cb7-32"><a href="#cb7-32" tabindex="-1"></a>  </span>
-<span id="cb7-33"><a href="#cb7-33" tabindex="-1"></a>  <span class="co"># Cálculo de l_x (Sobreviventes)</span></span>
-<span id="cb7-34"><a href="#cb7-34" tabindex="-1"></a>  <span class="co"># Soma reversa: quem sobrevive à idade x é a soma de todos que morrerão no futuro</span></span>
-<span id="cb7-35"><a href="#cb7-35" tabindex="-1"></a>  df<span class="sc">$</span>l_x <span class="ot">&lt;-</span> <span class="fu">rev</span>(<span class="fu">cumsum</span>(<span class="fu">rev</span>(df<span class="sc">$</span>d_x)))</span>
-<span id="cb7-36"><a href="#cb7-36" tabindex="-1"></a>  </span>
-<span id="cb7-37"><a href="#cb7-37" tabindex="-1"></a>  <span class="co"># Cálculo de L_x:</span></span>
-<span id="cb7-38"><a href="#cb7-38" tabindex="-1"></a>  Lx_vec <span class="ot">&lt;-</span> <span class="fu">numeric</span>(<span class="fu">nrow</span>(df))</span>
-<span id="cb7-39"><a href="#cb7-39" tabindex="-1"></a>  lx <span class="ot">&lt;-</span> df<span class="sc">$</span>l_x</span>
-<span id="cb7-40"><a href="#cb7-40" tabindex="-1"></a>  dx <span class="ot">&lt;-</span> df<span class="sc">$</span>d_x</span>
-<span id="cb7-41"><a href="#cb7-41" tabindex="-1"></a>  </span>
-<span id="cb7-42"><a href="#cb7-42" tabindex="-1"></a>  <span class="co"># L0 (Primeira linha):</span></span>
-<span id="cb7-43"><a href="#cb7-43" tabindex="-1"></a>  Lx_vec[<span class="dv">1</span>] <span class="ot">&lt;-</span> n <span class="sc">*</span> lx[<span class="dv">2</span>] <span class="sc">+</span> <span class="fl">0.78</span> <span class="sc">*</span> dx[<span class="dv">1</span>]</span>
-<span id="cb7-44"><a href="#cb7-44" tabindex="-1"></a>  </span>
-<span id="cb7-45"><a href="#cb7-45" tabindex="-1"></a>  <span class="co"># L_last (Última linha - Grupo aberto 80+)</span></span>
-<span id="cb7-46"><a href="#cb7-46" tabindex="-1"></a>  last <span class="ot">&lt;-</span> <span class="fu">nrow</span>(df)</span>
-<span id="cb7-47"><a href="#cb7-47" tabindex="-1"></a>  Lx_vec[last] <span class="ot">&lt;-</span> lx[last] <span class="sc">*</span> <span class="fu">log10</span>(lx[last])</span>
-<span id="cb7-48"><a href="#cb7-48" tabindex="-1"></a>  </span>
-<span id="cb7-49"><a href="#cb7-49" tabindex="-1"></a>  <span class="co"># Lx para 0 &lt; x &lt;= 75 (grupos etários intermediários):</span></span>
-<span id="cb7-50"><a href="#cb7-50" tabindex="-1"></a>  <span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">2</span><span class="sc">:</span>(last<span class="dv">-1</span>)) {</span>
-<span id="cb7-51"><a href="#cb7-51" tabindex="-1"></a>    Lx_vec[i] <span class="ot">&lt;-</span> n <span class="sc">*</span> lx[i<span class="sc">+</span><span class="dv">1</span>] <span class="sc">+</span> (n<span class="sc">/</span><span class="dv">2</span>) <span class="sc">*</span> dx[i]</span>
-<span id="cb7-52"><a href="#cb7-52" tabindex="-1"></a>  }</span>
-<span id="cb7-53"><a href="#cb7-53" tabindex="-1"></a>  df<span class="sc">$</span>L_x <span class="ot">&lt;-</span> Lx_vec</span>
-<span id="cb7-54"><a href="#cb7-54" tabindex="-1"></a>  </span>
-<span id="cb7-55"><a href="#cb7-55" tabindex="-1"></a>  <span class="co"># Probabilidade de morte (q_x)</span></span>
-<span id="cb7-56"><a href="#cb7-56" tabindex="-1"></a>  df<span class="sc">$</span>q_x <span class="ot">&lt;-</span> df<span class="sc">$</span>d_x <span class="sc">/</span> df<span class="sc">$</span>l_x</span>
-<span id="cb7-57"><a href="#cb7-57" tabindex="-1"></a>  </span>
-<span id="cb7-58"><a href="#cb7-58" tabindex="-1"></a>  <span class="co"># Anos vividos acima da idade x:</span></span>
-<span id="cb7-59"><a href="#cb7-59" tabindex="-1"></a>  df<span class="sc">$</span>T_x <span class="ot">&lt;-</span> <span class="fu">rev</span>(<span class="fu">cumsum</span>(<span class="fu">rev</span>(df<span class="sc">$</span>L_x)))</span>
-<span id="cb7-60"><a href="#cb7-60" tabindex="-1"></a>  </span>
-<span id="cb7-61"><a href="#cb7-61" tabindex="-1"></a>  <span class="co"># Expectativa de vida na idade x:</span></span>
-<span id="cb7-62"><a href="#cb7-62" tabindex="-1"></a>  df<span class="sc">$</span>e_x <span class="ot">&lt;-</span> df<span class="sc">$</span>T_x <span class="sc">/</span> df<span class="sc">$</span>l_x</span>
-<span id="cb7-63"><a href="#cb7-63" tabindex="-1"></a>  </span>
-<span id="cb7-64"><a href="#cb7-64" tabindex="-1"></a>  <span class="fu">return</span>(df)</span>
-<span id="cb7-65"><a href="#cb7-65" tabindex="-1"></a>}</span></code></pre></div>
+Óbitos:</strong></p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" tabindex="-1"></a>DDM <span class="ot">&lt;-</span> <span class="cf">function</span>(df, t1, t2, <span class="at">n =</span> <span class="dv">5</span>) {</span>
+<span id="cb6-2"><a href="#cb6-2" tabindex="-1"></a>  </span>
+<span id="cb6-3"><a href="#cb6-3" tabindex="-1"></a>  <span class="co"># Preparação dos dados:</span></span>
+<span id="cb6-4"><a href="#cb6-4" tabindex="-1"></a>  df<span class="sc">$</span>N_t1 <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(df<span class="sc">$</span>N_t1)</span>
+<span id="cb6-5"><a href="#cb6-5" tabindex="-1"></a>  df<span class="sc">$</span>N_t2 <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(df<span class="sc">$</span>N_t2)</span>
+<span id="cb6-6"><a href="#cb6-6" tabindex="-1"></a>  df<span class="sc">$</span>D <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(df<span class="sc">$</span>D)</span>
+<span id="cb6-7"><a href="#cb6-7" tabindex="-1"></a>  </span>
+<span id="cb6-8"><a href="#cb6-8" tabindex="-1"></a>  <span class="co"># Taxa de crescimento (r_x)</span></span>
+<span id="cb6-9"><a href="#cb6-9" tabindex="-1"></a>  df<span class="sc">$</span>r_x <span class="ot">&lt;-</span> <span class="fu">log</span>(df<span class="sc">$</span>N_t2 <span class="sc">/</span> df<span class="sc">$</span>N_t1) <span class="sc">/</span> (t2 <span class="sc">-</span> t1)</span>
+<span id="cb6-10"><a href="#cb6-10" tabindex="-1"></a>  </span>
+<span id="cb6-11"><a href="#cb6-11" tabindex="-1"></a>  <span class="co"># Cálculo de d_x (Equação 2.1):</span></span>
+<span id="cb6-12"><a href="#cb6-12" tabindex="-1"></a>  r <span class="ot">&lt;-</span> df<span class="sc">$</span>r_x</span>
+<span id="cb6-13"><a href="#cb6-13" tabindex="-1"></a>  D <span class="ot">&lt;-</span> df<span class="sc">$</span>D</span>
+<span id="cb6-14"><a href="#cb6-14" tabindex="-1"></a>  dx_vec <span class="ot">&lt;-</span> <span class="fu">numeric</span>(<span class="fu">nrow</span>(df))</span>
+<span id="cb6-15"><a href="#cb6-15" tabindex="-1"></a>  </span>
+<span id="cb6-16"><a href="#cb6-16" tabindex="-1"></a>  dx_vec[<span class="dv">1</span>] <span class="ot">&lt;-</span> D[<span class="dv">1</span>] <span class="co"># d0 = D0</span></span>
+<span id="cb6-17"><a href="#cb6-17" tabindex="-1"></a>  <span class="cf">if</span>(<span class="fu">nrow</span>(df) <span class="sc">&gt;</span> <span class="dv">1</span>) {</span>
+<span id="cb6-18"><a href="#cb6-18" tabindex="-1"></a>    dx_vec[<span class="dv">2</span>] <span class="ot">&lt;-</span> D[<span class="dv">2</span>] <span class="sc">*</span> <span class="fu">exp</span>((n<span class="sc">/</span><span class="dv">2</span>) <span class="sc">*</span> (r[<span class="dv">1</span>] <span class="sc">+</span> r[<span class="dv">2</span>])) <span class="co"># d5</span></span>
+<span id="cb6-19"><a href="#cb6-19" tabindex="-1"></a>  }</span>
+<span id="cb6-20"><a href="#cb6-20" tabindex="-1"></a>  </span>
+<span id="cb6-21"><a href="#cb6-21" tabindex="-1"></a>  <span class="cf">if</span>(<span class="fu">nrow</span>(df) <span class="sc">&gt;</span> <span class="dv">2</span>) {</span>
+<span id="cb6-22"><a href="#cb6-22" tabindex="-1"></a>    <span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">3</span><span class="sc">:</span><span class="fu">nrow</span>(df)) {</span>
+<span id="cb6-23"><a href="#cb6-23" tabindex="-1"></a>      <span class="co"># Soma de r_a de 0 até x (index 1 até i)</span></span>
+<span id="cb6-24"><a href="#cb6-24" tabindex="-1"></a>      sum_0_x <span class="ot">&lt;-</span> <span class="fu">sum</span>(r[<span class="dv">1</span><span class="sc">:</span>i])</span>
+<span id="cb6-25"><a href="#cb6-25" tabindex="-1"></a>      <span class="co"># Soma de r_a de 5 até x-5 (index 2 até i-1)</span></span>
+<span id="cb6-26"><a href="#cb6-26" tabindex="-1"></a>      sum_5_xm5 <span class="ot">&lt;-</span> <span class="fu">sum</span>(r[<span class="dv">2</span><span class="sc">:</span>(i<span class="dv">-1</span>)])</span>
+<span id="cb6-27"><a href="#cb6-27" tabindex="-1"></a>      </span>
+<span id="cb6-28"><a href="#cb6-28" tabindex="-1"></a>      dx_vec[i] <span class="ot">&lt;-</span> D[i] <span class="sc">*</span> <span class="fu">exp</span>((n<span class="sc">/</span><span class="dv">2</span>) <span class="sc">*</span> (sum_0_x <span class="sc">+</span> sum_5_xm5))</span>
+<span id="cb6-29"><a href="#cb6-29" tabindex="-1"></a>    }</span>
+<span id="cb6-30"><a href="#cb6-30" tabindex="-1"></a>  }</span>
+<span id="cb6-31"><a href="#cb6-31" tabindex="-1"></a>  df<span class="sc">$</span>d_x <span class="ot">&lt;-</span> dx_vec</span>
+<span id="cb6-32"><a href="#cb6-32" tabindex="-1"></a>  </span>
+<span id="cb6-33"><a href="#cb6-33" tabindex="-1"></a>  <span class="co"># Cálculo de l_x (Sobreviventes)</span></span>
+<span id="cb6-34"><a href="#cb6-34" tabindex="-1"></a>  <span class="co"># Soma reversa: quem sobrevive à idade x é a soma de todos que morrerão no futuro</span></span>
+<span id="cb6-35"><a href="#cb6-35" tabindex="-1"></a>  df<span class="sc">$</span>l_x <span class="ot">&lt;-</span> <span class="fu">rev</span>(<span class="fu">cumsum</span>(<span class="fu">rev</span>(df<span class="sc">$</span>d_x)))</span>
+<span id="cb6-36"><a href="#cb6-36" tabindex="-1"></a>  </span>
+<span id="cb6-37"><a href="#cb6-37" tabindex="-1"></a>  <span class="co"># Cálculo de L_x:</span></span>
+<span id="cb6-38"><a href="#cb6-38" tabindex="-1"></a>  Lx_vec <span class="ot">&lt;-</span> <span class="fu">numeric</span>(<span class="fu">nrow</span>(df))</span>
+<span id="cb6-39"><a href="#cb6-39" tabindex="-1"></a>  lx <span class="ot">&lt;-</span> df<span class="sc">$</span>l_x</span>
+<span id="cb6-40"><a href="#cb6-40" tabindex="-1"></a>  dx <span class="ot">&lt;-</span> df<span class="sc">$</span>d_x</span>
+<span id="cb6-41"><a href="#cb6-41" tabindex="-1"></a>  </span>
+<span id="cb6-42"><a href="#cb6-42" tabindex="-1"></a>  <span class="co"># L0 (Primeira linha):</span></span>
+<span id="cb6-43"><a href="#cb6-43" tabindex="-1"></a>  Lx_vec[<span class="dv">1</span>] <span class="ot">&lt;-</span> n <span class="sc">*</span> lx[<span class="dv">2</span>] <span class="sc">+</span> <span class="fl">0.78</span> <span class="sc">*</span> dx[<span class="dv">1</span>]</span>
+<span id="cb6-44"><a href="#cb6-44" tabindex="-1"></a>  </span>
+<span id="cb6-45"><a href="#cb6-45" tabindex="-1"></a>  <span class="co"># L_last (Última linha - Grupo aberto 80+)</span></span>
+<span id="cb6-46"><a href="#cb6-46" tabindex="-1"></a>  last <span class="ot">&lt;-</span> <span class="fu">nrow</span>(df)</span>
+<span id="cb6-47"><a href="#cb6-47" tabindex="-1"></a>  Lx_vec[last] <span class="ot">&lt;-</span> lx[last] <span class="sc">*</span> <span class="fu">log10</span>(lx[last])</span>
+<span id="cb6-48"><a href="#cb6-48" tabindex="-1"></a>  </span>
+<span id="cb6-49"><a href="#cb6-49" tabindex="-1"></a>  <span class="co"># Lx para 0 &lt; x &lt;= 75 (grupos etários intermediários):</span></span>
+<span id="cb6-50"><a href="#cb6-50" tabindex="-1"></a>  <span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">2</span><span class="sc">:</span>(last<span class="dv">-1</span>)) {</span>
+<span id="cb6-51"><a href="#cb6-51" tabindex="-1"></a>    Lx_vec[i] <span class="ot">&lt;-</span> n <span class="sc">*</span> lx[i<span class="sc">+</span><span class="dv">1</span>] <span class="sc">+</span> (n<span class="sc">/</span><span class="dv">2</span>) <span class="sc">*</span> dx[i]</span>
+<span id="cb6-52"><a href="#cb6-52" tabindex="-1"></a>  }</span>
+<span id="cb6-53"><a href="#cb6-53" tabindex="-1"></a>  df<span class="sc">$</span>L_x <span class="ot">&lt;-</span> Lx_vec</span>
+<span id="cb6-54"><a href="#cb6-54" tabindex="-1"></a>  </span>
+<span id="cb6-55"><a href="#cb6-55" tabindex="-1"></a>  <span class="co"># Probabilidade de morte (q_x)</span></span>
+<span id="cb6-56"><a href="#cb6-56" tabindex="-1"></a>  df<span class="sc">$</span>q_x <span class="ot">&lt;-</span> df<span class="sc">$</span>d_x <span class="sc">/</span> df<span class="sc">$</span>l_x</span>
+<span id="cb6-57"><a href="#cb6-57" tabindex="-1"></a>  </span>
+<span id="cb6-58"><a href="#cb6-58" tabindex="-1"></a>  <span class="co"># Anos vividos acima da idade x:</span></span>
+<span id="cb6-59"><a href="#cb6-59" tabindex="-1"></a>  df<span class="sc">$</span>T_x <span class="ot">&lt;-</span> <span class="fu">rev</span>(<span class="fu">cumsum</span>(<span class="fu">rev</span>(df<span class="sc">$</span>L_x)))</span>
+<span id="cb6-60"><a href="#cb6-60" tabindex="-1"></a>  </span>
+<span id="cb6-61"><a href="#cb6-61" tabindex="-1"></a>  <span class="co"># Expectativa de vida na idade x:</span></span>
+<span id="cb6-62"><a href="#cb6-62" tabindex="-1"></a>  df<span class="sc">$</span>e_x <span class="ot">&lt;-</span> df<span class="sc">$</span>T_x <span class="sc">/</span> df<span class="sc">$</span>l_x</span>
+<span id="cb6-63"><a href="#cb6-63" tabindex="-1"></a>  </span>
+<span id="cb6-64"><a href="#cb6-64" tabindex="-1"></a>  <span class="fu">return</span>(df)</span>
+<span id="cb6-65"><a href="#cb6-65" tabindex="-1"></a>}</span></code></pre></div>
 <p>Aplica-se a função<code>DDM</code> aos dados da população masculina
-do Vietnã :</p>
-<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" tabindex="-1"></a>DDM_lt <span class="ot">&lt;-</span> <span class="fu">DDM</span>(data.viet, <span class="dv">1979</span>, <span class="dv">1989</span>, <span class="dv">5</span>)</span></code></pre></div>
-<p>Assim como nos resultados para o <em>r-method</em>, a tábua de vida
-estimada pelo Método de Distribuição dos Óbitos é condizente com os
-resultados apresentados por <span class="citation">Muniz
-(2023)</span>:</p>
-<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" tabindex="-1"></a><span class="fu">print</span>(DDM_lt)</span></code></pre></div>
+do Vietnã, conforme código abaixo. Assim como nos resultados para o
+<em>r-method</em>, a tábua de vida estimada pelo Método de Distribuição
+dos Óbitos é condizente com os resultados apresentados por <span class="citation">Muniz (2023)</span>.</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" tabindex="-1"></a>DDM_lt <span class="ot">&lt;-</span> <span class="fu">DDM</span>(data.viet, <span class="dv">1979</span>, <span class="dv">1989</span>, <span class="dv">5</span>)</span>
+<span id="cb7-2"><a href="#cb7-2" tabindex="-1"></a><span class="fu">print</span>(DDM_lt)</span></code></pre></div>
 <pre><code>##    age_x    N_t1    N_t2     D          r_x       d_x       l_x       L_x
 ## 1      0 3946224 4710423 48508  0.017701854 48508.000 546274.18 2526667.1
 ## 2      5 3928795 4430179  8029  0.012010723  8648.115 497766.18 2467210.6
@@ -3296,10 +3513,11 @@ cobertura, “corrigindo” a população do segundo censo através de
 projeções sucessivas baseadas nas razões de sobrevivência estimadas pelo
 método DDM. Trata-se de um método iterativo em duas etapas que busca
 conciliar os métodos anteriores.</p>
-<p>Este método permite comparar as expectativas de vida pelos três
-métodos, permitindo observar como a iteração tende a suavizar anomalias
-causadas por fluxos migratórios não registrados entre os censos e
-subregistro de óbitos nos registros vitais.</p>
+<p>Este método possibilita estimar as expectativas de vida observando
+como a iteração tende a suavizar anomalias causadas por fluxos
+migratórios não registrados entre os censos e subregistro de óbitos nos
+registros vitais. O código abaixo implementa uma função para a aplicação
+do Método Iterativo Intercensal.</p>
 <p><br></p>
 <strong>ALGORITMO 3: cálculos do Método Iterativo Intercensal</strong>
 <div style="border: 2px solid #2c3e50; padding: 15px; border-radius: 5px;">
@@ -3322,9 +3540,10 @@ respectivas razões de sobrevivência sobre essa população projetada,
 obtém-se a projeção para mais cinco anos, atingindo-se o tempo <span class="math inline">\(t_2\)</span>. Esse encadeamento de projeções é
 operacionalizado da seguinte forma:</p>
 <p><span class="math display">\[N_{x+10}(t_2)^{proj}=N_x(t_1)p_xp_{x+5}\hspace{1cm}
-para \hspace{0.5cm} x\ge10 \hspace{3cm}(3.2)\]</span> Esta equação
-projeta o contingente populacional do ano base — <span class="math inline">\(P(t_1)\)</span> — da idade <span class="math inline">\(x\)</span> para a idade <span class="math inline">\(x+10\)</span>, dez anos à frente, correspondendo a
-<span class="math inline">\(P(t_2)\)</span>.</p>
+para \hspace{0.5cm} x\ge10 \hspace{3cm}(3.2)\]</span> A Equação <span class="math inline">\((3.2)\)</span> projeta o contingente populacional
+do ano base — <span class="math inline">\(P(t_1)\)</span> — da idade
+<span class="math inline">\(x\)</span> para a idade <span class="math inline">\(x+10\hspace{0.5cm}(3.2)\)</span>, dez anos à
+frente, correspondendo a <span class="math inline">\(P(t_2)\hspace{0.5cm}\)</span>.</p>
 <p>Para o primeiro grupo etário, <span class="citation">Merli
 (1998)</span> sugere o emprego da seguinte equação:</p>
 <p><span class="math display">\[N_0(t_1+5)^{proj}=N_0(t_1)p_0exp\left[
@@ -3334,12 +3553,13 @@ para o último grupo etário:</p>
 </div>
 <p><br></p>
 <p>As equações <span class="math inline">\((3.3)\)</span> e <span class="math inline">\((3.4)\)</span> devem ser aplicadas novamente sobre
-as populações projetadas para <span class="math inline">\(t_1+5\)</span>, visando deslocá-las para <span class="math inline">\(t_1+10\)</span> e obtendo-se, assim, a população
-projetada para <span class="math inline">\(t_2\)</span>. Um passo
-adicional é requerido para estimar a população projetada no último grupo
-etário em <span class="math inline">\(t_2\)</span>. Especificamente,
-deve-se projetar a população da faixa de 70 a 74 anos — <span class="math inline">\(N_{70}(t_1)\)</span> — para <span class="math inline">\(t_1+5\)</span>, utilizando o produto <span class="math inline">\(N_{70}(t_1)p_{70}\)</span>, a fim de compor a
-projeção do grupo etário aberto (<span class="math inline">\(N_{80+}\)</span>), conforme estabelecido na
+as populações projetadas para <span class="math inline">\(t_1+5\hspace{0.5cm}\)</span>, visando deslocá-las
+para <span class="math inline">\(t_1+10\hspace{0.5cm}\)</span> e
+obtendo-se, assim, a população projetada para <span class="math inline">\(t_2\)</span>. Um passo adicional é requerido para
+estimar a população projetada no último grupo etário em <span class="math inline">\(t_2\)</span>. Especificamente, deve-se projetar a
+população da faixa de 70 a 74 anos — <span class="math inline">\(N_{70}(t_1)\)</span> — para <span class="math inline">\(t_1+5\hspace{0.5cm}\)</span>, utilizando o produto
+<span class="math inline">\(N_{70}(t_1)p_{70}\hspace{0.5cm}\)</span>, a
+fim de compor a projeção do grupo etário aberto (<span class="math inline">\(N_{80+}\)</span>), conforme estabelecido na
 equação <span class="math inline">\((3.4)\)</span>.</p>
 <p>A função <code>MII</code>, apresentada no código abaixo, segue as
 especificações das Equações <span class="math inline">\((3.3)\)</span> e
@@ -3353,95 +3573,95 @@ coorte de 75-79 anos e pelos sobreviventes daqueles que já pertenciam ao
 grupo <span class="math inline">\(80+\)</span> no período anterior.</p>
 <p><br></p>
 <p><strong>Função implementada para o Método Iterativo
-Intercensal</strong></p>
-<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" tabindex="-1"></a>MII <span class="ot">&lt;-</span> <span class="cf">function</span>(df, t1, t2, <span class="at">n =</span> <span class="dv">5</span>, <span class="at">tol =</span> <span class="fl">1e-6</span>, <span class="at">max_iter =</span> <span class="dv">100</span>) {</span>
-<span id="cb11-2"><a href="#cb11-2" tabindex="-1"></a>  </span>
-<span id="cb11-3"><a href="#cb11-3" tabindex="-1"></a>  <span class="co"># Preparação inicial</span></span>
-<span id="cb11-4"><a href="#cb11-4" tabindex="-1"></a>  df_iter <span class="ot">&lt;-</span> df</span>
-<span id="cb11-5"><a href="#cb11-5" tabindex="-1"></a>  df_iter<span class="sc">$</span>N_t1 <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(df_iter<span class="sc">$</span>N_t1)</span>
-<span id="cb11-6"><a href="#cb11-6" tabindex="-1"></a>  df_iter<span class="sc">$</span>N_t2 <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(df_iter<span class="sc">$</span>N_t2)</span>
-<span id="cb11-7"><a href="#cb11-7" tabindex="-1"></a>  </span>
-<span id="cb11-8"><a href="#cb11-8" tabindex="-1"></a>  <span class="co"># Guarda a população observada original para o dataframe de comparação</span></span>
-<span id="cb11-9"><a href="#cb11-9" tabindex="-1"></a>  N_t2_original <span class="ot">&lt;-</span> df_iter<span class="sc">$</span>N_t2</span>
-<span id="cb11-10"><a href="#cb11-10" tabindex="-1"></a>  </span>
-<span id="cb11-11"><a href="#cb11-11" tabindex="-1"></a>  e0_prev <span class="ot">&lt;-</span> <span class="dv">0</span></span>
-<span id="cb11-12"><a href="#cb11-12" tabindex="-1"></a>  num_ages <span class="ot">&lt;-</span> <span class="fu">nrow</span>(df_iter)</span>
-<span id="cb11-13"><a href="#cb11-13" tabindex="-1"></a>  </span>
-<span id="cb11-14"><a href="#cb11-14" tabindex="-1"></a>  <span class="co"># Loop Iterativo (Processo de Conciliação)</span></span>
-<span id="cb11-15"><a href="#cb11-15" tabindex="-1"></a>  <span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>max_iter) {</span>
-<span id="cb11-16"><a href="#cb11-16" tabindex="-1"></a>    </span>
-<span id="cb11-17"><a href="#cb11-17" tabindex="-1"></a>    <span class="co"># STAGE 1: Gera tábua de vida via DDM (usa N_t2 projetado das iterações anteriores)</span></span>
-<span id="cb11-18"><a href="#cb11-18" tabindex="-1"></a>    lt_ddm <span class="ot">&lt;-</span> <span class="fu">DDM</span>(df_iter, t1, t2, n)</span>
-<span id="cb11-19"><a href="#cb11-19" tabindex="-1"></a>    </span>
-<span id="cb11-20"><a href="#cb11-20" tabindex="-1"></a>    <span class="co"># Critério de convergência (estabilidade de e0)</span></span>
-<span id="cb11-21"><a href="#cb11-21" tabindex="-1"></a>    <span class="cf">if</span> (<span class="fu">abs</span>(lt_ddm<span class="sc">$</span>e_x[<span class="dv">1</span>] <span class="sc">-</span> e0_prev) <span class="sc">&lt;</span> tol) {</span>
-<span id="cb11-22"><a href="#cb11-22" tabindex="-1"></a>      <span class="fu">message</span>(<span class="fu">paste</span>(<span class="st">&quot;Convergência atingida na iteração:&quot;</span>, i))</span>
-<span id="cb11-23"><a href="#cb11-23" tabindex="-1"></a>      <span class="cf">break</span></span>
-<span id="cb11-24"><a href="#cb11-24" tabindex="-1"></a>    }</span>
-<span id="cb11-25"><a href="#cb11-25" tabindex="-1"></a>    e0_prev <span class="ot">&lt;-</span> lt_ddm<span class="sc">$</span>e_x[<span class="dv">1</span>]</span>
-<span id="cb11-26"><a href="#cb11-26" tabindex="-1"></a>    </span>
-<span id="cb11-27"><a href="#cb11-27" tabindex="-1"></a>    <span class="co"># Parâmetros para projeção</span></span>
-<span id="cb11-28"><a href="#cb11-28" tabindex="-1"></a>    L <span class="ot">&lt;-</span> lt_ddm<span class="sc">$</span>L_x</span>
-<span id="cb11-29"><a href="#cb11-29" tabindex="-1"></a>    r <span class="ot">&lt;-</span> lt_ddm<span class="sc">$</span>r_x</span>
-<span id="cb11-30"><a href="#cb11-30" tabindex="-1"></a>    N_t1 <span class="ot">&lt;-</span> df_iter<span class="sc">$</span>N_t1</span>
-<span id="cb11-31"><a href="#cb11-31" tabindex="-1"></a>    </span>
-<span id="cb11-32"><a href="#cb11-32" tabindex="-1"></a>    <span class="co"># STAGE 2: Cálculo das razões de sobrevivência (px)</span></span>
-<span id="cb11-33"><a href="#cb11-33" tabindex="-1"></a>    p <span class="ot">&lt;-</span> <span class="fu">numeric</span>(num_ages)</span>
-<span id="cb11-34"><a href="#cb11-34" tabindex="-1"></a>    <span class="cf">for</span>(j <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>(num_ages<span class="dv">-2</span>)) {</span>
-<span id="cb11-35"><a href="#cb11-35" tabindex="-1"></a>      p[j] <span class="ot">&lt;-</span> L[j<span class="sc">+</span><span class="dv">1</span>] <span class="sc">/</span> L[j] <span class="co"># p0 até p70</span></span>
-<span id="cb11-36"><a href="#cb11-36" tabindex="-1"></a>    }</span>
-<span id="cb11-37"><a href="#cb11-37" tabindex="-1"></a>    p[num_ages<span class="dv">-1</span>] <span class="ot">&lt;-</span> L[num_ages] <span class="sc">/</span> (L[num_ages<span class="dv">-1</span>] <span class="sc">+</span> L[num_ages]) <span class="co"># p75</span></span>
-<span id="cb11-38"><a href="#cb11-38" tabindex="-1"></a>    </span>
-<span id="cb11-39"><a href="#cb11-39" tabindex="-1"></a>    <span class="co"># Termo exponencial para correção de N0 (Equação 3.3)</span></span>
-<span id="cb11-40"><a href="#cb11-40" tabindex="-1"></a>    term_exp <span class="ot">&lt;-</span> <span class="fu">exp</span>(<span class="sc">-</span>(n<span class="sc">/</span><span class="dv">2</span>) <span class="sc">*</span> (r[<span class="dv">1</span>] <span class="sc">+</span> r[<span class="dv">2</span>]) <span class="sc">*</span> (L[<span class="dv">1</span>]<span class="sc">/</span>L[<span class="dv">2</span>]))</span>
-<span id="cb11-41"><a href="#cb11-41" tabindex="-1"></a>    </span>
-<span id="cb11-42"><a href="#cb11-42" tabindex="-1"></a>    <span class="co"># Projeção t1 -&gt; t1+5</span></span>
-<span id="cb11-43"><a href="#cb11-43" tabindex="-1"></a>    N_5 <span class="ot">&lt;-</span> <span class="fu">numeric</span>(num_ages)</span>
-<span id="cb11-44"><a href="#cb11-44" tabindex="-1"></a>    N_5[<span class="dv">1</span>] <span class="ot">&lt;-</span> N_t1[<span class="dv">1</span>] <span class="sc">*</span> p[<span class="dv">1</span>] <span class="sc">*</span> term_exp</span>
-<span id="cb11-45"><a href="#cb11-45" tabindex="-1"></a>    <span class="cf">for</span>(j <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>(num_ages<span class="dv">-1</span>)) {</span>
-<span id="cb11-46"><a href="#cb11-46" tabindex="-1"></a>      N_5[j<span class="sc">+</span><span class="dv">1</span>] <span class="ot">&lt;-</span> N_t1[j] <span class="sc">*</span> p[j]</span>
-<span id="cb11-47"><a href="#cb11-47" tabindex="-1"></a>    }</span>
-<span id="cb11-48"><a href="#cb11-48" tabindex="-1"></a>    N_5[num_ages] <span class="ot">&lt;-</span> N_5[num_ages] <span class="sc">+</span> (N_t1[num_ages] <span class="sc">*</span> p[num_ages<span class="dv">-1</span>])</span>
-<span id="cb11-49"><a href="#cb11-49" tabindex="-1"></a>    </span>
-<span id="cb11-50"><a href="#cb11-50" tabindex="-1"></a>    <span class="co"># Projeção t1+5 -&gt; t2 (t1+10)</span></span>
-<span id="cb11-51"><a href="#cb11-51" tabindex="-1"></a>    N_10 <span class="ot">&lt;-</span> <span class="fu">numeric</span>(num_ages)</span>
-<span id="cb11-52"><a href="#cb11-52" tabindex="-1"></a>    N_10[<span class="dv">1</span>] <span class="ot">&lt;-</span> N_5[<span class="dv">1</span>] <span class="sc">*</span> p[<span class="dv">1</span>] <span class="sc">*</span> term_exp</span>
-<span id="cb11-53"><a href="#cb11-53" tabindex="-1"></a>    <span class="cf">for</span>(j <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>(num_ages<span class="dv">-1</span>)) {</span>
-<span id="cb11-54"><a href="#cb11-54" tabindex="-1"></a>      N_10[j<span class="sc">+</span><span class="dv">1</span>] <span class="ot">&lt;-</span> N_5[j] <span class="sc">*</span> p[j]</span>
-<span id="cb11-55"><a href="#cb11-55" tabindex="-1"></a>    }</span>
-<span id="cb11-56"><a href="#cb11-56" tabindex="-1"></a>    N_10[num_ages] <span class="ot">&lt;-</span> N_10[num_ages] <span class="sc">+</span> (N_5[num_ages] <span class="sc">*</span> p[num_ages<span class="dv">-1</span>])</span>
-<span id="cb11-57"><a href="#cb11-57" tabindex="-1"></a>    </span>
-<span id="cb11-58"><a href="#cb11-58" tabindex="-1"></a>    <span class="co"># STAGE 3 &amp; 4: Atualiza N_t2 com a projeção (o DDM na próxima volta usará estas taxas)</span></span>
-<span id="cb11-59"><a href="#cb11-59" tabindex="-1"></a>    df_iter<span class="sc">$</span>N_t2 <span class="ot">&lt;-</span> N_10</span>
-<span id="cb11-60"><a href="#cb11-60" tabindex="-1"></a>  }</span>
-<span id="cb11-61"><a href="#cb11-61" tabindex="-1"></a>  </span>
-<span id="cb11-62"><a href="#cb11-62" tabindex="-1"></a>  <span class="co"># --- Construção dos Objetos de Retorno ---</span></span>
-<span id="cb11-63"><a href="#cb11-63" tabindex="-1"></a>  </span>
-<span id="cb11-64"><a href="#cb11-64" tabindex="-1"></a>  <span class="co"># 1. Tábua DDM final (já calculada no loop)</span></span>
-<span id="cb11-65"><a href="#cb11-65" tabindex="-1"></a>  tabua_ddm_final <span class="ot">&lt;-</span> lt_ddm</span>
-<span id="cb11-66"><a href="#cb11-66" tabindex="-1"></a>  </span>
-<span id="cb11-67"><a href="#cb11-67" tabindex="-1"></a>  <span class="co"># 2. Tábua CBM final (usando a população projetada que convergiu)</span></span>
-<span id="cb11-68"><a href="#cb11-68" tabindex="-1"></a>  tabua_r_method_final <span class="ot">&lt;-</span> <span class="fu">r_method</span>(df_iter, t1, t2, n)</span>
-<span id="cb11-69"><a href="#cb11-69" tabindex="-1"></a>  </span>
-<span id="cb11-70"><a href="#cb11-70" tabindex="-1"></a>  <span class="co"># 3. Dataframe de comparação das populações</span></span>
-<span id="cb11-71"><a href="#cb11-71" tabindex="-1"></a>  df_comparacao <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
-<span id="cb11-72"><a href="#cb11-72" tabindex="-1"></a>    <span class="at">age_x          =</span> df<span class="sc">$</span>age_x,</span>
-<span id="cb11-73"><a href="#cb11-73" tabindex="-1"></a>    <span class="at">N_t2_observada =</span> N_t2_original,</span>
-<span id="cb11-74"><a href="#cb11-74" tabindex="-1"></a>    <span class="at">N_t2_projetada =</span> df_iter<span class="sc">$</span>N_t2,</span>
-<span id="cb11-75"><a href="#cb11-75" tabindex="-1"></a>    <span class="at">diferenca      =</span> N_t2_original <span class="sc">-</span> df_iter<span class="sc">$</span>N_t2,</span>
-<span id="cb11-76"><a href="#cb11-76" tabindex="-1"></a>    <span class="at">razao          =</span> N_t2_original <span class="sc">/</span> df_iter<span class="sc">$</span>N_t2</span>
-<span id="cb11-77"><a href="#cb11-77" tabindex="-1"></a>  )</span>
-<span id="cb11-78"><a href="#cb11-78" tabindex="-1"></a>  </span>
-<span id="cb11-79"><a href="#cb11-79" tabindex="-1"></a>  <span class="co"># Retorna a lista com os três objetos</span></span>
-<span id="cb11-80"><a href="#cb11-80" tabindex="-1"></a>  <span class="fu">return</span>(<span class="fu">list</span>(</span>
-<span id="cb11-81"><a href="#cb11-81" tabindex="-1"></a>    <span class="at">DDM_Final  =</span> tabua_ddm_final,</span>
-<span id="cb11-82"><a href="#cb11-82" tabindex="-1"></a>    <span class="at">r_method_Final  =</span> tabua_r_method_final,</span>
-<span id="cb11-83"><a href="#cb11-83" tabindex="-1"></a>    <span class="at">Comparacao =</span> df_comparacao</span>
-<span id="cb11-84"><a href="#cb11-84" tabindex="-1"></a>  ))</span>
-<span id="cb11-85"><a href="#cb11-85" tabindex="-1"></a>}</span>
-<span id="cb11-86"><a href="#cb11-86" tabindex="-1"></a></span>
-<span id="cb11-87"><a href="#cb11-87" tabindex="-1"></a><span class="co"># --- Execução ---</span></span>
-<span id="cb11-88"><a href="#cb11-88" tabindex="-1"></a>resultados <span class="ot">&lt;-</span> <span class="fu">MII</span>(data.viet, <span class="dv">1979</span>, <span class="dv">1989</span>, <span class="dv">5</span>)</span></code></pre></div>
+Intercensal:</strong></p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" tabindex="-1"></a>MII <span class="ot">&lt;-</span> <span class="cf">function</span>(df, t1, t2, <span class="at">n =</span> <span class="dv">5</span>, <span class="at">tol =</span> <span class="fl">1e-6</span>, <span class="at">max_iter =</span> <span class="dv">100</span>) {</span>
+<span id="cb9-2"><a href="#cb9-2" tabindex="-1"></a>  </span>
+<span id="cb9-3"><a href="#cb9-3" tabindex="-1"></a>  <span class="co"># Preparação inicial</span></span>
+<span id="cb9-4"><a href="#cb9-4" tabindex="-1"></a>  df_iter <span class="ot">&lt;-</span> df</span>
+<span id="cb9-5"><a href="#cb9-5" tabindex="-1"></a>  df_iter<span class="sc">$</span>N_t1 <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(df_iter<span class="sc">$</span>N_t1)</span>
+<span id="cb9-6"><a href="#cb9-6" tabindex="-1"></a>  df_iter<span class="sc">$</span>N_t2 <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(df_iter<span class="sc">$</span>N_t2)</span>
+<span id="cb9-7"><a href="#cb9-7" tabindex="-1"></a>  </span>
+<span id="cb9-8"><a href="#cb9-8" tabindex="-1"></a>  <span class="co"># Guarda a população observada original para o dataframe de comparação</span></span>
+<span id="cb9-9"><a href="#cb9-9" tabindex="-1"></a>  N_t2_original <span class="ot">&lt;-</span> df_iter<span class="sc">$</span>N_t2</span>
+<span id="cb9-10"><a href="#cb9-10" tabindex="-1"></a>  </span>
+<span id="cb9-11"><a href="#cb9-11" tabindex="-1"></a>  e0_prev <span class="ot">&lt;-</span> <span class="dv">0</span></span>
+<span id="cb9-12"><a href="#cb9-12" tabindex="-1"></a>  num_ages <span class="ot">&lt;-</span> <span class="fu">nrow</span>(df_iter)</span>
+<span id="cb9-13"><a href="#cb9-13" tabindex="-1"></a>  </span>
+<span id="cb9-14"><a href="#cb9-14" tabindex="-1"></a>  <span class="co"># Loop Iterativo (Processo de Conciliação)</span></span>
+<span id="cb9-15"><a href="#cb9-15" tabindex="-1"></a>  <span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>max_iter) {</span>
+<span id="cb9-16"><a href="#cb9-16" tabindex="-1"></a>    </span>
+<span id="cb9-17"><a href="#cb9-17" tabindex="-1"></a>    <span class="co"># STAGE 1: Gera tábua de vida via DDM (usa N_t2 projetado das iterações anteriores)</span></span>
+<span id="cb9-18"><a href="#cb9-18" tabindex="-1"></a>    lt_ddm <span class="ot">&lt;-</span> <span class="fu">DDM</span>(df_iter, t1, t2, n)</span>
+<span id="cb9-19"><a href="#cb9-19" tabindex="-1"></a>    </span>
+<span id="cb9-20"><a href="#cb9-20" tabindex="-1"></a>    <span class="co"># Critério de convergência (estabilidade de e0)</span></span>
+<span id="cb9-21"><a href="#cb9-21" tabindex="-1"></a>    <span class="cf">if</span> (<span class="fu">abs</span>(lt_ddm<span class="sc">$</span>e_x[<span class="dv">1</span>] <span class="sc">-</span> e0_prev) <span class="sc">&lt;</span> tol) {</span>
+<span id="cb9-22"><a href="#cb9-22" tabindex="-1"></a>      <span class="fu">message</span>(<span class="fu">paste</span>(<span class="st">&quot;Convergência atingida na iteração:&quot;</span>, i))</span>
+<span id="cb9-23"><a href="#cb9-23" tabindex="-1"></a>      <span class="cf">break</span></span>
+<span id="cb9-24"><a href="#cb9-24" tabindex="-1"></a>    }</span>
+<span id="cb9-25"><a href="#cb9-25" tabindex="-1"></a>    e0_prev <span class="ot">&lt;-</span> lt_ddm<span class="sc">$</span>e_x[<span class="dv">1</span>]</span>
+<span id="cb9-26"><a href="#cb9-26" tabindex="-1"></a>    </span>
+<span id="cb9-27"><a href="#cb9-27" tabindex="-1"></a>    <span class="co"># Parâmetros para projeção</span></span>
+<span id="cb9-28"><a href="#cb9-28" tabindex="-1"></a>    L <span class="ot">&lt;-</span> lt_ddm<span class="sc">$</span>L_x</span>
+<span id="cb9-29"><a href="#cb9-29" tabindex="-1"></a>    r <span class="ot">&lt;-</span> lt_ddm<span class="sc">$</span>r_x</span>
+<span id="cb9-30"><a href="#cb9-30" tabindex="-1"></a>    N_t1 <span class="ot">&lt;-</span> df_iter<span class="sc">$</span>N_t1</span>
+<span id="cb9-31"><a href="#cb9-31" tabindex="-1"></a>    </span>
+<span id="cb9-32"><a href="#cb9-32" tabindex="-1"></a>    <span class="co"># STAGE 2: Cálculo das razões de sobrevivência (px)</span></span>
+<span id="cb9-33"><a href="#cb9-33" tabindex="-1"></a>    p <span class="ot">&lt;-</span> <span class="fu">numeric</span>(num_ages)</span>
+<span id="cb9-34"><a href="#cb9-34" tabindex="-1"></a>    <span class="cf">for</span>(j <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>(num_ages<span class="dv">-2</span>)) {</span>
+<span id="cb9-35"><a href="#cb9-35" tabindex="-1"></a>      p[j] <span class="ot">&lt;-</span> L[j<span class="sc">+</span><span class="dv">1</span>] <span class="sc">/</span> L[j] <span class="co"># p0 até p70</span></span>
+<span id="cb9-36"><a href="#cb9-36" tabindex="-1"></a>    }</span>
+<span id="cb9-37"><a href="#cb9-37" tabindex="-1"></a>    p[num_ages<span class="dv">-1</span>] <span class="ot">&lt;-</span> L[num_ages] <span class="sc">/</span> (L[num_ages<span class="dv">-1</span>] <span class="sc">+</span> L[num_ages]) <span class="co"># p75</span></span>
+<span id="cb9-38"><a href="#cb9-38" tabindex="-1"></a>    </span>
+<span id="cb9-39"><a href="#cb9-39" tabindex="-1"></a>    <span class="co"># Termo exponencial para correção de N0 (Equação 3.3)</span></span>
+<span id="cb9-40"><a href="#cb9-40" tabindex="-1"></a>    term_exp <span class="ot">&lt;-</span> <span class="fu">exp</span>(<span class="sc">-</span>(n<span class="sc">/</span><span class="dv">2</span>) <span class="sc">*</span> (r[<span class="dv">1</span>] <span class="sc">+</span> r[<span class="dv">2</span>]) <span class="sc">*</span> (L[<span class="dv">1</span>]<span class="sc">/</span>L[<span class="dv">2</span>]))</span>
+<span id="cb9-41"><a href="#cb9-41" tabindex="-1"></a>    </span>
+<span id="cb9-42"><a href="#cb9-42" tabindex="-1"></a>    <span class="co"># Projeção t1 -&gt; t1+5</span></span>
+<span id="cb9-43"><a href="#cb9-43" tabindex="-1"></a>    N_5 <span class="ot">&lt;-</span> <span class="fu">numeric</span>(num_ages)</span>
+<span id="cb9-44"><a href="#cb9-44" tabindex="-1"></a>    N_5[<span class="dv">1</span>] <span class="ot">&lt;-</span> N_t1[<span class="dv">1</span>] <span class="sc">*</span> p[<span class="dv">1</span>] <span class="sc">*</span> term_exp</span>
+<span id="cb9-45"><a href="#cb9-45" tabindex="-1"></a>    <span class="cf">for</span>(j <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>(num_ages<span class="dv">-1</span>)) {</span>
+<span id="cb9-46"><a href="#cb9-46" tabindex="-1"></a>      N_5[j<span class="sc">+</span><span class="dv">1</span>] <span class="ot">&lt;-</span> N_t1[j] <span class="sc">*</span> p[j]</span>
+<span id="cb9-47"><a href="#cb9-47" tabindex="-1"></a>    }</span>
+<span id="cb9-48"><a href="#cb9-48" tabindex="-1"></a>    N_5[num_ages] <span class="ot">&lt;-</span> N_5[num_ages] <span class="sc">+</span> (N_t1[num_ages] <span class="sc">*</span> p[num_ages<span class="dv">-1</span>])</span>
+<span id="cb9-49"><a href="#cb9-49" tabindex="-1"></a>    </span>
+<span id="cb9-50"><a href="#cb9-50" tabindex="-1"></a>    <span class="co"># Projeção t1+5 -&gt; t2 (t1+10)</span></span>
+<span id="cb9-51"><a href="#cb9-51" tabindex="-1"></a>    N_10 <span class="ot">&lt;-</span> <span class="fu">numeric</span>(num_ages)</span>
+<span id="cb9-52"><a href="#cb9-52" tabindex="-1"></a>    N_10[<span class="dv">1</span>] <span class="ot">&lt;-</span> N_5[<span class="dv">1</span>] <span class="sc">*</span> p[<span class="dv">1</span>] <span class="sc">*</span> term_exp</span>
+<span id="cb9-53"><a href="#cb9-53" tabindex="-1"></a>    <span class="cf">for</span>(j <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>(num_ages<span class="dv">-1</span>)) {</span>
+<span id="cb9-54"><a href="#cb9-54" tabindex="-1"></a>      N_10[j<span class="sc">+</span><span class="dv">1</span>] <span class="ot">&lt;-</span> N_5[j] <span class="sc">*</span> p[j]</span>
+<span id="cb9-55"><a href="#cb9-55" tabindex="-1"></a>    }</span>
+<span id="cb9-56"><a href="#cb9-56" tabindex="-1"></a>    N_10[num_ages] <span class="ot">&lt;-</span> N_10[num_ages] <span class="sc">+</span> (N_5[num_ages] <span class="sc">*</span> p[num_ages<span class="dv">-1</span>])</span>
+<span id="cb9-57"><a href="#cb9-57" tabindex="-1"></a>    </span>
+<span id="cb9-58"><a href="#cb9-58" tabindex="-1"></a>    <span class="co"># STAGE 3 &amp; 4: Atualiza N_t2 com a projeção (o DDM na próxima volta usará estas taxas)</span></span>
+<span id="cb9-59"><a href="#cb9-59" tabindex="-1"></a>    df_iter<span class="sc">$</span>N_t2 <span class="ot">&lt;-</span> N_10</span>
+<span id="cb9-60"><a href="#cb9-60" tabindex="-1"></a>  }</span>
+<span id="cb9-61"><a href="#cb9-61" tabindex="-1"></a>  </span>
+<span id="cb9-62"><a href="#cb9-62" tabindex="-1"></a>  <span class="co"># --- Construção dos Objetos de Retorno ---</span></span>
+<span id="cb9-63"><a href="#cb9-63" tabindex="-1"></a>  </span>
+<span id="cb9-64"><a href="#cb9-64" tabindex="-1"></a>  <span class="co"># 1. Tábua DDM final (já calculada no loop)</span></span>
+<span id="cb9-65"><a href="#cb9-65" tabindex="-1"></a>  tabua_ddm_final <span class="ot">&lt;-</span> lt_ddm</span>
+<span id="cb9-66"><a href="#cb9-66" tabindex="-1"></a>  </span>
+<span id="cb9-67"><a href="#cb9-67" tabindex="-1"></a>  <span class="co"># 2. Tábua CBM final (usando a população projetada que convergiu)</span></span>
+<span id="cb9-68"><a href="#cb9-68" tabindex="-1"></a>  tabua_r_method_final <span class="ot">&lt;-</span> <span class="fu">r_method</span>(df_iter, t1, t2, n)</span>
+<span id="cb9-69"><a href="#cb9-69" tabindex="-1"></a>  </span>
+<span id="cb9-70"><a href="#cb9-70" tabindex="-1"></a>  <span class="co"># 3. Dataframe de comparação das populações</span></span>
+<span id="cb9-71"><a href="#cb9-71" tabindex="-1"></a>  df_comparacao <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb9-72"><a href="#cb9-72" tabindex="-1"></a>    <span class="at">age_x          =</span> df<span class="sc">$</span>age_x,</span>
+<span id="cb9-73"><a href="#cb9-73" tabindex="-1"></a>    <span class="at">N_t2_observada =</span> N_t2_original,</span>
+<span id="cb9-74"><a href="#cb9-74" tabindex="-1"></a>    <span class="at">N_t2_projetada =</span> df_iter<span class="sc">$</span>N_t2,</span>
+<span id="cb9-75"><a href="#cb9-75" tabindex="-1"></a>    <span class="at">diferenca      =</span> N_t2_original <span class="sc">-</span> df_iter<span class="sc">$</span>N_t2,</span>
+<span id="cb9-76"><a href="#cb9-76" tabindex="-1"></a>    <span class="at">razao          =</span> N_t2_original <span class="sc">/</span> df_iter<span class="sc">$</span>N_t2</span>
+<span id="cb9-77"><a href="#cb9-77" tabindex="-1"></a>  )</span>
+<span id="cb9-78"><a href="#cb9-78" tabindex="-1"></a>  </span>
+<span id="cb9-79"><a href="#cb9-79" tabindex="-1"></a>  <span class="co"># Retorna a lista com os três objetos</span></span>
+<span id="cb9-80"><a href="#cb9-80" tabindex="-1"></a>  <span class="fu">return</span>(<span class="fu">list</span>(</span>
+<span id="cb9-81"><a href="#cb9-81" tabindex="-1"></a>    <span class="at">DDM_Final  =</span> tabua_ddm_final,</span>
+<span id="cb9-82"><a href="#cb9-82" tabindex="-1"></a>    <span class="at">r_method_Final  =</span> tabua_r_method_final,</span>
+<span id="cb9-83"><a href="#cb9-83" tabindex="-1"></a>    <span class="at">Comparacao =</span> df_comparacao</span>
+<span id="cb9-84"><a href="#cb9-84" tabindex="-1"></a>  ))</span>
+<span id="cb9-85"><a href="#cb9-85" tabindex="-1"></a>}</span>
+<span id="cb9-86"><a href="#cb9-86" tabindex="-1"></a></span>
+<span id="cb9-87"><a href="#cb9-87" tabindex="-1"></a><span class="co"># --- Execução ---</span></span>
+<span id="cb9-88"><a href="#cb9-88" tabindex="-1"></a>resultados <span class="ot">&lt;-</span> <span class="fu">MII</span>(data.viet, <span class="dv">1979</span>, <span class="dv">1989</span>, <span class="dv">5</span>)</span></code></pre></div>
 <p><br></p>
 <p>A função <code>MII</code> inicia-se com a geração de uma tábua de
 vida via função <code>DDM</code>, fundamentada nas taxas de crescimento
@@ -3449,11 +3669,11 @@ populacional <span class="math inline">\((r_x)\)</span>, obtidas pela
 função <code>r_method</code> a partir das populações recenseadas em
 <span class="math inline">\(N(t_1)\)</span> e <span class="math inline">\(N(t_2)\)</span> (Estágio 1, conforme descrito por
 <span class="citation">Muniz (2023)</span>). A cada iteração, a função
-projeta <span class="math inline">\(N(t_1)\)</span>, com base nas razões
-de sobrevivência das tábaus de vida geradas por <code>DDM</code>, e
-substitui o valor observado de <span class="math inline">\(N(t_2)\)</span> pelo valor projetado, utilizando-o
-como entrada para a rodada seguinte do <code>r_method</code> (Estágios 2
-e 3).</p>
+projeta <span class="math inline">\(N(t_1)\hspace{0.5cm}\)</span>, com
+base nas razões de sobrevivência das tábaus de vida geradas por
+<code>DDM</code>, e substitui o valor observado de <span class="math inline">\(N(t_2)\hspace{0.5cm}\)</span> pelo valor
+projetado, utilizando-o como entrada para a rodada seguinte do
+<code>r_method</code> (Estágios 2 e 3).</p>
 <p>Nesse processo iterativo, novas taxas de crescimento (<span class="math inline">\(r_x\)</span>) são calculadas, considerando a
 diferença entre o censo observado em <span class="math inline">\(t_1\)</span> e a projeção teórica para <span class="math inline">\(t_2\)</span>. Esse procedimento “limpa” as taxas
 de crescimento de erros de enumeração diferencial entre os dois
@@ -3462,9 +3682,9 @@ pelo DDM é atualizada com base nessas novas taxas — agora livres dos
 efeitos da migração e do sub-registro de óbitos. Essa tábua gera novas
 razões de sobrevivência, reiniciando o ciclo até que a estabilidade seja
 alcançada. O processo converge quando a variação na expectativa de vida
-entre duas iterações torna-se insignificante (inferior a <span class="math inline">\(0,000001\)</span>). No exemplo em questão, com os
-dados do Vietnã, foram necessárias 50 iterações para atingir a
-convergência.</p>
+entre duas iterações torna-se insignificante (inferior a <span class="math inline">\(0,000001\hspace{0.5cm}\)</span>). No exemplo em
+questão, com os dados do Vietnã, foram necessárias 50 iterações para
+atingir a convergência.</p>
 <p>A função <code>MII</code> gera os seguintes objetos:</p>
 <ul>
 <li><p><strong>DDM_Final:</strong> Tábua de vida obtida via DDM,
@@ -3483,9 +3703,9 @@ enumeração.</p></li>
 </ul>
 <p>O código abaixo extrai e exibe os resultados, conforme apresentados
 por <span class="citation">Muniz (2023)</span>:</p>
-<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" tabindex="-1"></a><span class="co"># 1. Acessar a Tábua DDM (após convergência)</span></span>
-<span id="cb12-2"><a href="#cb12-2" tabindex="-1"></a>ddm_lt_final <span class="ot">&lt;-</span> resultados<span class="sc">$</span>DDM_Final</span>
-<span id="cb12-3"><a href="#cb12-3" tabindex="-1"></a><span class="fu">print</span>(ddm_lt_final)</span></code></pre></div>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" tabindex="-1"></a><span class="co"># 1. Acessar a tábua de vida pelo método DDM (após convergência)</span></span>
+<span id="cb10-2"><a href="#cb10-2" tabindex="-1"></a>ddm_lt_final <span class="ot">&lt;-</span> resultados<span class="sc">$</span>DDM_Final</span>
+<span id="cb10-3"><a href="#cb10-3" tabindex="-1"></a><span class="fu">print</span>(ddm_lt_final)</span></code></pre></div>
 <pre><code>##    age_x    N_t1      N_t2     D          r_x       d_x       l_x       L_x
 ## 1      0 3946224 3862406.5 48508 -0.002146873 48508.000 527347.39 2432033.2
 ## 2      5 3928795 3811545.0  8029 -0.003029814  7925.760 478839.39 2374382.5
@@ -3522,9 +3742,9 @@ por <span class="citation">Muniz (2023)</span>:</p>
 ## 15 0.314612469  1995451  8.557165
 ## 16 0.482628465  1012910  6.337577
 ## 17 1.000000000   406621  4.917450</code></pre>
-<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" tabindex="-1"></a><span class="co"># 2. Acessar a Tábua CBM (após convergência)</span></span>
-<span id="cb14-2"><a href="#cb14-2" tabindex="-1"></a>r_method_lt_final <span class="ot">&lt;-</span> resultados<span class="sc">$</span>r_method_Final</span>
-<span id="cb14-3"><a href="#cb14-3" tabindex="-1"></a><span class="fu">print</span>(r_method_lt_final)</span></code></pre></div>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" tabindex="-1"></a><span class="co"># 2. Acessar a tábua de vida pelo r-method (após convergência)</span></span>
+<span id="cb12-2"><a href="#cb12-2" tabindex="-1"></a>r_method_lt_final <span class="ot">&lt;-</span> resultados<span class="sc">$</span>r_method_Final</span>
+<span id="cb12-3"><a href="#cb12-3" tabindex="-1"></a><span class="fu">print</span>(r_method_lt_final)</span></code></pre></div>
 <pre><code>##    age_x    N_t1      N_t2     D          r_x          S_x  N_x_star       L_x
 ## 1      0 3946224 3862406.5 48508 -0.002146873 -0.005367182 3904090.3 3883192.5
 ## 2      5 3928795 3811545.0  8029 -0.003029814 -0.018308898 3869726.0 3799520.2
@@ -3561,9 +3781,9 @@ por <span class="citation">Muniz (2023)</span>:</p>
 ## 15 370244.1  3168804.3  8.558690
 ## 16 255697.2  1612478.6  6.306204
 ## 17 161247.9   611832.4  3.794360</code></pre>
-<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" tabindex="-1"></a><span class="co"># 3. Analisar a comparação entre populações (Observado vs Projetado)</span></span>
-<span id="cb16-2"><a href="#cb16-2" tabindex="-1"></a>comparacao <span class="ot">&lt;-</span> resultados<span class="sc">$</span>Comparacao</span>
-<span id="cb16-3"><a href="#cb16-3" tabindex="-1"></a><span class="fu">print</span>(comparacao)</span></code></pre></div>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" tabindex="-1"></a><span class="co"># 3. Analisar a comparação entre populações (Observado vs Projetado)</span></span>
+<span id="cb14-2"><a href="#cb14-2" tabindex="-1"></a>comparacao <span class="ot">&lt;-</span> resultados<span class="sc">$</span>Comparacao</span>
+<span id="cb14-3"><a href="#cb14-3" tabindex="-1"></a><span class="fu">print</span>(comparacao)</span></code></pre></div>
 <pre><code>##    age_x N_t2_observada N_t2_projetada   diferenca     razao
 ## 1      0        4710423      3862406.5  848016.456 1.2195565
 ## 2      5        4430179      3811545.0  618633.976 1.1623053
@@ -3584,6 +3804,1169 @@ por <span class="citation">Muniz (2023)</span>:</p>
 ## 17    80         145637       116601.1   29035.861 1.2490187</code></pre>
 <p><br></p>
 </div>
+<div id="expectativa-de-vida-por-sexo-e-raça-no-brasil-entre-2010-e-2022" class="section level3">
+<h3><strong>4. Expectativa de vida por sexo e raça no Brasil entre 2010
+e 2022</strong></h3>
+<p>O código abaixo carrega diversos arquivos em formato .RData, os quais
+contêm as seguintes informações:</p>
+<ul>
+<li><p><code>obitos</code>: Base de dados de óbitos mensais, oriunda dos
+microdados do SIM/MS, desagregada por sexo, raça e grupos etários
+quinquenais para o período de julho de 2010 a julho de 2022.</p></li>
+<li><p><code>pop.censo.10</code> e <code>pop.censo.22</code>: Bases
+contendo as populações municipais recenseadas em 2010 e 2022,
+estratificadas por sexo, raça e grupos etários quinquenais.</p></li>
+<li><p><code>pop.interp</code>: Bases com as populações municipais
+interpoladas para o período entre 2010 e 2022, ajustadas pelas
+respectivas correções de omissão populacional de ambos os censos,
+conforme a metodologia proposta por <span class="citation">Gonzaga et
+al. (2026)</span>.</p></li>
+</ul>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" tabindex="-1"></a><span class="co"># Carregando a base de óbitos por raça:</span></span>
+<span id="cb16-2"><a href="#cb16-2" tabindex="-1"></a><span class="fu">load</span>(<span class="st">&quot;C:/Projetos_R/projeto-metodo-iterativo/data/obitos_Brasil_juL2010_juL2022.RDATA&quot;</span>)</span>
+<span id="cb16-3"><a href="#cb16-3" tabindex="-1"></a>obitos <span class="ot">&lt;-</span> dados_filtrados</span>
+<span id="cb16-4"><a href="#cb16-4" tabindex="-1"></a><span class="fu">head</span>(obitos)</span></code></pre></div>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":["Year"],"name":[1],"type":["int"],"align":["right"]},{"label":["Month"],"name":[2],"type":["int"],"align":["right"]},{"label":["SEXO"],"name":[3],"type":["chr"],"align":["left"]},{"label":["RACACOR"],"name":[4],"type":["chr"],"align":["left"]},{"label":["age.group"],"name":[5],"type":["chr"],"align":["left"]},{"label":["obitos"],"name":[6],"type":["int"],"align":["right"]}],"data":[{"1":"2010","2":"7","3":"Feminino","4":"Amarela","5":"0-4","6":"3"},{"1":"2010","2":"7","3":"Feminino","4":"Amarela","5":"15-19","6":"1"},{"1":"2010","2":"7","3":"Feminino","4":"Amarela","5":"20-24","6":"1"},{"1":"2010","2":"7","3":"Feminino","4":"Amarela","5":"25-29","6":"1"},{"1":"2010","2":"7","3":"Feminino","4":"Amarela","5":"30-34","6":"3"},{"1":"2010","2":"7","3":"Feminino","4":"Amarela","5":"35-39","6":"6"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" tabindex="-1"></a><span class="co"># Carregando a base de população por raça do censo 2010:</span></span>
+<span id="cb17-2"><a href="#cb17-2" tabindex="-1"></a><span class="fu">load</span>(<span class="st">&quot;C:/Projetos_R/projeto-metodo-iterativo/data/Pop_BR_Muni10_Cor_Raca.RDATA&quot;</span>)</span>
+<span id="cb17-3"><a href="#cb17-3" tabindex="-1"></a>pop.censo<span class="fl">.10</span> <span class="ot">&lt;-</span> dados_final</span>
+<span id="cb17-4"><a href="#cb17-4" tabindex="-1"></a><span class="fu">head</span>(pop.censo<span class="fl">.10</span>)</span></code></pre></div>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":["codigo_municipio"],"name":[1],"type":["chr"],"align":["left"]},{"label":["municipio"],"name":[2],"type":["chr"],"align":["left"]},{"label":["ano"],"name":[3],"type":["chr"],"align":["left"]},{"label":["sexo"],"name":[4],"type":["chr"],"align":["left"]},{"label":["cor_raca"],"name":[5],"type":["chr"],"align":["left"]},{"label":["idade"],"name":[6],"type":["ord"],"align":["right"]},{"label":["populacao"],"name":[7],"type":["dbl"],"align":["right"]}],"data":[{"1":"1100015","2":"Alta Floresta D'Oeste (RO)","3":"2010","4":"Homens","5":"Amarela","6":"0","7":"4"},{"1":"1100015","2":"Alta Floresta D'Oeste (RO)","3":"2010","4":"Homens","5":"Amarela","6":"5","7":"8"},{"1":"1100015","2":"Alta Floresta D'Oeste (RO)","3":"2010","4":"Homens","5":"Amarela","6":"10","7":"10"},{"1":"1100015","2":"Alta Floresta D'Oeste (RO)","3":"2010","4":"Homens","5":"Amarela","6":"15","7":"11"},{"1":"1100015","2":"Alta Floresta D'Oeste (RO)","3":"2010","4":"Homens","5":"Amarela","6":"20","7":"9"},{"1":"1100015","2":"Alta Floresta D'Oeste (RO)","3":"2010","4":"Homens","5":"Amarela","6":"25","7":"12"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" tabindex="-1"></a><span class="co"># Carregando a base de população por raça do censo 2022:</span></span>
+<span id="cb18-2"><a href="#cb18-2" tabindex="-1"></a><span class="fu">load</span>(<span class="st">&quot;C:/Projetos_R/projeto-metodo-iterativo/data/Pop_BR_Muni22_Cor_Raca.RDATA&quot;</span>)</span>
+<span id="cb18-3"><a href="#cb18-3" tabindex="-1"></a>pop.censo<span class="fl">.22</span> <span class="ot">&lt;-</span> dados_final</span>
+<span id="cb18-4"><a href="#cb18-4" tabindex="-1"></a><span class="fu">head</span>(pop.censo<span class="fl">.22</span>)</span></code></pre></div>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":["codigo_municipio"],"name":[1],"type":["int"],"align":["right"]},{"label":["municipio"],"name":[2],"type":["chr"],"align":["left"]},{"label":["ano"],"name":[3],"type":["chr"],"align":["left"]},{"label":["sexo"],"name":[4],"type":["chr"],"align":["left"]},{"label":["cor_raca"],"name":[5],"type":["chr"],"align":["left"]},{"label":["faixa_idade"],"name":[6],"type":["ord"],"align":["right"]},{"label":["populacao"],"name":[7],"type":["dbl"],"align":["right"]}],"data":[{"1":"1100015","2":"Alta Floresta D'Oeste (RO)","3":"2022","4":"Homens","5":"Amarela","6":"0","7":"1"},{"1":"1100015","2":"Alta Floresta D'Oeste (RO)","3":"2022","4":"Homens","5":"Amarela","6":"5","7":"0"},{"1":"1100015","2":"Alta Floresta D'Oeste (RO)","3":"2022","4":"Homens","5":"Amarela","6":"10","7":"0"},{"1":"1100015","2":"Alta Floresta D'Oeste (RO)","3":"2022","4":"Homens","5":"Amarela","6":"15","7":"0"},{"1":"1100015","2":"Alta Floresta D'Oeste (RO)","3":"2022","4":"Homens","5":"Amarela","6":"20","7":"2"},{"1":"1100015","2":"Alta Floresta D'Oeste (RO)","3":"2022","4":"Homens","5":"Amarela","6":"25","7":"3"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" tabindex="-1"></a><span class="co"># Carregando a base de população interpolada por raça entre 2010 e 2022:</span></span>
+<span id="cb19-2"><a href="#cb19-2" tabindex="-1"></a><span class="fu">load</span>(<span class="st">&quot;C:/Projetos_R/projeto-metodo-iterativo/data/04_pop_intep_final.RDATA&quot;</span>)</span>
+<span id="cb19-3"><a href="#cb19-3" tabindex="-1"></a>pop.interp <span class="ot">&lt;-</span> pop_intep_final</span>
+<span id="cb19-4"><a href="#cb19-4" tabindex="-1"></a><span class="fu">head</span>(pop.interp)</span></code></pre></div>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":[""],"name":["_rn_"],"type":[""],"align":["left"]},{"label":["codigo_municipio"],"name":[1],"type":["dbl"],"align":["right"]},{"label":["sexo"],"name":[2],"type":["chr"],"align":["left"]},{"label":["cor_raca"],"name":[3],"type":["chr"],"align":["left"]},{"label":["idade"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["pop10"],"name":[5],"type":["dbl"],"align":["right"]},{"label":["pop11"],"name":[6],"type":["dbl"],"align":["right"]},{"label":["pop12"],"name":[7],"type":["dbl"],"align":["right"]},{"label":["pop13"],"name":[8],"type":["dbl"],"align":["right"]},{"label":["pop14"],"name":[9],"type":["dbl"],"align":["right"]},{"label":["pop15"],"name":[10],"type":["dbl"],"align":["right"]},{"label":["pop16"],"name":[11],"type":["dbl"],"align":["right"]},{"label":["pop17"],"name":[12],"type":["dbl"],"align":["right"]},{"label":["pop18"],"name":[13],"type":["dbl"],"align":["right"]},{"label":["pop19"],"name":[14],"type":["dbl"],"align":["right"]},{"label":["pop20"],"name":[15],"type":["dbl"],"align":["right"]},{"label":["pop21"],"name":[16],"type":["dbl"],"align":["right"]},{"label":["pop22"],"name":[17],"type":["dbl"],"align":["right"]}],"data":[{"1":"110001","2":"Feminino","3":"Amarela","4":"0","5":"3","6":"3","7":"3","8":"3","9":"2","10":"2","11":"2","12":"2","13":"2","14":"2","15":"1","16":"1","17":"1","_rn_":"1"},{"1":"110001","2":"Feminino","3":"Branca","4":"0","5":"484","6":"464","7":"446","8":"431","9":"414","10":"398","11":"381","12":"367","13":"359","14":"353","15":"346","16":"338","17":"327","_rn_":"2"},{"1":"110001","2":"Feminino","3":"Indígena","4":"0","5":"42","6":"43","7":"44","8":"44","9":"45","10":"45","11":"46","12":"46","13":"47","14":"49","15":"50","16":"52","17":"52","_rn_":"3"},{"1":"110001","2":"Feminino","3":"Parda","4":"0","5":"481","6":"474","7":"469","8":"466","9":"461","10":"456","11":"449","12":"445","13":"448","14":"454","15":"458","16":"462","17":"459","_rn_":"4"},{"1":"110001","2":"Feminino","3":"Preta","4":"0","5":"23","6":"22","7":"21","8":"20","9":"19","10":"18","11":"17","12":"17","13":"16","14":"16","15":"15","16":"15","17":"14","_rn_":"5"},{"1":"110001","2":"Feminino","3":"Amarela","4":"5","5":"4","6":"4","7":"3","8":"3","9":"3","10":"2","11":"2","12":"1","13":"1","14":"1","15":"1","16":"0","17":"0","_rn_":"6"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+<p>Observa-se, abaixo, que as populações ajustadas pelas omissões
+censitárias são superiores às efetivamente recenseadas, com fatores
+médios de correção de <span class="math inline">\(1,02\hspace{0.5cm}\)</span> em 2010 e <span class="math inline">\(1,04\hspace{0.5cm}\)</span> em 2022. Conforme
+argumentado por <span class="citation">Gonzaga et al. (2026)</span>,
+esses ajustes foram realizados para assegurar que os totais
+populacionais fossem coerentes com a Revisão 2024 das Projeções de
+População do IBGE <span class="citation">(IBGE 2024)</span>.
+Ressalta-se, contudo, a limitação de que foram aplicados os mesmos
+fatores de correção por sexo e grupos etários para todas as categorias
+de cor/raça <span class="citation">(Gonzaga et al. 2026)</span>.</p>
+<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" tabindex="-1"></a><span class="co"># População total do censo 2010:</span></span>
+<span id="cb20-2"><a href="#cb20-2" tabindex="-1"></a><span class="fu">sum</span>(pop.censo<span class="fl">.10</span><span class="sc">$</span>populacao)</span></code></pre></div>
+<pre><code>## [1] 190749191</code></pre>
+<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" tabindex="-1"></a><span class="co"># População total do censo 2022:</span></span>
+<span id="cb22-2"><a href="#cb22-2" tabindex="-1"></a><span class="fu">sum</span>(pop.censo<span class="fl">.22</span><span class="sc">$</span>populacao)</span></code></pre></div>
+<pre><code>## [1] 203069637</code></pre>
+<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" tabindex="-1"></a><span class="co"># População ajustada em 2010:</span></span>
+<span id="cb24-2"><a href="#cb24-2" tabindex="-1"></a><span class="fu">sum</span>(pop.interp<span class="sc">$</span>pop10)</span></code></pre></div>
+<pre><code>## [1] 194740165</code></pre>
+<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" tabindex="-1"></a><span class="co"># População ajustada em 2022:</span></span>
+<span id="cb26-2"><a href="#cb26-2" tabindex="-1"></a><span class="fu">sum</span>(pop.interp<span class="sc">$</span>pop22)</span></code></pre></div>
+<pre><code>## [1] 210859492</code></pre>
+<div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" tabindex="-1"></a><span class="fu">sum</span>(pop.interp<span class="sc">$</span>pop10)<span class="sc">/</span><span class="fu">sum</span>(pop.censo<span class="fl">.10</span><span class="sc">$</span>populacao)</span></code></pre></div>
+<pre><code>## [1] 1.020923</code></pre>
+<div class="sourceCode" id="cb30"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" tabindex="-1"></a><span class="fu">sum</span>(pop.interp<span class="sc">$</span>pop22)<span class="sc">/</span><span class="fu">sum</span>(pop.censo<span class="fl">.22</span><span class="sc">$</span>populacao)</span></code></pre></div>
+<pre><code>## [1] 1.038361</code></pre>
+<p>Os dados de entrada devem ser estruturados seguindo o padrão da
+população masculina do Vietnã, conforme apresentado por <span class="citation">Muniz (2023)</span>.</p>
+<p>Embora ajustes possam ser realizados nas fórmulas e funções para
+incorporar distintos intervalos intercensitários, optou-se por manter
+esta aplicação restrita a um período de dez anos. Nesse sentido, para a
+estimação das tábuas de vida por sexo e cor/raça no Brasil,
+considerou-se o intervalo entre 2012 e 2022. A base pop.interp contém as
+populações municipais interpoladas para todos os anos civis entre 2010 e
+2022, adotando-se o dia 1º de julho como data de referência das
+estimativas.</p>
+<p><br></p>
+<div id="organização-dos-dados-de-entrada" class="section level4">
+<h4><strong>4.1 Organização dos dados de entrada</strong></h4>
+<p>O código abaixo organiza a base de dados de óbitos para o período
+compreendido entre julho de 2012 e julho de 2022, restringindo a análise
+à população feminina autodeclarada branca, preta e parda.</p>
+<div class="sourceCode" id="cb32"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" tabindex="-1"></a><span class="co"># Configura a coluna age_x:</span></span>
+<span id="cb32-2"><a href="#cb32-2" tabindex="-1"></a>obitos<span class="sc">$</span>age_x <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(<span class="fu">sub</span>(<span class="st">&quot;([-+].*)&quot;</span>, <span class="st">&quot;&quot;</span>, obitos<span class="sc">$</span>age.group))</span>
+<span id="cb32-3"><a href="#cb32-3" tabindex="-1"></a></span>
+<span id="cb32-4"><a href="#cb32-4" tabindex="-1"></a><span class="co"># Filtra da base apenas os óbitos no período julho/2012 a julho/2022:</span></span>
+<span id="cb32-5"><a href="#cb32-5" tabindex="-1"></a>D <span class="ot">&lt;-</span> obitos <span class="sc">%&gt;%</span></span>
+<span id="cb32-6"><a href="#cb32-6" tabindex="-1"></a>  <span class="fu">filter</span>(Year <span class="sc">&gt;</span> <span class="dv">2012</span> <span class="sc">|</span> (Year <span class="sc">==</span> <span class="dv">2012</span> <span class="sc">&amp;</span> Month <span class="sc">&gt;=</span> <span class="dv">7</span>))</span>
+<span id="cb32-7"><a href="#cb32-7" tabindex="-1"></a></span>
+<span id="cb32-8"><a href="#cb32-8" tabindex="-1"></a><span class="co"># Média dos óbitos no período por sexo, raça e idade:</span></span>
+<span id="cb32-9"><a href="#cb32-9" tabindex="-1"></a>D <span class="ot">&lt;-</span> D <span class="sc">%&gt;%</span></span>
+<span id="cb32-10"><a href="#cb32-10" tabindex="-1"></a>  <span class="fu">group_by</span>(SEXO, RACACOR, age_x) <span class="sc">%&gt;%</span></span>
+<span id="cb32-11"><a href="#cb32-11" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">D=</span><span class="fu">mean</span>(obitos))</span>
+<span id="cb32-12"><a href="#cb32-12" tabindex="-1"></a></span>
+<span id="cb32-13"><a href="#cb32-13" tabindex="-1"></a><span class="co"># Filtra os óbitos apenas para mulheres de raça branca, preta e parda:</span></span>
+<span id="cb32-14"><a href="#cb32-14" tabindex="-1"></a>D.branca.f <span class="ot">&lt;-</span> D <span class="sc">%&gt;%</span> <span class="fu">filter</span>(SEXO<span class="sc">==</span><span class="st">&#39;Feminino&#39;</span> <span class="sc">&amp;</span> RACACOR<span class="sc">==</span><span class="st">&#39;Branca&#39;</span>)</span>
+<span id="cb32-15"><a href="#cb32-15" tabindex="-1"></a>D.parda.f <span class="ot">&lt;-</span> D <span class="sc">%&gt;%</span> <span class="fu">filter</span>(SEXO<span class="sc">==</span><span class="st">&#39;Feminino&#39;</span> <span class="sc">&amp;</span> RACACOR<span class="sc">==</span><span class="st">&#39;Parda&#39;</span>)</span>
+<span id="cb32-16"><a href="#cb32-16" tabindex="-1"></a>D.preta.f <span class="ot">&lt;-</span> D <span class="sc">%&gt;%</span> <span class="fu">filter</span>(SEXO<span class="sc">==</span><span class="st">&#39;Feminino&#39;</span> <span class="sc">&amp;</span> RACACOR<span class="sc">==</span><span class="st">&#39;Preta&#39;</span>)</span></code></pre></div>
+<p>Assim, tem-se os seguintes resultados em relação aos óbitos por grupo
+de análise:</p>
+<div class="sourceCode" id="cb33"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" tabindex="-1"></a><span class="co"># Óbitos de mulheres brancas</span></span>
+<span id="cb33-2"><a href="#cb33-2" tabindex="-1"></a><span class="fu">print</span>(D.branca.f)</span></code></pre></div>
+<pre><code>## # A tibble: 17 x 4
+## # Groups:   SEXO, RACACOR [1]
+##    SEXO     RACACOR age_x       D
+##    &lt;chr&gt;    &lt;chr&gt;   &lt;dbl&gt;   &lt;dbl&gt;
+##  1 Feminino Branca      0   628. 
+##  2 Feminino Branca      5    47.5
+##  3 Feminino Branca     10    59.5
+##  4 Feminino Branca     15   117. 
+##  5 Feminino Branca     20   157. 
+##  6 Feminino Branca     25   194. 
+##  7 Feminino Branca     30   271. 
+##  8 Feminino Branca     35   377. 
+##  9 Feminino Branca     40   511. 
+## 10 Feminino Branca     45   714. 
+## 11 Feminino Branca     50  1008. 
+## 12 Feminino Branca     55  1403. 
+## 13 Feminino Branca     60  1840. 
+## 14 Feminino Branca     65  2297. 
+## 15 Feminino Branca     70  2755. 
+## 16 Feminino Branca     75  3338. 
+## 17 Feminino Branca     80 12054.</code></pre>
+<div class="sourceCode" id="cb35"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" tabindex="-1"></a><span class="co"># Óbitos de mulheres pardas</span></span>
+<span id="cb35-2"><a href="#cb35-2" tabindex="-1"></a><span class="fu">print</span>(D.parda.f)</span></code></pre></div>
+<pre><code>## # A tibble: 17 x 4
+## # Groups:   SEXO, RACACOR [1]
+##    SEXO     RACACOR age_x      D
+##    &lt;chr&gt;    &lt;chr&gt;   &lt;dbl&gt;  &lt;dbl&gt;
+##  1 Feminino Parda       0  711. 
+##  2 Feminino Parda       5   55.6
+##  3 Feminino Parda      10   73.8
+##  4 Feminino Parda      15  156. 
+##  5 Feminino Parda      20  195. 
+##  6 Feminino Parda      25  230. 
+##  7 Feminino Parda      30  309. 
+##  8 Feminino Parda      35  422. 
+##  9 Feminino Parda      40  544. 
+## 10 Feminino Parda      45  703. 
+## 11 Feminino Parda      50  901. 
+## 12 Feminino Parda      55 1132. 
+## 13 Feminino Parda      60 1349. 
+## 14 Feminino Parda      65 1548. 
+## 15 Feminino Parda      70 1688. 
+## 16 Feminino Parda      75 1823. 
+## 17 Feminino Parda      80 5059.</code></pre>
+<div class="sourceCode" id="cb37"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" tabindex="-1"></a><span class="co"># Óbitos de mulheres pretas</span></span>
+<span id="cb37-2"><a href="#cb37-2" tabindex="-1"></a><span class="fu">print</span>(D.preta.f)</span></code></pre></div>
+<pre><code>## # A tibble: 17 x 4
+## # Groups:   SEXO, RACACOR [1]
+##    SEXO     RACACOR age_x       D
+##    &lt;chr&gt;    &lt;chr&gt;   &lt;dbl&gt;   &lt;dbl&gt;
+##  1 Feminino Preta       0   41.2 
+##  2 Feminino Preta       5    5.73
+##  3 Feminino Preta      10    8.62
+##  4 Feminino Preta      15   21.3 
+##  5 Feminino Preta      20   31.9 
+##  6 Feminino Preta      25   44.2 
+##  7 Feminino Preta      30   64.3 
+##  8 Feminino Preta      35   94.3 
+##  9 Feminino Preta      40  126.  
+## 10 Feminino Preta      45  168.  
+## 11 Feminino Preta      50  225.  
+## 12 Feminino Preta      55  290.  
+## 13 Feminino Preta      60  350.  
+## 14 Feminino Preta      65  385.  
+## 15 Feminino Preta      70  405.  
+## 16 Feminino Preta      75  416.  
+## 17 Feminino Preta      80 1140.</code></pre>
+<p>O código abaixo filtra os dados populacionais para cada grupo de
+análise (mulheres brancas, pretas e pardas) nos anos de 2012 e 2022.
+Adicionalmente, padroniza os grupos etários para garantir a consistência
+com a base de dados de óbitos e agrega as populações em nível
+nacional.</p>
+<div class="sourceCode" id="cb39"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" tabindex="-1"></a>N_t.branca.f <span class="ot">&lt;-</span> pop.interp <span class="sc">%&gt;%</span></span>
+<span id="cb39-2"><a href="#cb39-2" tabindex="-1"></a>  <span class="fu">select</span>(codigo_municipio, sexo, cor_raca, idade, pop12, pop22) <span class="sc">%&gt;%</span></span>
+<span id="cb39-3"><a href="#cb39-3" tabindex="-1"></a>  <span class="fu">filter</span>(sexo <span class="sc">==</span> <span class="st">&#39;Feminino&#39;</span>, cor_raca <span class="sc">==</span> <span class="st">&#39;Branca&#39;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb39-4"><a href="#cb39-4" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">idade =</span> <span class="fu">ifelse</span>(idade <span class="sc">&gt;=</span> <span class="dv">80</span>, <span class="dv">80</span>, idade)) <span class="sc">%&gt;%</span> </span>
+<span id="cb39-5"><a href="#cb39-5" tabindex="-1"></a>  <span class="fu">group_by</span>(sexo, cor_raca, idade) <span class="sc">%&gt;%</span></span>
+<span id="cb39-6"><a href="#cb39-6" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
+<span id="cb39-7"><a href="#cb39-7" tabindex="-1"></a>    <span class="at">N_t1 =</span> <span class="fu">sum</span>(pop12, <span class="at">na.rm =</span> <span class="cn">TRUE</span>), </span>
+<span id="cb39-8"><a href="#cb39-8" tabindex="-1"></a>    <span class="at">N_t2 =</span> <span class="fu">sum</span>(pop22, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb39-9"><a href="#cb39-9" tabindex="-1"></a>    <span class="at">.groups =</span> <span class="st">&quot;drop&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb39-10"><a href="#cb39-10" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="at">age_x =</span> idade)</span>
+<span id="cb39-11"><a href="#cb39-11" tabindex="-1"></a></span>
+<span id="cb39-12"><a href="#cb39-12" tabindex="-1"></a>N_t.parda.f <span class="ot">&lt;-</span> pop.interp <span class="sc">%&gt;%</span></span>
+<span id="cb39-13"><a href="#cb39-13" tabindex="-1"></a>  <span class="fu">select</span>(codigo_municipio, sexo, cor_raca, idade, pop12, pop22) <span class="sc">%&gt;%</span></span>
+<span id="cb39-14"><a href="#cb39-14" tabindex="-1"></a>  <span class="fu">filter</span>(sexo <span class="sc">==</span> <span class="st">&#39;Feminino&#39;</span>, cor_raca <span class="sc">==</span> <span class="st">&#39;Parda&#39;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb39-15"><a href="#cb39-15" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">idade =</span> <span class="fu">ifelse</span>(idade <span class="sc">&gt;=</span> <span class="dv">80</span>, <span class="dv">80</span>, idade)) <span class="sc">%&gt;%</span> </span>
+<span id="cb39-16"><a href="#cb39-16" tabindex="-1"></a>  <span class="fu">group_by</span>(sexo, cor_raca, idade) <span class="sc">%&gt;%</span></span>
+<span id="cb39-17"><a href="#cb39-17" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
+<span id="cb39-18"><a href="#cb39-18" tabindex="-1"></a>    <span class="at">N_t1 =</span> <span class="fu">sum</span>(pop12, <span class="at">na.rm =</span> <span class="cn">TRUE</span>), </span>
+<span id="cb39-19"><a href="#cb39-19" tabindex="-1"></a>    <span class="at">N_t2 =</span> <span class="fu">sum</span>(pop22, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb39-20"><a href="#cb39-20" tabindex="-1"></a>    <span class="at">.groups =</span> <span class="st">&quot;drop&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb39-21"><a href="#cb39-21" tabindex="-1"></a>    <span class="fu">rename</span>(<span class="at">age_x =</span> idade)</span>
+<span id="cb39-22"><a href="#cb39-22" tabindex="-1"></a></span>
+<span id="cb39-23"><a href="#cb39-23" tabindex="-1"></a>N_t.preta.f <span class="ot">&lt;-</span> pop.interp <span class="sc">%&gt;%</span></span>
+<span id="cb39-24"><a href="#cb39-24" tabindex="-1"></a>  <span class="fu">select</span>(codigo_municipio, sexo, cor_raca, idade, pop12, pop22) <span class="sc">%&gt;%</span></span>
+<span id="cb39-25"><a href="#cb39-25" tabindex="-1"></a>  <span class="fu">filter</span>(sexo <span class="sc">==</span> <span class="st">&#39;Feminino&#39;</span>, cor_raca <span class="sc">==</span> <span class="st">&#39;Preta&#39;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb39-26"><a href="#cb39-26" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">idade =</span> <span class="fu">ifelse</span>(idade <span class="sc">&gt;=</span> <span class="dv">80</span>, <span class="dv">80</span>, idade)) <span class="sc">%&gt;%</span> </span>
+<span id="cb39-27"><a href="#cb39-27" tabindex="-1"></a>  <span class="fu">group_by</span>(sexo, cor_raca, idade) <span class="sc">%&gt;%</span></span>
+<span id="cb39-28"><a href="#cb39-28" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
+<span id="cb39-29"><a href="#cb39-29" tabindex="-1"></a>    <span class="at">N_t1 =</span> <span class="fu">sum</span>(pop12, <span class="at">na.rm =</span> <span class="cn">TRUE</span>), </span>
+<span id="cb39-30"><a href="#cb39-30" tabindex="-1"></a>    <span class="at">N_t2 =</span> <span class="fu">sum</span>(pop22, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb39-31"><a href="#cb39-31" tabindex="-1"></a>    <span class="at">.groups =</span> <span class="st">&quot;drop&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb39-32"><a href="#cb39-32" tabindex="-1"></a>    <span class="fu">rename</span>(<span class="at">age_x =</span> idade)</span></code></pre></div>
+<p>Assim, tem-se os seguintes resultados sobre as populações <span class="math inline">\(N_x(t_1)\)</span> e <span class="math inline">\(N_x(t_2)\hspace{0.5cm}\)</span> em cada grupo de
+análise:</p>
+<div class="sourceCode" id="cb40"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" tabindex="-1"></a><span class="fu">print</span>(N_t.branca.f)</span></code></pre></div>
+<pre><code>## # A tibble: 17 x 5
+##    sexo     cor_raca age_x    N_t1    N_t2
+##    &lt;chr&gt;    &lt;chr&gt;    &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;
+##  1 Feminino Branca       0 3481124 3092509
+##  2 Feminino Branca       5 3337149 2987385
+##  3 Feminino Branca      10 3479260 2842712
+##  4 Feminino Branca      15 3715497 3017617
+##  5 Feminino Branca      20 3844396 3240724
+##  6 Feminino Branca      25 4044491 3331945
+##  7 Feminino Branca      30 3979166 3420894
+##  8 Feminino Branca      35 3544104 3633309
+##  9 Feminino Branca      40 3356813 3638847
+## 10 Feminino Branca      45 3272085 3216781
+## 11 Feminino Branca      50 2947573 3040266
+## 12 Feminino Branca      55 2506014 2955953
+## 13 Feminino Branca      60 2023705 2635511
+## 14 Feminino Branca      65 1547371 2188413
+## 15 Feminino Branca      70 1228746 1719547
+## 16 Feminino Branca      75  961381 1238532
+## 17 Feminino Branca      80 1218578 1608516</code></pre>
+<p>`</p>
+<div class="sourceCode" id="cb42"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" tabindex="-1"></a><span class="fu">print</span>(N_t.parda.f)</span></code></pre></div>
+<pre><code>## # A tibble: 17 x 5
+##    sexo     cor_raca age_x    N_t1    N_t2
+##    &lt;chr&gt;    &lt;chr&gt;    &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;
+##  1 Feminino Parda        0 3212422 3143091
+##  2 Feminino Parda        5 3666785 3519453
+##  3 Feminino Parda       10 4129143 3623290
+##  4 Feminino Parda       15 4100284 3723965
+##  5 Feminino Parda       20 3863901 3928115
+##  6 Feminino Parda       25 3874210 3960476
+##  7 Feminino Parda       30 3719669 3869796
+##  8 Feminino Parda       35 3203843 3942886
+##  9 Feminino Parda       40 2842516 3752168
+## 10 Feminino Parda       45 2579083 3231033
+## 11 Feminino Parda       50 2199658 2849574
+## 12 Feminino Parda       55 1769910 2544742
+## 13 Feminino Parda       60 1359059 2104406
+## 14 Feminino Parda       65  997175 1613913
+## 15 Feminino Parda       70  739116 1153833
+## 16 Feminino Parda       75  516502  762326
+## 17 Feminino Parda       80  580665  859343</code></pre>
+<div class="sourceCode" id="cb44"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" tabindex="-1"></a><span class="fu">print</span>(N_t.preta.f)</span></code></pre></div>
+<pre><code>## # A tibble: 17 x 5
+##    sexo     cor_raca age_x   N_t1   N_t2
+##    &lt;chr&gt;    &lt;chr&gt;    &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;
+##  1 Feminino Preta        0 349921 424916
+##  2 Feminino Preta        5 449559 524509
+##  3 Feminino Preta       10 554264 562277
+##  4 Feminino Preta       15 640038 706729
+##  5 Feminino Preta       20 686136 864165
+##  6 Feminino Preta       25 736117 902965
+##  7 Feminino Preta       30 718190 873567
+##  8 Feminino Preta       35 616925 922729
+##  9 Feminino Preta       40 563439 898303
+## 10 Feminino Preta       45 526923 779890
+## 11 Feminino Preta       50 475299 696061
+## 12 Feminino Preta       55 389621 624524
+## 13 Feminino Preta       60 306922 539775
+## 14 Feminino Preta       65 228387 424424
+## 15 Feminino Preta       70 173044 310325
+## 16 Feminino Preta       75 125042 204224
+## 17 Feminino Preta       80 144278 240500</code></pre>
+<p>Por fim, com base nos dados de população e óbitos previamente
+organizados, estruturam-se os dados de entrada para as funções r_method,
+DDM e MII, conforme os códigos apresentados a seguir:</p>
+<div class="sourceCode" id="cb46"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" tabindex="-1"></a><span class="co"># Mulheres brancas:</span></span>
+<span id="cb46-2"><a href="#cb46-2" tabindex="-1"></a>df.branca <span class="ot">&lt;-</span> <span class="fu">cbind</span>(N_t.branca.f[,<span class="dv">3</span><span class="sc">:</span><span class="dv">5</span>], D.branca.f[,<span class="dv">4</span>])</span>
+<span id="cb46-3"><a href="#cb46-3" tabindex="-1"></a><span class="fu">print</span>(df.branca)</span></code></pre></div>
+<pre><code>##    age_x    N_t1    N_t2           D
+## 1      0 3481124 3092509   627.86777
+## 2      5 3337149 2987385    47.46281
+## 3     10 3479260 2842712    59.54545
+## 4     15 3715497 3017617   117.28099
+## 5     20 3844396 3240724   157.33884
+## 6     25 4044491 3331945   193.86777
+## 7     30 3979166 3420894   270.67769
+## 8     35 3544104 3633309   377.30579
+## 9     40 3356813 3638847   510.85950
+## 10    45 3272085 3216781   713.92562
+## 11    50 2947573 3040266  1008.33884
+## 12    55 2506014 2955953  1403.09091
+## 13    60 2023705 2635511  1839.85124
+## 14    65 1547371 2188413  2297.33884
+## 15    70 1228746 1719547  2754.91736
+## 16    75  961381 1238532  3337.93388
+## 17    80 1218578 1608516 12054.42149</code></pre>
+<div class="sourceCode" id="cb48"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" tabindex="-1"></a><span class="co"># Mulheres pardas:</span></span>
+<span id="cb48-2"><a href="#cb48-2" tabindex="-1"></a>df.parda <span class="ot">&lt;-</span> <span class="fu">cbind</span>(N_t.parda.f[,<span class="dv">3</span><span class="sc">:</span><span class="dv">5</span>], D.parda.f[,<span class="dv">4</span>])</span>
+<span id="cb48-3"><a href="#cb48-3" tabindex="-1"></a><span class="fu">print</span>(df.parda)</span></code></pre></div>
+<pre><code>##    age_x    N_t1    N_t2          D
+## 1      0 3212422 3143091  711.03306
+## 2      5 3666785 3519453   55.59504
+## 3     10 4129143 3623290   73.79339
+## 4     15 4100284 3723965  155.99174
+## 5     20 3863901 3928115  194.89256
+## 6     25 3874210 3960476  229.85950
+## 7     30 3719669 3869796  309.05785
+## 8     35 3203843 3942886  422.20661
+## 9     40 2842516 3752168  544.41322
+## 10    45 2579083 3231033  702.64463
+## 11    50 2199658 2849574  900.87603
+## 12    55 1769910 2544742 1131.85950
+## 13    60 1359059 2104406 1349.40496
+## 14    65  997175 1613913 1547.94215
+## 15    70  739116 1153833 1687.87603
+## 16    75  516502  762326 1822.78512
+## 17    80  580665  859343 5059.42149</code></pre>
+<div class="sourceCode" id="cb50"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" tabindex="-1"></a><span class="co"># Mulheres pretas:</span></span>
+<span id="cb50-2"><a href="#cb50-2" tabindex="-1"></a>df.preta <span class="ot">&lt;-</span> <span class="fu">cbind</span>(N_t.preta.f[,<span class="dv">3</span><span class="sc">:</span><span class="dv">5</span>], D.preta.f[,<span class="dv">4</span>])</span>
+<span id="cb50-3"><a href="#cb50-3" tabindex="-1"></a><span class="fu">print</span>(df.preta)</span></code></pre></div>
+<pre><code>##    age_x   N_t1   N_t2           D
+## 1      0 349921 424916   41.157025
+## 2      5 449559 524509    5.733333
+## 3     10 554264 562277    8.619835
+## 4     15 640038 706729   21.272727
+## 5     20 686136 864165   31.933884
+## 6     25 736117 902965   44.181818
+## 7     30 718190 873567   64.289256
+## 8     35 616925 922729   94.272727
+## 9     40 563439 898303  126.123967
+## 10    45 526923 779890  168.140496
+## 11    50 475299 696061  225.148760
+## 12    55 389621 624524  290.330579
+## 13    60 306922 539775  349.884298
+## 14    65 228387 424424  385.454545
+## 15    70 173044 310325  405.016529
+## 16    75 125042 204224  416.305785
+## 17    80 144278 240500 1140.256198</code></pre>
+<p><br></p>
+</div>
+<div id="tábuas-de-vida-feminina-por-raça-para-o-brasil-entre-2012-e-2022" class="section level4">
+<h4><strong>4.2 Tábuas de vida feminina por raça para o Brasil entre
+2012 e 2022</strong></h4>
+<p><strong>Método Integrado de Preston (r-method)</strong></p>
+<p>No código a seguir, com base nos dados de entrada previamente
+organizados, estimam-se as tábuas de vida para a população feminina no
+Brasil, desagregadas por categoria de cor/raça, utilizando-se a função
+r_method com os argumentos pertinentes.</p>
+<div class="sourceCode" id="cb52"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1" tabindex="-1"></a>r_method_lt_branca <span class="ot">&lt;-</span> <span class="fu">r_method</span>(df.branca, <span class="dv">2012</span>, <span class="dv">2022</span>, <span class="dv">5</span>)</span>
+<span id="cb52-2"><a href="#cb52-2" tabindex="-1"></a><span class="fu">print</span>(r_method_lt_branca)</span></code></pre></div>
+<pre><code>##    age_x    N_t1    N_t2           D          r_x         S_x N_x_star     L_x
+## 1      0 3481124 3092509   627.86777 -0.011837249 -0.02959312  3281068 3185394
+## 2      5 3337149 2987385    47.46281 -0.011071843 -0.08686585  3157428 2894730
+## 3     10 3479260 2842712    59.54545 -0.020206110 -0.16506074  3144922 2666398
+## 4     15 3715497 3017617   117.28099 -0.020804500 -0.26758726  3348425 2562293
+## 5     20 3844396 3240724   157.33884 -0.017081974 -0.36230345  3529678 2456907
+## 6     25 4044491 3331945   193.86777 -0.019379949 -0.45345826  3670970 2332633
+## 7     30 3979166 3420894   270.67769 -0.015117033 -0.53970071  3689486 2150685
+## 8     35 3544104 3633309   377.30579  0.002485843 -0.57127869  3588429 2026755
+## 9     40 3356813 3638847   510.85950  0.008067486 -0.54489537  3494986 2026751
+## 10    45 3272085 3216781   713.92562 -0.001704623 -0.52898821  3244315 1911553
+## 11    50 2947573 3040266  1008.33884  0.003096289 -0.52550904  2993561 1769956
+## 12    55 2506014 2955953  1403.09091  0.016512766 -0.47648640  2721702 1690072
+## 13    60 2023705 2635511  1839.85124  0.026414710 -0.36916771  2309436 1596535
+## 14    65 1547371 2188413  2297.33884  0.034661926 -0.21647612  1840187 1481998
+## 15    70 1228746 1719547  2754.91736  0.033606675 -0.04580462  1453577 1388498
+## 16    75  961381 1238532  3337.93388  0.025331129  0.10153989  1091193 1207813
+## 17    80 1218578 1608516 12054.42149  0.027762741  0.23427457  1400037 1769634
+##         l_x      T_x       e_x
+## 1        NA 35118604        NA
+## 2  608012.3 31933210 52.520661
+## 3  556112.7 29038480 52.216895
+## 4  522869.1 26372083 50.437257
+## 5  501920.0 23809789 47.437417
+## 6  478954.0 21352883 44.582325
+## 7  448331.8 19020249 42.424493
+## 8  417744.0 16869565 40.382544
+## 9  405350.6 14842810 36.617215
+## 10 393830.4 12816059 32.542073
+## 11 368150.9 10904505 29.619664
+## 12 346002.7  9134550 26.400225
+## 13 328660.7  7444478 22.650955
+## 14 307853.3  5847943 18.995876
+## 15 287049.6  4365945 15.209725
+## 16 259631.1  2977447 11.467990
+## 17 297744.7  1769634  5.943462</code></pre>
+<div class="sourceCode" id="cb54"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb54-1"><a href="#cb54-1" tabindex="-1"></a>r_method_lt_parda <span class="ot">&lt;-</span> <span class="fu">r_method</span>(df.parda, <span class="dv">2012</span>, <span class="dv">2022</span>, <span class="dv">5</span>)</span>
+<span id="cb54-2"><a href="#cb54-2" tabindex="-1"></a><span class="fu">print</span>(r_method_lt_parda)</span></code></pre></div>
+<pre><code>##    age_x    N_t1    N_t2          D          r_x          S_x  N_x_star     L_x
+## 1      0 3212422 3143091  711.03306 -0.002181846 -0.005454615 3177567.4 3160282
+## 2      5 3666785 3519453   55.59504 -0.004100968 -0.021161649 3592363.8 3517142
+## 3     10 4129143 3623290   73.79339 -0.013068743 -0.064085924 3867955.9 3627850
+## 4     15 4100284 3723965  155.99174 -0.009626728 -0.120824601 3907597.0 3462871
+## 5     20 3863901 3928115  194.89256  0.001648237 -0.140770827 3895875.7 3384302
+## 6     25 3874210 3960476  229.85950  0.002202245 -0.131144622 3917105.5 3435658
+## 7     30 3719669 3869796  309.05785  0.003956711 -0.115747233 3793990.0 3379308
+## 8     35 3203843 3942886  422.20661  0.020756192 -0.053964978 3554207.0 3367488
+## 9     40 2842516 3752168  544.41322  0.027764423  0.067336559 3265822.6 3493305
+## 10    45 2579083 3231033  702.64463  0.022536799  0.193089614 2886711.3 3501556
+## 11    50 2199658 2849574  900.87603  0.025886762  0.314148516 2503615.0 3427682
+## 12    55 1769910 2544742 1131.85950  0.036310057  0.469640563 2122254.5 3394375
+## 13    60 1359059 2104406 1349.40496  0.043724069  0.669725879 1691157.0 3304016
+## 14    65  997175 1613913 1547.94215  0.048149066  0.899408718 1268603.0 3118416
+## 15    70  739116 1153833 1687.87603  0.044538985  1.131128845  923480.6 2862008
+## 16    75  516502  762326 1822.78512  0.038929512  1.339800088  627489.4 2395930
+## 17    80  580665  859343 5059.42149  0.039199415  1.535122405  706392.5 3278999
+##         l_x      T_x       e_x
+## 1        NA 56111188        NA
+## 2  667742.4 52950905 79.298398
+## 3  714499.2 49433763 69.186587
+## 4  709072.1 45805913 64.599795
+## 5  684717.3 42343042 61.840183
+## 6  681996.0 38958740 57.124591
+## 7  681496.6 35523082 52.125107
+## 8  674679.6 32143774 47.643021
+## 9  686079.3 28776286 41.943093
+## 10 699486.1 25282982 36.145080
+## 11 692923.8 21781425 31.434084
+## 12 682205.7 18353743 26.903534
+## 13 669839.1 14959369 22.332780
+## 14 642243.2 11655352 18.147880
+## 15 598042.3  8536937 14.274804
+## 16 525793.8  5674929 10.793070
+## 17 567492.9  3278999  5.778044</code></pre>
+<div class="sourceCode" id="cb56"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb56-1"><a href="#cb56-1" tabindex="-1"></a>r_method_lt_preta <span class="ot">&lt;-</span> <span class="fu">r_method</span>(df.preta, <span class="dv">2012</span>, <span class="dv">2022</span>, <span class="dv">5</span>)</span>
+<span id="cb56-2"><a href="#cb56-2" tabindex="-1"></a><span class="fu">print</span>(r_method_lt_preta)</span></code></pre></div>
+<pre><code>##    age_x   N_t1   N_t2           D         r_x        S_x N_x_star       L_x
+## 1      0 349921 424916   41.157025 0.019418409 0.04854602 385599.6  404780.7
+## 2      5 449559 524509    5.733333 0.015419548 0.13564091 485590.1  556132.0
+## 3     10 554264 562277    8.619835 0.001435350 0.17777816 558256.1  666870.6
+## 4     15 640038 706729   21.272727 0.009911973 0.20614647 672557.4  826528.1
+## 5     20 686136 864165   31.933884 0.023068786 0.28859837 770022.5 1027637.9
+## 6     25 736117 902965   44.181818 0.020429472 0.39734402 815283.9 1213034.6
+## 7     30 718190 873567   64.289256 0.019585067 0.49738036 792077.7 1302498.8
+## 8     35 616925 922729   94.272727 0.040258812 0.64699006 754489.6 1440912.1
+## 9     40 563439 898303  126.123967 0.046644835 0.86424918 711434.4 1688392.9
+## 10    45 526923 779890  168.140496 0.039209846 1.07888588 641047.6 1885577.7
+## 11    50 475299 696061  225.148760 0.038149322 1.27228380 575184.4 2052829.8
+## 12    55 389621 624524  290.330579 0.047181529 1.48561093 493282.5 2179156.3
+## 13    60 306922 539775  349.884298 0.056455874 1.74470444 407024.4 2329892.6
+## 14    65 228387 424424  385.454545 0.061969140 2.04076697 311340.5 2396235.5
+## 15    70 173044 310325  405.016529 0.058407424 2.34170838 231732.3 2409781.6
+## 16    75 125042 204224  416.305785 0.049056775 2.61036888 159801.7 2173953.0
+## 17    80 144278 240500 1140.256198 0.051097810 2.86075534 186276.3 3255126.4
+##          l_x      T_x        e_x
+## 1         NA 27809341         NA
+## 2   96091.28 27404560 285.193005
+## 3  122300.26 26848428 219.528780
+## 4  149339.87 26181557 175.315257
+## 5  185416.60 25355029 136.746274
+## 6  224067.25 24327391 108.571828
+## 7  251553.34 23114357  91.886501
+## 8  274341.09 21811858  79.506347
+## 9  312930.50 20370946  65.097348
+## 10 357397.07 18682553  52.273940
+## 11 393840.75 16796975  42.649155
+## 12 423198.60 14744145  34.839778
+## 13 450904.89 12564989  27.866163
+## 14 472612.81 10235096  21.656409
+## 15 480601.71  7838861  16.310514
+## 16 458373.46  5429079  11.844227
+## 17 542907.94  3255126   5.995724</code></pre>
+<p>A partir dos resultados apresentados, nota-se que as expectativas de
+vida estimadas por categoria de cor/raça, por meio do Método Integrado
+de Preston (r-method), mostram-se pouco plausíveis. As expectativas de
+vida para mulheres brancas encontram-se subestimadas, ao passo que os
+valores para mulheres pretas estão fortemente sobreestimados. Como o
+método fundamenta-se estritamente na estrutura etária da população, os
+diferentes níveis e padrões migratórios por categoria de cor/raça, bem
+como os fluxos decorrentes da reclassificação racial, impactam
+significativamente os resultados.</p>
+<p><br></p>
+<p><strong>Método de Distribuição dos Óbitos (DDM)</strong></p>
+<p>No código a seguir, obtêm-se as tábuas de vida para a população
+feminina no Brasil, desagregadas por categoria de cor/raça, mediante o
+emprego da função DDM com os argumentos pertinentes.</p>
+<div class="sourceCode" id="cb58"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb58-1"><a href="#cb58-1" tabindex="-1"></a>DDM_lt_branca <span class="ot">&lt;-</span> <span class="fu">DDM</span>(df.branca, <span class="dv">2012</span>, <span class="dv">2022</span>, <span class="dv">5</span>)</span>
+<span id="cb58-2"><a href="#cb58-2" tabindex="-1"></a><span class="fu">print</span>(DDM_lt_branca)</span></code></pre></div>
+<pre><code>##    age_x    N_t1    N_t2           D          r_x         d_x      l_x
+## 1      0 3481124 3092509   627.86777 -0.011837249   627.86777 29115.24
+## 2      5 3337149 2987385    47.46281 -0.011071843    44.82086 28487.37
+## 3     10 3479260 2842712    59.54545 -0.020206110    52.00149 28442.55
+## 4     15 3715497 3017617   117.28099 -0.020804500    92.44174 28390.55
+## 5     20 3844396 3240724   157.33884 -0.017081974   112.80847 28298.11
+## 6     25 4044491 3331945   193.86777 -0.019379949   126.88881 28185.30
+## 7     30 3979166 3420894   270.67769 -0.015117033   162.52327 28058.41
+## 8     35 3544104 3633309   377.30579  0.002485843   219.50399 27895.89
+## 9     40 3356813 3638847   510.85950  0.008067486   305.14662 27676.38
+## 10    45 3272085 3216781   713.92562 -0.001704623   433.27980 27371.23
+## 11    50 2947573 3040266  1008.33884  0.003096289   614.09131 26937.96
+## 12    55 2506014 2955953  1403.09091  0.016512766   897.43401 26323.86
+## 13    60 2023705 2635511  1839.85124  0.026414710  1310.10873 25426.43
+## 14    65 1547371 2188413  2297.33884  0.034661926  1905.73627 24116.32
+## 15    70 1228746 1719547  2754.91736  0.033606675  2710.61609 22210.58
+## 16    75  961381 1238532  3337.93388  0.025331129  3805.64325 19499.97
+## 17    80 1218578 1608516 12054.42149  0.027762741 15694.32545 15694.33
+##          L_x         q_x        T_x       e_x
+## 1  142926.59 0.021564920 2163397.85 74.304660
+## 2  142324.80 0.001573359 2020471.26 70.925159
+## 3  142082.74 0.001828299 1878146.46 66.032986
+## 4  141721.63 0.003256074 1736063.72 61.149356
+## 5  141208.51 0.003986432 1594342.09 56.340947
+## 6  140609.27 0.004501950 1453133.58 51.556439
+## 7  139885.74 0.005792319 1312524.31 46.778287
+## 8  138930.67 0.007868687 1172638.58 42.036256
+## 9  137619.04 0.011025524 1033707.91 37.349821
+## 10 135772.98 0.015829750  896088.87 32.738343
+## 11 133154.55 0.022796508  760315.89 28.224707
+## 12 129375.73 0.034092032  627161.35 23.824821
+## 13 123856.88 0.051525469  497785.61 19.577488
+## 14 115817.26 0.079022678  373928.73 15.505215
+## 15 104276.38 0.122041635  258111.47 11.621102
+## 16  87985.74 0.195161506  153835.09  7.888991
+## 17  65849.35 1.000000000   65849.35  4.195743</code></pre>
+<div class="sourceCode" id="cb60"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb60-1"><a href="#cb60-1" tabindex="-1"></a>DDM_lt_parda <span class="ot">&lt;-</span> <span class="fu">DDM</span>(df.parda, <span class="dv">2012</span>, <span class="dv">2022</span>, <span class="dv">5</span>)</span>
+<span id="cb60-2"><a href="#cb60-2" tabindex="-1"></a><span class="fu">print</span>(DDM_lt_parda)</span></code></pre></div>
+<pre><code>##    age_x    N_t1    N_t2          D          r_x         d_x      l_x      L_x
+## 1      0 3212422 3143091  711.03306 -0.002181846   711.03306 48877.07 241384.8
+## 2      5 3666785 3519453   55.59504 -0.004100968    54.72863 48166.04 240693.4
+## 3     10 4129143 3623290   73.79339 -0.013068743    69.59118 48111.31 240382.6
+## 4     15 4100284 3723965  155.99174 -0.009626728   138.99432 48041.72 239861.1
+## 5     20 3863901 3928115  194.89256  0.001648237   170.22690 47902.72 239088.1
+## 6     25 3874210 3960476  229.85950  0.002202245   202.71038 47732.50 238155.7
+## 7     30 3719669 3869796  309.05785  0.003956711   276.78357 47529.79 236957.0
+## 8     35 3203843 3942886  422.20661  0.020756192   402.21406 47253.00 235259.5
+## 9     40 2842516 3752168  544.41322  0.027764423   585.51964 46850.79 232790.1
+## 10    45 2579083 3231033  702.64463  0.022536799   856.96364 46265.27 229183.9
+## 11    50 2199658 2849574  900.87603  0.025886762  1240.12913 45408.31 223941.2
+## 12    55 1769910 2544742 1131.85950  0.036310057  1820.21939 44168.18 216290.3
+## 13    60 1359059 2104406 1349.40496  0.043724069  2650.75424 42347.96 205112.9
+## 14    65  997175 1613913 1547.94215  0.048149066  3825.88471 39697.20 188921.3
+## 15    70  739116 1153833 1687.87603  0.044538985  5259.59703 35871.32 166207.6
+## 16    75  516502  762326 1822.78512  0.038929512  6997.97150 30611.72 135563.7
+## 17    80  580665  859343 5059.42149  0.039199415 23613.74993 23613.75 103266.8
+##            q_x       T_x       e_x
+## 1  0.014547374 3613060.0 73.921368
+## 2  0.001136249 3371675.2 70.001090
+## 3  0.001446462 3130981.8 65.077876
+## 4  0.002893200 2890599.3 60.168523
+## 5  0.003553595 2650738.2 55.335854
+## 6  0.004246800 2411650.1 50.524281
+## 7  0.005823371 2173494.4 45.729100
+## 8  0.008511926 1936537.4 40.982314
+## 9  0.012497541 1701277.9 36.312685
+## 10 0.018522828 1468487.8 31.740608
+## 11 0.027310623 1239303.8 27.292448
+## 12 0.041211105 1015362.6 22.988557
+## 13 0.062594619  799072.3 18.869205
+## 14 0.096376681  593959.4 14.962248
+## 15 0.146624023  405038.1 11.291419
+## 16 0.228604312  238830.5  7.801930
+## 17 1.000000000  103266.8  4.373165</code></pre>
+<div class="sourceCode" id="cb62"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb62-1"><a href="#cb62-1" tabindex="-1"></a>DDM_lt_preta <span class="ot">&lt;-</span> <span class="fu">DDM</span>(df.preta, <span class="dv">2012</span>, <span class="dv">2022</span>, <span class="dv">5</span>)</span>
+<span id="cb62-2"><a href="#cb62-2" tabindex="-1"></a><span class="fu">print</span>(DDM_lt_preta)</span></code></pre></div>
+<pre><code>##    age_x   N_t1   N_t2           D         r_x          d_x      l_x      L_x
+## 1      0 349921 424916   41.157025 0.019418409    41.157025 36323.81 181445.4
+## 2      5 449559 524509    5.733333 0.015419548     6.255068 36282.65 181397.6
+## 3     10 554264 562277    8.619835 0.001435350     9.808978 36276.40 181357.5
+## 4     15 640038 706729   21.272727 0.009911973    24.903947 36266.59 181270.7
+## 5     20 686136 864165   31.933884 0.023068786    40.598048 36241.68 181106.9
+## 6     25 736117 902965   44.181818 0.020429472    62.621668 36201.08 180848.9
+## 7     30 718190 873567   64.289256 0.019585067   100.708164 36138.46 180440.5
+## 8     35 616925 922729   94.272727 0.040258812   171.509040 36037.76 179760.0
+## 9     40 563439 898303  126.123967 0.046644835   285.136624 35866.25 178618.4
+## 10    45 526923 779890  168.140496 0.039209846   471.132691 35581.11 176727.7
+## 11    50 475299 696061  225.148760 0.038149322   765.476964 35109.98 173636.2
+## 12    55 389621 624524  290.330579 0.047181529  1221.805678 34344.50 168668.0
+## 13    60 306922 539775  349.884298 0.056455874  1907.904764 33122.69 160843.7
+## 14    65 228387 424424  385.454545 0.061969140  2826.075350 31214.79 149008.8
+## 15    70 173044 310325  405.016529 0.058407424  4012.180899 28388.71 131913.1
+## 16    75 125042 204224  416.305785 0.049056775  5395.081082 24376.53 108395.0
+## 17    80 144278 240500 1140.256198 0.051097810 18981.451965 18981.45  81208.9
+##             q_x       T_x       e_x
+## 1  0.0011330592 2776647.2 76.441522
+## 2  0.0001723983 2595201.8 71.527348
+## 3  0.0002703956 2413804.2 66.539251
+## 4  0.0006866912 2232446.7 61.556571
+## 5  0.0011202032 2051176.1 56.597153
+## 6  0.0017298285 1870069.1 51.657821
+## 7  0.0027867307 1689220.3 46.743003
+## 8  0.0047591488 1508779.7 41.866640
+## 9  0.0079499991 1329019.7 37.054888
+## 10 0.0132410905 1150401.3 32.331801
+## 11 0.0218022635  973673.6 27.732107
+## 12 0.0355750029  800037.4 23.294485
+## 13 0.0576011348  631369.5 19.061537
+## 14 0.0905364224  470525.7 15.073808
+## 15 0.1413301394  321517.0 11.325521
+## 16 0.2213227399  189603.9  7.778131
+## 17 1.0000000000   81208.9  4.278329</code></pre>
+<p>A partir dos resultados obtidos pelo Método de Distribuição de Óbitos
+(DDM), observa-se que as expectativas de vida femininas por cor/raça
+apresentam maior plausibilidade. No entanto, ainda persistem
+diferenciais inesperados na expectativa de vida ao nascer entre mulheres
+brancas e pretas. Dado que estas últimas compõem um grupo com múltiplos
+marcadores de vulnerabilidade que impactam a saúde e a mortalidade <span class="citation">(Silva Filho et al. 2024; Souza et al. 2015; De Castro
+Cerqueira and Moura 2014)</span>, seria esperado que apresentassem uma
+expectativa de vida inferior à das mulheres brancas.</p>
+<p><br></p>
+<p><strong>Método Iterativo Intercensal (MII)</strong></p>
+<p>Nos códigos a seguir, obtêm-se as tábuas de vida para a população
+feminina no Brasil, desagregadas por categoria de cor/raça, mediante o
+emprego da função MII com os argumentos pertinentes.</p>
+<p><strong>Mulheres brancas:</strong></p>
+<div class="sourceCode" id="cb64"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb64-1"><a href="#cb64-1" tabindex="-1"></a>result.branca <span class="ot">&lt;-</span> <span class="fu">MII</span>(df.branca, <span class="dv">2012</span>, <span class="dv">2022</span>, <span class="dv">5</span>) <span class="co">#Convergência atingida na iteração: 44</span></span>
+<span id="cb64-2"><a href="#cb64-2" tabindex="-1"></a>DDM_MII_branca <span class="ot">&lt;-</span> result.branca<span class="sc">$</span>DDM_Final</span>
+<span id="cb64-3"><a href="#cb64-3" tabindex="-1"></a><span class="fu">print</span>(DDM_MII_branca)</span></code></pre></div>
+<pre><code>##    age_x    N_t1      N_t2           D           r_x         d_x      l_x
+## 1      0 3481124 3431204.0   627.86777 -0.0014444016   627.86777 44775.81
+## 2      5 3337149 3446561.2    47.46281  0.0032260123    47.67468 44147.94
+## 3     10 3479260 3467297.0    59.54545 -0.0003444291    60.24370 44100.26
+## 4     15 3715497 3326429.0   117.28099 -0.0110613106   115.32063 44040.02
+## 5     20 3844396 3461990.7   157.33884 -0.0104772728   146.59870 43924.70
+## 6     25 4044491 3690977.4   193.86777 -0.0091464413   171.98620 43778.10
+## 7     30 3979166 3812713.6   270.67769 -0.0042731082   232.20434 43606.11
+## 8     35 3544104 3999759.2   377.30579  0.0120948787   330.06823 43373.91
+## 9     40 3356813 3916442.5   510.85950  0.0154191701   478.72349 43043.84
+## 10    45 3272085 3462380.0   713.92562  0.0056528815   705.20425 42565.12
+## 11    50 2947573 3242172.7  1008.33884  0.0095261585  1034.54381 41859.91
+## 12    55 2506014 3104281.6  1403.09091  0.0214088874  1555.30475 40825.37
+## 13    60 2023705 2717242.6  1839.85124  0.0294687628  2316.07225 39270.06
+## 14    65 1547371 2205991.1  2297.33884  0.0354619522  3401.66919 36953.99
+## 15    70 1228746 1654119.5  2754.91736  0.0297274711  4801.24771 33552.32
+## 16    75  961381 1119130.3  3337.93388  0.0151936340  6508.72224 28751.08
+## 17    80 1218578  839331.7 12054.42149 -0.0372833891 22242.35328 22242.35
+##          L_x         q_x        T_x       e_x
+## 1  221229.42 0.014022479 3332120.68 74.417884
+## 2  220620.50 0.001079885 3110891.26 70.465155
+## 3  220350.70 0.001366062 2890270.75 65.538629
+## 4  219911.79 0.002618542 2669920.05 60.624861
+## 5  219257.00 0.003337500 2450008.26 55.777463
+## 6  218460.53 0.003928590 2230751.26 50.955872
+## 7  217450.06 0.005325041 2012290.73 46.146986
+## 8  216044.38 0.007609834 1794840.67 41.380653
+## 9  214022.40 0.011121765 1578796.30 36.678797
+## 10 211062.58 0.016567657 1364773.90 32.063201
+## 11 206713.21 0.024714428 1153711.32 27.561245
+## 12 200238.59 0.038096526  946998.12 23.196315
+## 13 190560.14 0.058978060  746759.53 19.016000
+## 14 176265.79 0.092051466  556199.39 15.051131
+## 15 155758.50 0.143097325  379933.60 11.323615
+## 16 127483.57 0.226381870  224175.10  7.797103
+## 17  96691.53 1.000000000   96691.53  4.347181</code></pre>
+<div class="sourceCode" id="cb66"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb66-1"><a href="#cb66-1" tabindex="-1"></a>r_method_MII_branca <span class="ot">&lt;-</span> result.branca<span class="sc">$</span>r_method_Final</span>
+<span id="cb66-2"><a href="#cb66-2" tabindex="-1"></a><span class="fu">print</span>(r_method_MII_branca)</span></code></pre></div>
+<pre><code>##    age_x    N_t1      N_t2           D           r_x           S_x N_x_star
+## 1      0 3481124 3431204.0   627.86777 -0.0014444016 -0.0036110040  3456074
+## 2      5 3337149 3446561.2    47.46281  0.0032260123  0.0008430228  3391414
+## 3     10 3479260 3467297.0    59.54545 -0.0003444291  0.0080469807  3473273
+## 4     15 3715497 3326429.0   117.28099 -0.0110613106 -0.0204673687  3515585
+## 5     20 3844396 3461990.7   157.33884 -0.0104772728 -0.0743138273  3648186
+## 6     25 4044491 3690977.4   193.86777 -0.0091464413 -0.1233731125  3863693
+## 7     30 3979166 3812713.6   270.67769 -0.0042731082 -0.1569219865  3895051
+## 8     35 3544104 3999759.2   377.30579  0.0120948787 -0.1373675604  3765045
+## 9     40 3356813 3916442.5   510.85950  0.0154191701 -0.0685824384  3625847
+## 10    45 3272085 3462380.0   713.92562  0.0056528815 -0.0159023093  3365888
+## 11    50 2947573 3242172.7  1008.33884  0.0095261585  0.0220452907  3091366
+## 12    55 2506014 3104281.6  1403.09091  0.0214088874  0.0993829055  2789153
+## 13    60 2023705 2717242.6  1839.85124  0.0294687628  0.2265770309  2344973
+## 14    65 1547371 2205991.1  2297.33884  0.0354619522  0.3889038184  1847562
+## 15    70 1228746 1654119.5  2754.91736  0.0297274711  0.5518773765  1425655
+## 16    75  961381 1119130.3  3337.93388  0.0151936340  0.6641801392  1037261
+## 17    80 1218578  839331.7 12054.42149 -0.0372833891  0.6089557515  1011331
+##        L_x      l_x      T_x       e_x
+## 1  3443616       NA 52153498        NA
+## 2  3394274 683789.1 48709882 71.235246
+## 3  3501335 689561.0 45315608 65.716608
+## 4  3444361 694569.7 41814272 60.201694
+## 5  3386904 683126.6 38369911 56.168084
+## 6  3415249 680215.3 34983006 51.429312
+## 7  3329375 674462.4 31567757 46.804323
+## 8  3281801 661117.6 28238382 42.713100
+## 9  3385513 666731.3 24956582 37.431241
+## 10 3312786 669829.9 21571069 32.203802
+## 11 3160272 647305.8 18258283 28.206579
+## 12 3080589 624086.1 15098010 24.192190
+## 13 2941298 602188.6 12017421 19.956240
+## 14 2725824 566712.2  9076124 16.015402
+## 15 2475665 520148.9  6350299 12.208618
+## 16 2015291 449095.6  3874635  8.627639
+## 17 1859343 387463.5  1859343  4.798758</code></pre>
+<p>A partir dos resultados apresentados, observa-se que a expectativa de
+vida para mulheres brancas, estimada pelo método DDM com correção nas
+taxas de crescimento (ajustadas para migração e reclassificação),
+apresentou variação marginal, aumentando de <span class="math inline">\(74,3\)</span> para <span class="math inline">\(74,4\)</span> anos (um acréscimo de apenas <span class="math inline">\(0,1\)</span> ano). Em contrapartida, a estimativa
+obtida pelo r-method com taxas de crescimento corrigidas aproximou-se
+significativamente daquela produzida pelo método DDM (<span class="math inline">\(74,4\)</span> frente a <span class="math inline">\(71,2\)</span> na estimativa anterior).</p>
+<p>O quadro abaixo apresenta as discrepâncias entre as populações de
+mulheres brancas observadas e projetadas para 2022 <span class="math inline">\([N_x(t_2)]\hspace{0.5cm}\)</span>. Para tanto,
+utilizaram-se as razões de sobrevivência derivadas do DDM, com taxas de
+crescimento corrigidas pelos efeitos da reclassificação racial,
+sub-registro de óbitos e migração. Devido, primordialmente, à
+reclassificação racial, o contingente populacional projetado excede o
+observado em <span class="math inline">\(3.088.563\)</span> mulheres —
+uma diferença de <span class="math inline">\(6,5\%\)</span>, concentrada
+majoritariamente nas faixas etárias abaixo dos 55 anos.</p>
+<div class="sourceCode" id="cb68"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb68-1"><a href="#cb68-1" tabindex="-1"></a>comparacao_branca <span class="ot">&lt;-</span> result.branca<span class="sc">$</span>Comparacao</span>
+<span id="cb68-2"><a href="#cb68-2" tabindex="-1"></a><span class="fu">print</span>(comparacao_branca)</span></code></pre></div>
+<pre><code>##    age_x N_t2_observada N_t2_projetada  diferenca     razao
+## 1      0        3092509      3431204.0 -338694.98 0.9012898
+## 2      5        2987385      3446561.2 -459176.17 0.8667727
+## 3     10        2842712      3467297.0 -624585.03 0.8198640
+## 4     15        3017617      3326429.0 -308811.96 0.9071641
+## 5     20        3240724      3461990.7 -221266.72 0.9360869
+## 6     25        3331945      3690977.4 -359032.38 0.9027270
+## 7     30        3420894      3812713.6 -391819.60 0.8972334
+## 8     35        3633309      3999759.2 -366450.22 0.9083819
+## 9     40        3638847      3916442.5 -277595.49 0.9291205
+## 10    45        3216781      3462380.0 -245598.99 0.9290664
+## 11    50        3040266      3242172.7 -201906.74 0.9377249
+## 12    55        2955953      3104281.6 -148328.59 0.9522181
+## 13    60        2635511      2717242.6  -81731.60 0.9699211
+## 14    65        2188413      2205991.1  -17578.09 0.9920317
+## 15    70        1719547      1654119.5   65427.49 1.0395543
+## 16    75        1238532      1119130.3  119401.71 1.1066915
+## 17    80        1608516       839331.7  769184.29 1.9164247</code></pre>
+<div class="sourceCode" id="cb70"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb70-1"><a href="#cb70-1" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">sum</span>(comparacao_branca<span class="sc">$</span>diferenca))</span></code></pre></div>
+<pre><code>## [1] -3088563</code></pre>
+<div class="sourceCode" id="cb72"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb72-1"><a href="#cb72-1" tabindex="-1"></a>N_t2_projetada <span class="ot">&lt;-</span> <span class="fu">sum</span>(comparacao_branca<span class="sc">$</span>N_t2_projetada)</span>
+<span id="cb72-2"><a href="#cb72-2" tabindex="-1"></a>N_t2_observada <span class="ot">&lt;-</span> <span class="fu">sum</span>(comparacao_branca<span class="sc">$</span>N_t2_observada)</span>
+<span id="cb72-3"><a href="#cb72-3" tabindex="-1"></a><span class="fu">round</span>((N_t2_projetada<span class="sc">/</span>N_t2_observada<span class="dv">-1</span>)<span class="sc">*</span><span class="dv">100</span>, <span class="dv">1</span>)</span></code></pre></div>
+<pre><code>## [1] 6.5</code></pre>
+<p><br></p>
+<p><strong>Mulheres pardas:</strong></p>
+<div class="sourceCode" id="cb74"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb74-1"><a href="#cb74-1" tabindex="-1"></a>result.parda <span class="ot">&lt;-</span> <span class="fu">MII</span>(df.parda, <span class="dv">2012</span>, <span class="dv">2022</span>, <span class="dv">5</span>) <span class="co">#Convergência atingida na iteração: 36</span></span>
+<span id="cb74-2"><a href="#cb74-2" tabindex="-1"></a>DDM_MII_parda <span class="ot">&lt;-</span> result.parda<span class="sc">$</span>DDM_Final</span>
+<span id="cb74-3"><a href="#cb74-3" tabindex="-1"></a><span class="fu">print</span>(DDM_MII_parda)</span></code></pre></div>
+<pre><code>##    age_x    N_t1      N_t2          D          r_x         d_x      l_x
+## 1      0 3212422 3324554.7  711.03306  0.003431056   711.03306 33667.98
+## 2      5 3666785 3254356.0   55.59504 -0.011932084    54.42597 32956.95
+## 3     10 4129143 3193165.3   73.79339 -0.025705721    65.75410 32902.52
+## 4     15 4100284 3649384.1  155.99174 -0.011649782   126.60439 32836.77
+## 5     20 3863901 4099314.9  194.89256  0.005914256   155.92479 32710.16
+## 6     25 3874210 4061043.0  229.85950  0.004709807   188.85014 32554.24
+## 7     30 3719669 3816998.8  309.05785  0.002582978   258.59056 32365.39
+## 8     35 3203843 3809918.7  422.20661  0.017325681   371.29018 32106.80
+## 9     40 2842516 3631241.9  544.41322  0.024488514   531.51593 31735.51
+## 10    45 2579083 3093561.3  702.64463  0.018188905   763.23762 31203.99
+## 11    50 2199658 2700885.5  900.87603  0.020527780  1078.01593 30440.75
+## 12    55 1769910 2392627.9 1131.85950  0.030146359  1537.34527 29362.74
+## 13    60 1359059 1967183.6 1349.40496  0.036981030  2167.72323 27825.39
+## 14    65  997175 1494750.2 1547.94215  0.040478808  3017.98590 25657.67
+## 15    70  739116 1049587.9 1687.87603  0.035069801  3974.92454 22639.68
+## 16    75  516502  667568.4 1822.78512  0.025656272  4996.38980 18664.76
+## 17    80  580665  423918.1 5059.42149 -0.031463370 13668.36985 13668.37
+##          L_x         q_x        T_x       e_x
+## 1  165339.35 0.021118969 2403463.05 71.387204
+## 2  164648.68 0.001651426 2238123.70 67.910527
+## 3  164348.23 0.001998452 2073475.03 63.018726
+## 4  163867.33 0.003855568 1909126.80 58.139912
+## 5  163161.01 0.004766861 1745259.47 53.355266
+## 6  162299.07 0.005801092 1582098.47 48.598847
+## 7  161180.47 0.007989725 1419799.40 43.867831
+## 8  159605.77 0.011564223 1258618.93 39.201010
+## 9  157348.75 0.016748304 1099013.16 34.630394
+## 10 154111.87 0.024459615  941664.41 30.177690
+## 11 149508.73 0.035413575  787552.55 25.871650
+## 12 142970.33 0.052357012  638043.81 21.729711
+## 13 133707.66 0.077904496  495073.48 17.792147
+## 14 120743.39 0.117625096  361365.82 14.084125
+## 15 103261.11 0.175573321  240622.44 10.628348
+## 16  80832.82 0.267691087  137361.33  7.359394
+## 17  56528.51 1.000000000   56528.51  4.135717</code></pre>
+<div class="sourceCode" id="cb76"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb76-1"><a href="#cb76-1" tabindex="-1"></a>r_method_MII_parda <span class="ot">&lt;-</span> result.parda<span class="sc">$</span>r_method_Final</span>
+<span id="cb76-2"><a href="#cb76-2" tabindex="-1"></a><span class="fu">print</span>(r_method_MII_parda)</span></code></pre></div>
+<pre><code>##    age_x    N_t1      N_t2          D          r_x          S_x  N_x_star
+## 1      0 3212422 3324554.7  711.03306  0.003431056  0.008577641 3268007.4
+## 2      5 3666785 3254356.0   55.59504 -0.011932084 -0.012674928 3454420.9
+## 3     10 4129143 3193165.3   73.79339 -0.025705721 -0.106769442 3631120.5
+## 4     15 4100284 3649384.1  155.99174 -0.011649782 -0.200158199 3868269.8
+## 5     20 3863901 4099314.9  194.89256  0.005914256 -0.214497012 3979867.7
+## 6     25 3874210 4061043.0  229.85950  0.004709807 -0.187936853 3966526.6
+## 7     30 3719669 3816998.8  309.05785  0.002582978 -0.169704890 3768019.7
+## 8     35 3203843 3809918.7  422.20661  0.017325681 -0.119933241 3493763.2
+## 9     40 2842516 3631241.9  544.41322  0.024488514 -0.015397753 3212765.7
+## 10    45 2579083 3093561.3  702.64463  0.018188905  0.091295795 2824633.0
+## 11    50 2199658 2700885.5  900.87603  0.020527780  0.188087509 2437421.7
+## 12    55 1769910 2392627.9 1131.85950  0.030146359  0.314772857 2057847.4
+## 13    60 1359059 1967183.6 1349.40496  0.036981030  0.482591331 1635089.8
+## 14    65  997175 1494750.2 1547.94215  0.040478808  0.676240928 1220871.6
+## 15    70  739116 1049587.9 1687.87603  0.035069801  0.865112452  880776.5
+## 16    75  516502  667568.4 1822.78512  0.025656272  1.016927634  587197.1
+## 17    80  580665  423918.1 5059.42149 -0.031463370  1.002409888  496139.5
+##        L_x      l_x      T_x      e_x
+## 1  3296160       NA 48051086       NA
+## 2  3410913 670707.2 44754926 66.72796
+## 3  3263407 667432.0 41344013 61.94491
+## 4  3166570 642997.8 38080606 59.22354
+## 5  3211543 637811.4 34914036 54.74038
+## 6  3286930 649847.3 31702493 48.78453
+## 7  3179884 646681.4 28415563 43.94059
+## 8  3098897 627878.1 25235679 40.19201
+## 9  3163675 626257.2 22136782 35.34775
+## 10 3094648 625832.3 18973107 30.31660
+## 11 2941820 603646.8 15878459 26.30422
+## 12 2819144 576096.4 12936639 22.45569
+## 13 2649283 546842.7 10117495 18.50165
+## 14 2400810 505009.2  7468212 14.78827
+## 15 2092085 449289.4  5067402 11.27870
+## 16 1623416 371550.1  2975318  8.00785
+## 17 1351901 297531.8  1351901  4.54372</code></pre>
+<p>O quadro abaixo apresenta uma análise análoga das discrepâncias entre
+as populações de mulheres pardas observadas e projetadas para 2022 <span class="math inline">\([N_x(t_2)]\hspace{0.5cm}\)</span>. Diferentemente
+do observado para as mulheres brancas, o contingente de mulheres pardas
+projetado é menor que o observado, apresentando <span class="math inline">\(1.952.350\hspace{0.5cm}\)</span> mulheres pardas a
+menos — uma redução de <span class="math inline">\(4\%\hspace{0.5cm}\)</span> em relação à população
+recenseada. Observa-se que essas diferenças concentram-se
+majoritariamente nos grupos etários de 5 a 14 anos e acima dos 30 anos,
+com especial ênfase nas idades mais avançadas.</p>
+<div class="sourceCode" id="cb78"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb78-1"><a href="#cb78-1" tabindex="-1"></a>comparacao_parda <span class="ot">&lt;-</span> result.parda<span class="sc">$</span>Comparacao</span>
+<span id="cb78-2"><a href="#cb78-2" tabindex="-1"></a><span class="fu">print</span>(comparacao_parda)</span></code></pre></div>
+<pre><code>##    age_x N_t2_observada N_t2_projetada  diferenca     razao
+## 1      0        3143091      3324554.7 -181463.68 0.9454171
+## 2      5        3519453      3254356.0  265096.98 1.0814591
+## 3     10        3623290      3193165.3  430124.74 1.1347017
+## 4     15        3723965      3649384.1   74580.86 1.0204366
+## 5     20        3928115      4099314.9 -171199.88 0.9582370
+## 6     25        3960476      4061043.0 -100567.03 0.9752362
+## 7     30        3869796      3816998.8   52797.18 1.0138321
+## 8     35        3942886      3809918.7  132967.33 1.0349003
+## 9     40        3752168      3631241.9  120926.09 1.0333016
+## 10    45        3231033      3093561.3  137471.67 1.0444380
+## 11    50        2849574      2700885.5  148688.46 1.0550517
+## 12    55        2544742      2392627.9  152114.13 1.0635762
+## 13    60        2104406      1967183.6  137222.44 1.0697558
+## 14    65        1613913      1494750.2  119162.82 1.0797209
+## 15    70        1153833      1049587.9  104245.10 1.0993200
+## 16    75         762326       667568.4   94757.58 1.1419444
+## 17    80         859343       423918.1  435424.89 2.0271439</code></pre>
+<div class="sourceCode" id="cb80"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb80-1"><a href="#cb80-1" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">sum</span>(comparacao_parda<span class="sc">$</span>diferenca))</span></code></pre></div>
+<pre><code>## [1] 1952350</code></pre>
+<div class="sourceCode" id="cb82"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb82-1"><a href="#cb82-1" tabindex="-1"></a>N_t2_projetada <span class="ot">&lt;-</span> <span class="fu">sum</span>(comparacao_parda<span class="sc">$</span>N_t2_projetada)</span>
+<span id="cb82-2"><a href="#cb82-2" tabindex="-1"></a>N_t2_observada <span class="ot">&lt;-</span> <span class="fu">sum</span>(comparacao_parda<span class="sc">$</span>N_t2_observada)</span>
+<span id="cb82-3"><a href="#cb82-3" tabindex="-1"></a><span class="fu">round</span>((N_t2_projetada<span class="sc">/</span>N_t2_observada<span class="dv">-1</span>)<span class="sc">*</span><span class="dv">100</span>, <span class="dv">1</span>)</span></code></pre></div>
+<pre><code>## [1] -4</code></pre>
+<p><br></p>
+<p><strong>Mulheres pretas:</strong></p>
+<div class="sourceCode" id="cb84"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb84-1"><a href="#cb84-1" tabindex="-1"></a>result.preta <span class="ot">&lt;-</span> <span class="fu">MII</span>(df.preta, <span class="dv">2012</span>, <span class="dv">2022</span>, <span class="dv">5</span>) <span class="co">#Convergência atingida na iteração: 46</span></span>
+<span id="cb84-2"><a href="#cb84-2" tabindex="-1"></a>DDM_MII_preta <span class="ot">&lt;-</span> result.preta<span class="sc">$</span>DDM_Final</span>
+<span id="cb84-3"><a href="#cb84-3" tabindex="-1"></a><span class="fu">print</span>(DDM_MII_preta)</span></code></pre></div>
+<pre><code>##    age_x   N_t1      N_t2           D          r_x         d_x      l_x
+## 1      0 349921 375039.79   41.157025  0.006932472   41.157025 3343.780
+## 2      5 449559 361257.53    5.733333 -0.021867603    5.523210 3302.623
+## 3     10 554264 348287.88    8.619835 -0.046461173    6.999972 3297.099
+## 4     15 640038 447271.21   21.272727 -0.035836241   14.062653 3290.099
+## 5     20 686136 549771.92   31.933884 -0.022157236   18.261238 3276.037
+## 6     25 736117 632863.55   44.181818 -0.015113423   23.017383 3257.776
+## 7     30 718190 676048.13   64.289256 -0.006046989   31.766995 3234.758
+## 8     35 616925 720895.09   94.272727  0.015574616   47.705482 3202.991
+## 9     40 563439 696197.25  126.123967  0.021157395   69.961823 3155.286
+## 10    45 526923 588909.75  168.140496  0.011121852  101.107312 3085.324
+## 11    50 475299 525974.66  225.148760  0.010130896  142.775825 2984.217
+## 12    55 389621 476119.44  290.330579  0.020049428  198.538972 2841.441
+## 13    60 306922 409199.48  349.884298  0.028760913  270.316525 2642.902
+## 14    65 228387 312520.74  385.454545  0.031362926  346.098681 2372.585
+## 15    70 173044 222393.52  405.016529  0.025090251  418.786602 2026.487
+## 16    75 125042 142355.24  416.305785  0.012967592  473.427254 1607.700
+## 17    80 144278  74195.83 1140.256198 -0.066503399 1134.272722 1134.273
+##          L_x         q_x        T_x       e_x
+## 1  16545.216 0.012308534 232475.843 69.524869
+## 2  16499.305 0.001672371 215930.627 65.381562
+## 3  16467.997 0.002123070 199431.322 60.486899
+## 4  16415.341 0.004274233 182963.325 55.610272
+## 5  16334.531 0.005574186 166547.984 50.838252
+## 6  16231.334 0.007065368 150213.453 46.109208
+## 7  16094.373 0.009820516 133982.119 41.419516
+## 8  15895.692 0.014894041 117887.745 36.805516
+## 9  15601.524 0.022172896 101992.053 32.324189
+## 10 15173.851 0.032770405  86390.529 28.000473
+## 11 14564.143 0.047843654  71216.678 23.864447
+## 12 13710.856 0.069872642  56652.534 19.937961
+## 13 12538.718 0.102280201  42941.678 16.247928
+## 14 10997.680 0.145874075  30402.960 12.814275
+## 15  9085.466 0.206656489  19405.281  9.575825
+## 16  6854.932 0.294474878  10319.814  6.418993
+## 17  3464.883 1.000000000   3464.883  3.054717</code></pre>
+<div class="sourceCode" id="cb86"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb86-1"><a href="#cb86-1" tabindex="-1"></a>r_method_MII_preta <span class="ot">&lt;-</span> result.preta<span class="sc">$</span>r_method_Final</span>
+<span id="cb86-2"><a href="#cb86-2" tabindex="-1"></a><span class="fu">print</span>(r_method_MII_preta)</span></code></pre></div>
+<pre><code>##    age_x   N_t1      N_t2           D          r_x         S_x N_x_star
+## 1      0 349921 375039.79   41.157025  0.006932472  0.01733118 362262.7
+## 2      5 449559 361257.53    5.733333 -0.021867603 -0.02000665 402997.0
+## 3     10 554264 348287.88    8.619835 -0.046461173 -0.19082859 439367.1
+## 4     15 640038 447271.21   21.272727 -0.035836241 -0.39657212 535042.6
+## 5     20 686136 549771.92   31.933884 -0.022157236 -0.54155582 614181.0
+## 6     25 736117 632863.55   44.181818 -0.015113423 -0.63473246 682540.6
+## 7     30 718190 676048.13   64.289256 -0.006046989 -0.68763350 696800.5
+## 8     35 616925 720895.09   94.272727  0.015574616 -0.66381443 666887.0
+## 9     40 563439 696197.25  126.123967  0.021157395 -0.57198440 626310.4
+## 10    45 526923 588909.75  168.140496  0.011121852 -0.49128629 557054.8
+## 11    50 475299 525974.66  225.148760  0.010130896 -0.43815442 499995.2
+## 12    55 389621 476119.44  290.330579  0.020049428 -0.36270360 430704.2
+## 13    60 306922 409199.48  349.884298  0.028760913 -0.24067775 354390.1
+## 14    65 228387 312520.74  385.454545  0.031362926 -0.09036816 267162.3
+## 15    70 173044 222393.52  405.016529  0.025090251  0.05076479 196173.0
+## 16    75 125042 142355.24  416.305785  0.012967592  0.14590940 133418.1
+## 17    80 144278  74195.83 1140.256198 -0.066503399  0.01206988 103464.1
+##         L_x      l_x       T_x       e_x
+## 1  368595.9       NA 5204140.2        NA
+## 2  395014.5 76361.04 4835544.3 63.324757
+## 3  363037.7 75805.22 4440529.8 58.578156
+## 4  359881.3 72291.90 4077492.2 56.403170
+## 5  357356.5 71723.78 3717610.9 51.832335
+## 6  361799.2 71915.57 3360254.4 46.724989
+## 7  350326.5 71212.58 2998455.1 42.105695
+## 8  343369.2 69369.57 2648128.6 38.174211
+## 9  353492.3 69686.14 2304759.4 33.073425
+## 10 340827.8 69432.01 1951267.1 28.103279
+## 11 322610.0 66343.78 1610439.3 24.274157
+## 12 299680.8 62229.08 1287829.3 20.694976
+## 13 278584.2 57826.51  988148.5 17.088159
+## 14 244078.0 52266.23  709564.3 13.575961
+## 15 206388.8 45046.69  465486.2 10.333418
+## 16 154376.9 36076.57  259097.4  7.181874
+## 17 104720.5 25909.74  104720.5  4.041743</code></pre>
+<p><br></p>
+<div class="sourceCode" id="cb88"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb88-1"><a href="#cb88-1" tabindex="-1"></a>r_method_MII_preta <span class="ot">&lt;-</span> result.preta<span class="sc">$</span>r_method_Final</span>
+<span id="cb88-2"><a href="#cb88-2" tabindex="-1"></a><span class="fu">print</span>(r_method_MII_preta)</span></code></pre></div>
+<pre><code>##    age_x   N_t1      N_t2           D          r_x         S_x N_x_star
+## 1      0 349921 375039.79   41.157025  0.006932472  0.01733118 362262.7
+## 2      5 449559 361257.53    5.733333 -0.021867603 -0.02000665 402997.0
+## 3     10 554264 348287.88    8.619835 -0.046461173 -0.19082859 439367.1
+## 4     15 640038 447271.21   21.272727 -0.035836241 -0.39657212 535042.6
+## 5     20 686136 549771.92   31.933884 -0.022157236 -0.54155582 614181.0
+## 6     25 736117 632863.55   44.181818 -0.015113423 -0.63473246 682540.6
+## 7     30 718190 676048.13   64.289256 -0.006046989 -0.68763350 696800.5
+## 8     35 616925 720895.09   94.272727  0.015574616 -0.66381443 666887.0
+## 9     40 563439 696197.25  126.123967  0.021157395 -0.57198440 626310.4
+## 10    45 526923 588909.75  168.140496  0.011121852 -0.49128629 557054.8
+## 11    50 475299 525974.66  225.148760  0.010130896 -0.43815442 499995.2
+## 12    55 389621 476119.44  290.330579  0.020049428 -0.36270360 430704.2
+## 13    60 306922 409199.48  349.884298  0.028760913 -0.24067775 354390.1
+## 14    65 228387 312520.74  385.454545  0.031362926 -0.09036816 267162.3
+## 15    70 173044 222393.52  405.016529  0.025090251  0.05076479 196173.0
+## 16    75 125042 142355.24  416.305785  0.012967592  0.14590940 133418.1
+## 17    80 144278  74195.83 1140.256198 -0.066503399  0.01206988 103464.1
+##         L_x      l_x       T_x       e_x
+## 1  368595.9       NA 5204140.2        NA
+## 2  395014.5 76361.04 4835544.3 63.324757
+## 3  363037.7 75805.22 4440529.8 58.578156
+## 4  359881.3 72291.90 4077492.2 56.403170
+## 5  357356.5 71723.78 3717610.9 51.832335
+## 6  361799.2 71915.57 3360254.4 46.724989
+## 7  350326.5 71212.58 2998455.1 42.105695
+## 8  343369.2 69369.57 2648128.6 38.174211
+## 9  353492.3 69686.14 2304759.4 33.073425
+## 10 340827.8 69432.01 1951267.1 28.103279
+## 11 322610.0 66343.78 1610439.3 24.274157
+## 12 299680.8 62229.08 1287829.3 20.694976
+## 13 278584.2 57826.51  988148.5 17.088159
+## 14 244078.0 52266.23  709564.3 13.575961
+## 15 206388.8 45046.69  465486.2 10.333418
+## 16 154376.9 36076.57  259097.4  7.181874
+## 17 104720.5 25909.74  104720.5  4.041743</code></pre>
+<p>Por fim, o quadro abaixo apresenta a análise das discrepâncias entre
+as populações de mulheres pretas observadas e projetadas para 2022 <span class="math inline">\([N_x(t_2)]\)</span>. O contingente projetado de
+mulheres pretas é significativamente inferior ao observado, apresentando
+uma diferença negativa de <span class="math inline">\(2.940.582\)</span>
+indivíduos — o que representa uma redução de <span class="math inline">\(28\%\)</span>. Tal decréscimo ocorre
+predominantemente entre a população jovem (dos 5 aos 29 anos) e na
+população idosa.</p>
+<div class="sourceCode" id="cb90"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb90-1"><a href="#cb90-1" tabindex="-1"></a>comparacao_preta <span class="ot">&lt;-</span> result.preta<span class="sc">$</span>Comparacao</span>
+<span id="cb90-2"><a href="#cb90-2" tabindex="-1"></a><span class="fu">print</span>(comparacao_preta)</span></code></pre></div>
+<pre><code>##    age_x N_t2_observada N_t2_projetada diferenca    razao
+## 1      0         424916      375039.79  49876.21 1.132989
+## 2      5         524509      361257.53 163251.47 1.451898
+## 3     10         562277      348287.88 213989.12 1.614403
+## 4     15         706729      447271.21 259457.79 1.580091
+## 5     20         864165      549771.92 314393.08 1.571861
+## 6     25         902965      632863.55 270101.45 1.426793
+## 7     30         873567      676048.13 197518.87 1.292167
+## 8     35         922729      720895.09 201833.91 1.279977
+## 9     40         898303      696197.25 202105.75 1.290300
+## 10    45         779890      588909.75 190980.25 1.324295
+## 11    50         696061      525974.66 170086.34 1.323374
+## 12    55         624524      476119.44 148404.56 1.311696
+## 13    60         539775      409199.48 130575.52 1.319100
+## 14    65         424424      312520.74 111903.26 1.358067
+## 15    70         310325      222393.52  87931.48 1.395387
+## 16    75         204224      142355.24  61868.76 1.434608
+## 17    80         240500       74195.83 166304.17 3.241422</code></pre>
+<div class="sourceCode" id="cb92"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb92-1"><a href="#cb92-1" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">sum</span>(comparacao_preta<span class="sc">$</span>diferenca))</span></code></pre></div>
+<pre><code>## [1] 2940582</code></pre>
+<div class="sourceCode" id="cb94"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb94-1"><a href="#cb94-1" tabindex="-1"></a>N_t2_projetada <span class="ot">&lt;-</span> <span class="fu">sum</span>(comparacao_preta<span class="sc">$</span>N_t2_projetada)</span>
+<span id="cb94-2"><a href="#cb94-2" tabindex="-1"></a>N_t2_observada <span class="ot">&lt;-</span> <span class="fu">sum</span>(comparacao_preta<span class="sc">$</span>N_t2_observada)</span>
+<span id="cb94-3"><a href="#cb94-3" tabindex="-1"></a><span class="fu">round</span>((N_t2_projetada<span class="sc">/</span>N_t2_observada<span class="dv">-1</span>)<span class="sc">*</span><span class="dv">100</span>, <span class="dv">1</span>)</span></code></pre></div>
+<pre><code>## [1] -28</code></pre>
+<p>O Quadro 1 apresenta um resumo das expectativas de vida ao nascer por
+cor/raça para as mulheres no Brasil no período de 2012 a 2022. As
+estimativas obtidas via r-method e DDM, dispostas na segunda e terceira
+colunas, respectivamente, não contemplam a correção nas taxas de
+crescimento por idade e, portanto, ignoram os efeitos de cobertura,
+migração e reclassificação racial ocorridos no intervalo
+intercensitário. Em contrapartida, as estimativas apresentadas nas duas
+últimas colunas resultam do Método Iterativo Intercensal (MII), que
+utiliza taxas de crescimento corrigidas e ajustadas para tais
+efeitos.</p>
+<p>Observa-se que as estimativas baseadas em taxas de crescimento
+corrigidas são mais realistas ao considerar o diferencial entre os
+grupos de cor/raça, com destaque para os resultados produzidos pelo
+método DDM.</p>
+<div class="sourceCode" id="cb96"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb96-1"><a href="#cb96-1" tabindex="-1"></a><span class="co"># Criando o dataframe com um resumo da expectiva de vida</span></span>
+<span id="cb96-2"><a href="#cb96-2" tabindex="-1"></a>dados_resumo <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb96-3"><a href="#cb96-3" tabindex="-1"></a>  <span class="at">Raca_Cor =</span> <span class="fu">c</span>(<span class="st">&quot;Branca&quot;</span>, <span class="st">&quot;Parda&quot;</span>, <span class="st">&quot;Preta&quot;</span>),</span>
+<span id="cb96-4"><a href="#cb96-4" tabindex="-1"></a>  <span class="at">r_method_1 =</span> <span class="fu">c</span>(<span class="fl">52.5</span>, <span class="fl">79.3</span>, <span class="fl">285.2</span>),</span>
+<span id="cb96-5"><a href="#cb96-5" tabindex="-1"></a>  <span class="at">DDM_1 =</span> <span class="fu">c</span>(<span class="fl">74.3</span>, <span class="fl">73.9</span>, <span class="fl">76.4</span>),</span>
+<span id="cb96-6"><a href="#cb96-6" tabindex="-1"></a>  <span class="at">r_method_2 =</span> <span class="fu">c</span>(<span class="fl">71.2</span>, <span class="fl">66.7</span>, <span class="fl">63.3</span>),</span>
+<span id="cb96-7"><a href="#cb96-7" tabindex="-1"></a>  <span class="at">DDM_2 =</span> <span class="fu">c</span>(<span class="fl">74.4</span>, <span class="fl">71.4</span>, <span class="fl">69.5</span>))</span>
+<span id="cb96-8"><a href="#cb96-8" tabindex="-1"></a></span>
+<span id="cb96-9"><a href="#cb96-9" tabindex="-1"></a>dados_resumo <span class="sc">%&gt;%</span></span>
+<span id="cb96-10"><a href="#cb96-10" tabindex="-1"></a>  <span class="fu">kable</span>(</span>
+<span id="cb96-11"><a href="#cb96-11" tabindex="-1"></a>    <span class="at">col.names =</span> <span class="fu">c</span>(<span class="st">&quot;Raça/Cor&quot;</span>, <span class="st">&quot;r-method&quot;</span>, <span class="st">&quot;DDM&quot;</span>, <span class="st">&quot;r-method&quot;</span>, <span class="st">&quot;DDM&quot;</span>),</span>
+<span id="cb96-12"><a href="#cb96-12" tabindex="-1"></a>    <span class="at">align =</span> <span class="st">&quot;lcccc&quot;</span>,</span>
+<span id="cb96-13"><a href="#cb96-13" tabindex="-1"></a>  <span class="at">caption =</span> <span class="st">&quot;Quadro 1: Expectativa de vida ao nascer por raça/cor, Mulheres, Brasil (2012-2022)&quot;</span></span>
+<span id="cb96-14"><a href="#cb96-14" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
+<span id="cb96-15"><a href="#cb96-15" tabindex="-1"></a>  <span class="fu">kable_styling</span>(</span>
+<span id="cb96-16"><a href="#cb96-16" tabindex="-1"></a>    <span class="at">bootstrap_options =</span> <span class="fu">c</span>(<span class="st">&quot;striped&quot;</span>, <span class="st">&quot;hover&quot;</span>, <span class="st">&quot;condensed&quot;</span>, <span class="st">&quot;responsive&quot;</span>),</span>
+<span id="cb96-17"><a href="#cb96-17" tabindex="-1"></a>    <span class="at">full_width =</span> F,</span>
+<span id="cb96-18"><a href="#cb96-18" tabindex="-1"></a>    <span class="at">position =</span> <span class="st">&quot;center&quot;</span></span>
+<span id="cb96-19"><a href="#cb96-19" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
+<span id="cb96-20"><a href="#cb96-20" tabindex="-1"></a>  <span class="co"># Adicionando a linha superior de cabeçalho agrupado</span></span>
+<span id="cb96-21"><a href="#cb96-21" tabindex="-1"></a>  <span class="fu">add_header_above</span>(<span class="fu">c</span>(<span class="st">&quot; &quot;</span> <span class="ot">=</span> <span class="dv">1</span>, <span class="st">&quot;Sem Iteração&quot;</span> <span class="ot">=</span> <span class="dv">2</span>, <span class="st">&quot;Método Iterativo Intercensal&quot;</span> <span class="ot">=</span> <span class="dv">2</span>), </span>
+<span id="cb96-22"><a href="#cb96-22" tabindex="-1"></a>                   <span class="at">bold =</span> <span class="cn">TRUE</span>, </span>
+<span id="cb96-23"><a href="#cb96-23" tabindex="-1"></a>                   <span class="at">line =</span> <span class="cn">TRUE</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb96-24"><a href="#cb96-24" tabindex="-1"></a>  <span class="co"># Estilizando a primeira coluna (Raça/Cor)</span></span>
+<span id="cb96-25"><a href="#cb96-25" tabindex="-1"></a>  <span class="fu">column_spec</span>(<span class="dv">1</span>, <span class="at">bold =</span> <span class="cn">TRUE</span>, <span class="at">border_right =</span> <span class="cn">TRUE</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb96-26"><a href="#cb96-26" tabindex="-1"></a>  <span class="co"># Estilizando as colunas de dados</span></span>
+<span id="cb96-27"><a href="#cb96-27" tabindex="-1"></a>  <span class="fu">column_spec</span>(<span class="dv">2</span><span class="sc">:</span><span class="dv">5</span>, <span class="at">width =</span> <span class="st">&quot;100px&quot;</span>)</span></code></pre></div>
+<table class="table table-striped table-hover table-condensed table-responsive" style="color: black; width: auto !important; margin-left: auto; margin-right: auto;">
+<caption>
+Quadro 1: Expectativa de vida ao nascer por raça/cor, Mulheres, Brasil
+(2012-2022)
+</caption>
+<thead>
+<tr>
+<th style="empty-cells: hide;border-bottom:hidden;" colspan="1">
+</th>
+<th style="border-bottom:hidden;padding-bottom:0; padding-left:3px;padding-right:3px;text-align: center; font-weight: bold; " colspan="2">
+<div style="border-bottom: 1px solid #ddd; padding-bottom: 5px; ">
+Sem Iteração
+</div>
+</th>
+<th style="border-bottom:hidden;padding-bottom:0; padding-left:3px;padding-right:3px;text-align: center; font-weight: bold; " colspan="2">
+<div style="border-bottom: 1px solid #ddd; padding-bottom: 5px; ">
+Método Iterativo Intercensal
+</div>
+</th>
+</tr>
+<tr>
+<th style="text-align:left;">
+Raça/Cor
+</th>
+<th style="text-align:center;">
+r-method
+</th>
+<th style="text-align:center;">
+DDM
+</th>
+<th style="text-align:center;">
+r-method
+</th>
+<th style="text-align:center;">
+DDM
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;font-weight: bold;border-right:1px solid;">
+Branca
+</td>
+<td style="text-align:center;width: 100px; ">
+52.5
+</td>
+<td style="text-align:center;width: 100px; ">
+74.3
+</td>
+<td style="text-align:center;width: 100px; ">
+71.2
+</td>
+<td style="text-align:center;width: 100px; ">
+74.4
+</td>
+</tr>
+<tr>
+<td style="text-align:left;font-weight: bold;border-right:1px solid;">
+Parda
+</td>
+<td style="text-align:center;width: 100px; ">
+79.3
+</td>
+<td style="text-align:center;width: 100px; ">
+73.9
+</td>
+<td style="text-align:center;width: 100px; ">
+66.7
+</td>
+<td style="text-align:center;width: 100px; ">
+71.4
+</td>
+</tr>
+<tr>
+<td style="text-align:left;font-weight: bold;border-right:1px solid;">
+Preta
+</td>
+<td style="text-align:center;width: 100px; ">
+285.2
+</td>
+<td style="text-align:center;width: 100px; ">
+76.4
+</td>
+<td style="text-align:center;width: 100px; ">
+63.3
+</td>
+<td style="text-align:center;width: 100px; ">
+69.5
+</td>
+</tr>
+</tbody>
+</table>
+<p><br></p>
+</div>
+</div>
+<div id="discussão" class="section level3">
+<h3><strong>5. Discussão</strong></h3>
+<p>A implementação do Método Iterativo Intercensal (MII) em ambiente R
+fomenta a disseminação e a reprodutibilidade desta metodologia em
+diversas frentes de pesquisa. Com isso, ampliam-se as possibilidades de
+emprego desta técnica na construção de tábuas de vida por cor/raça,
+especialmente em contextos onde a reclassificação racial entre censos
+demográficos impõe desafios analíticos à produção de indicadores que
+retratem, com fidedignidade, os diferenciais de mortalidade no
+Brasil.</p>
+<p>A análise evidencia que a estimação da mortalidade por cor/raça no
+país enfrenta obstáculos que transcendem a coleta primária de dados. O
+cerne da discussão reside na insuficiência dos métodos tradicionais de
+cálculo de tábuas de vida quando aplicados a contextos de intensa
+migração e reclassificação racial.</p>
+<p>A comparação entre as tábuas de vida estimadas sem correção e aquelas
+ajustadas pelo MII revela que o recalculo das taxas de crescimento é
+determinante para a plausibilidade dos resultados. Enquanto os métodos
+convencionais produzem expectativas de vida pouco razoáveis para
+mulheres pretas, principalmente em decorrência do inflamento artificial
+do denominador populacional causado pela mudança de autodeclaração, o
+processo iterativo permite expurgar os efeitos da reclassificação racial
+intercensitária. Como resultado, obtêm-se diferenciais de mortalidade
+que refletem de forma mais precisa a realidade socioeconômica e as
+vulnerabilidades históricas dos grupos analisados.</p>
+<p><br></p>
+</div>
 <div id="referências" class="section level3 unnumbered">
 <h3 class="unnumbered"><strong>Referências</strong></h3>
 <div id="refs" class="references csl-bib-body hanging-indent">
@@ -3601,10 +4984,26 @@ from Registered Deaths in Less Developed Countries.”</span>
 Brass, William. 1975. <em>Methods for Estimating Fertility and Mortality
 from Limited and Defective Data.</em>
 </div>
+<div id="ref-de2014vidas" class="csl-entry">
+De Castro Cerqueira, Daniel Ricardo, and Rodrigo Leandro de Moura. 2014.
+<span>“Vidas Perdidas e Racismo No Brasil.”</span> <em>Publicatio UEPG:
+Ci<span>ê</span>ncias Sociais Aplicadas</em> 22 (1): 73–90.
+</div>
+<div id="ref-gonzaga2026populacao" class="csl-entry">
+Gonzaga, Marcos Roberto, Ana Maria Nogales Vasconcelos, and Ricardo
+Teixeira. 2026. <em>População Municipal Por Sexo, Grupos de Idade e
+Raça/Cor No Brasil No Período de 2010 a 2022</em>. Relatório Técnico não
+publicado.
+</div>
 <div id="ref-hill1987estimating" class="csl-entry">
 Hill, Kenneth. 1987. <span>“Estimating Census and Death Registration
 Completeness.”</span> <em>Asian and Pacific Population Forum</em> 1:
 8–24.
+</div>
+<div id="ref-ibge2024censo" class="csl-entry">
+IBGE. 2024. <em>Censo Demográfico 2022: Quilombolas e Indígenas, Por
+Sexo e Idade, Segundo Recortes Territoriais Específicos: Resultados Do
+Universo</em>. Instituto Brasileiro de Geografia e Estatística.
 </div>
 <div id="ref-merli1998mortality" class="csl-entry">
 Merli, M Giovanna. 1998. <span>“Mortality in Vietnam, 1979–1989.”</span>
@@ -3619,6 +5018,20 @@ Journal</em> 23 (3): 813–34.
 Preston, Samuel H. 1983. <span>“An Integrated System for Demographic
 Estimation from Two Age Distributions.”</span> <em>Demography</em> 20
 (2): 213–26.
+</div>
+<div id="ref-silva2024years" class="csl-entry">
+Silva Filho, Aloisio Machado da, Edna Maria de Araújo, Ionara Magalhães
+de Souza, et al. 2024. <span>“Years of Potential Life Lost Due to
+COVID-19 According to Race/Color and Gender in Brazil Between 2020 and
+2021.”</span> <em>Ci<span>ê</span>ncia &amp; Sa<span>ú</span>de
+Coletiva</em> 29: e04702023.
+</div>
+<div id="ref-de2015mortalidade" class="csl-entry">
+Souza, Ionara Magalhães de, Edna Maria de Araújo, and Felipe Souza Nery.
+2015. <span>“Mortalidade Masculina Segundo a Ra<span>ç</span>a/Cor Da
+Pele Em Estados Do Nordeste e Sudeste Do Brasil, 2009-2011.”</span>
+<em>Revista Da Associa<span>ç</span><span>ã</span>o Brasileira de
+Pesquisadores/as Negros/as (ABPN)</em> 7 (16): 154–67.
 </div>
 </div>
 </div>

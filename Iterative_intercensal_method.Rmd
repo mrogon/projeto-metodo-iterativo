@@ -1,7 +1,7 @@
 ---
-title: "Aplicação do Método Iterativo Intercensal para estimativas de tábuas de vida por sexo e raça: solução em Ambiente R"
+title: "Expectativa de vida pora raça/cor no Brasil entre 2012 e 2022: aplicação do Método Iterativo Intercensal em ambiente R"
 author: "Marcos R. Gonzaga (UFRN)"
-date: "20-04-2026"
+date: "26-04-2026"
 output:
   html_document:
     toc: true
@@ -145,17 +145,17 @@ O r-method requer duas distribuições etárias sucessivas e um conjunto de taxa
 $$r_x(t_1,t_2)=\frac{log \left[\frac{N_x(t_2)}{N_x(t_1)}\right]}{t_2-t_1}\hspace{3cm}(1.1)$$
 <br>
 
-**2.** Acúmulo das taxas de crescimento por idade até o ponto médio do intervalo etário $x,x+n\hspace{0.5cm}$:
+**2.** Acúmulo das taxas de crescimento por idade até o ponto médio do intervalo etário $x,x+n\hspace{0.3cm}$:
 
 $$S_x=\frac{n}{2}r_x+n\sum_{a=0}^{x-5}r_a \hspace{3cm}(1.2)$$
 <br>
 
-**3.** Cálculo da média geometrica das populações por etário $x,x+n\hspace{0.5cm}$ entre $t_1$ e $t_2$:
+**3.** Cálculo da média geometrica das populações por grupo etário $x,x+n\hspace{0.5cm}$ entre $t_1$ e $t_2$:
 
 $$N_x^*=\sqrt{N_x(t_1)N_x(t_2)} \hspace{3cm}(1.3)$$
 <br>
 
-**4.** Cáculo do número de pessoa-anos vividos entre $x\hspace{0.3cm}$ e $x+n$:
+**4.** Cáculo do número de pessoa-anos vividos entre $x\hspace{0.1cm}$ e $x+n\hspace{0.3cm}$:
 
 $$L_x=N_x^*e^{S_x} \hspace{3cm}(1.4)$$
 <br>
@@ -223,27 +223,18 @@ print(data.viet)
 
 Onde:
 
-* **age_x** = limite inferior do grupo etário
+* **age_x** = Limite inferior do grupo etário.
 
-* **N_t1** = População do tempo $t_1$
+* **N_t1** = População do tempo $t_1$.
 
-* **N_t2** = População do tempo $t_2$
+* **N_t2** = População do tempo $t_2$.
 
-* **D** = número médio de óbitos entre $t_1$ e $t_2$
+* **D** = Número médio de óbitos entre $t_1$ e $t_2$.
 
-Inicialmente, definem-se os argumentos de entrada da função `r_method` com base nos dados da população masculina do Vietnã. Em seguida, a função é aplicada utilizando-se esses argumentos:
+O código abaixo estima aa tábua de vida pelo r-method, é condizente com os resultados apresentados por @muniz2023iterative.
 
 ```{r}
-t1 <- 1979
-t2 <- 1989
-n <- 5
-
 r_method_lt <- r_method(data.viet, 1979, 1989, 5)
-```
-
-A tábua de vida estimada é condizente com os resultados apresentados por @muniz2023iterative:
-
-```{r}
 print(r_method_lt)
 ```
 
@@ -251,17 +242,16 @@ print(r_method_lt)
 
 ### **2. Método de Distribuição dos Óbitos (DDM)**
 
-Igualmente ao r-method, este método, proposto por @bennett1984mortality, pertence a uma classificação mais ampla, que é a dos métodos de Método de Distribuição dos Óbitos, como o Growth Balance [@brass1975methods], o General Growth Balance de [@hill1987estimating] e o Synthetic Extinct Generation [@bennett1981estimating]. 
+Este método, proposto por @bennett1984mortality, pertence a uma classificação mais ampla, que é a dos Métodos de Distribuição dos Óbitos, como o Growth Balance [@brass1975methods], o General Growth Balance de [@hill1987estimating] e o Synthetic Extinct Generation [@bennett1981estimating]. 
 
-
-Trata-se de uma técnica de estimação de mortalidade voltada para contextos marcados pelo sub-registro de óbitos e por imprecisões na declaração da idade [@bennett1984mortality]. O método consiste em derivar o número de mortes da tábua de vida ($d_x$) a partir da média anual de óbitos observados na população ($D_x$) entre dois pontos no tempo ($t_1$ e $t_2$). Para tanto, a distribuição dos óbitos registrados é convertida na distribuição correspondente da tábua de vida por meio das taxas de crescimento específicas por idade do período intercensitário. A premissa central dessa abordagem é que a magnitude do sub-registro de óbitos permanece constante em todas as faixas etárias.
+Trata-se de uma técnica de estimação de mortalidade voltada para contextos marcados pelo sub-registro de óbitos e por imprecisões na declaração da idade [@bennett1984mortality]. O método consiste em derivar o número de mortes da tábua de vida ($d_x$) a partir da média anual de óbitos observados na população ($D_x$) entre dois pontos no tempo ($t_1$ e $t_2$). Para tanto, a distribuição dos óbitos registrados é convertida na distribuição correspondente da tábua de vida por meio das taxas de crescimento específicas por idade do período intercensitário. O pressuposto central dessa abordagem é que a magnitude do sub-registro de óbitos permanece constante em todas as faixas etárias. Apresentam-se, a seguir, os cálculos das funções para a obtenção da tábua de vida Método de Distribuição dos Óbitos proposto por @bennett1984mortality.
 
 <br>
 
-**ALGORITMO 2: cálculos do Método de Distribuição dos Óbitos **
+**ALGORITMO 2: cálculos do Método de Distribuição dos Óbitos**
 <div style="border: 2px solid #2c3e50; padding: 15px; border-radius: 5px;">
 
-**1.** O número de óbitos entre as idades $x$ e $x+n$ na tábua de vida para grupos etários quinquenaus é uma função do número de óbitos registrados e da acumulação das taxas de crescimento específicas por idade:
+**1.** O número de óbitos entre as idades $x$ e $x+n\hspace{0.2cm}$ na tábua de vida é uma função do número de óbitos registrados e da acumulação das taxas de crescimento específicas por idade:
 
 $$d_x=D_xexp\left[\frac{n}{2}\left(\sum_{a=0}^{x}r_a+\sum_{a=5}^{x-5}r_a\right)\right] \hspace{3cm}(2.1)$$
 <br>
@@ -270,19 +260,19 @@ Na equação $(2.1)$ assume-se que $d_0=D_0 \hspace{0.5cm}$ e $d_5=D_5exp\left[(
 
 <br>
 
-**2.** O número de anos-pessoa vividos pela coorte entre as idades $x$ e $x+n$ é dado por:
+**2.** O número de anos-pessoa vividos pela coorte entre as idades $x$ e $x+n\hspace{0.5cm}$ é dado por:
 
 $$L_x=nl_{x+n}+\frac{n}{2}d_x\hspace{1cm} \forall \hspace{0.5cm} x > 0 \hspace{0.5cm} and \hspace{0.5cm} x \leqslant 75\hspace{3cm}(2.2)$$
-Para o primeiro grupo etário considere $L_0=nl_5+0.78d_0 \hspace{0.5cm}$. Já para o último grupo etário faça $L_{80+}=l_{80}log_{10}(l_{80}) \hspace{0.5cm}$.
+Para o primeiro grupo etário considere $L_0=nl_5+0.78d_0 \hspace{1cm}$. Já para o último grupo etário faça $L_{80+}=l_{80}log_{10}(l_{80}) \hspace{1cm}$.
 
 <br>
 
-**3.** A probabilidade de morte entre a idade $x$ e $x+n$ é igual à razão entre o número de óbitos entre $x$ e $x+n$ e os sobreviventes à idade exata $x$:
+**3.** A probabilidade de morte entre a idade $x$ e $x+n\hspace{0.5cm}$ é igual à razão entre o número de óbitos entre $x$ e $x+n\hspace{0.5cm}$ e os sobreviventes à idade exata $x$:
 
 $$q_x=\frac{d_x}{l_x}=\frac{l_x-l_{x+n}}{l_x} \hspace{3cm}(2.3)$$
 <br>
 
-**4.** Número de anos-pessoa vividos acima da idade $x$ é dado por:
+**4.** O número de anos-pessoa vividos acima da idade $x$ é dado por:
 
 $$T_x=\sum_{a\geq x}^{\infty}L_a \hspace{3cm}(2.4)$$
 <br>
@@ -294,9 +284,9 @@ $$e_x=\frac{T_x}{l_x}\hspace{1cm}\forall x > 0 \hspace{3cm}(2.5)$$
 
 <br>
 
-O código abaixo implementa uma função para a aplicação do Método de Distribuição dos Óbitos em R.
+O código abaixo implementa uma função para a aplicação do Método de Distribuição dos Óbitos.
 
-**Função implementada para o Método de Distribuição dos Óbitos**
+**Função implementada para o Método de Distribuição dos Óbitos:**
 
 ```{r}
 DDM <- function(df, t1, t2, n = 5) {
@@ -366,15 +356,10 @@ DDM <- function(df, t1, t2, n = 5) {
 }
 ```
 
-Aplica-se a função`DDM` aos dados da população masculina do Vietnã :
+Aplica-se a função`DDM` aos dados da população masculina do Vietnã, conforme código abaixo. Assim como nos resultados para o _r-method_, a tábua de vida estimada pelo Método de Distribuição dos Óbitos é condizente com os resultados apresentados por @muniz2023iterative.
 
 ```{r}
 DDM_lt <- DDM(data.viet, 1979, 1989, 5)
-```
-
-Assim como nos resultados para o _r-method_, a tábua de vida estimada pelo Método de Distribuição dos Óbitos é condizente com os resultados apresentados por @muniz2023iterative:
-
-```{r}
 print(DDM_lt)
 ```
 
@@ -384,7 +369,7 @@ print(DDM_lt)
 
 O método proposto por @merli1998mortality é a evolução lógica para lidar com resíduos de migração e erros de cobertura, "corrigindo" a população do segundo censo através de projeções sucessivas baseadas nas razões de sobrevivência estimadas pelo método DDM. Trata-se de um método iterativo em duas etapas que busca conciliar os métodos anteriores.
 
-Este método permite comparar as expectativas de vida pelos três métodos, permitindo observar como a iteração tende a suavizar anomalias causadas por fluxos migratórios não registrados entre os censos e subregistro de óbitos nos registros vitais.
+Este método possibilita estimar as expectativas de vida observando como a iteração tende a suavizar anomalias causadas por fluxos migratórios não registrados entre os censos e subregistro de óbitos nos registros vitais. O código abaixo implementa uma função para a aplicação do Método Iterativo Intercensal.
 
 <br>
 
@@ -403,7 +388,7 @@ $$p_{75}=\frac{L_{80}}{L_{75}+L_{80}}$$
 A multiplicação dessas razões pela população do ano base — $P(t_1)$ — projeta essa população para cinco anos à frente. Subsequentemente, ao aplicar novamente as respectivas razões de sobrevivência sobre essa população projetada, obtém-se a projeção para mais cinco anos, atingindo-se o tempo $t_2$. Esse encadeamento de projeções é operacionalizado da seguinte forma:
 
 $$N_{x+10}(t_2)^{proj}=N_x(t_1)p_xp_{x+5}\hspace{1cm} para \hspace{0.5cm} x\ge10 \hspace{3cm}(3.2)$$
-Esta equação projeta o contingente populacional do ano base — $P(t_1)$ — da idade $x$ para a idade $x+10$, dez anos à frente, correspondendo a $P(t_2)$.
+A Equação $(3.2)$ projeta o contingente populacional do ano base — $P(t_1)$ — da idade $x$ para a idade $x+10\hspace{0.5cm}(3.2)$, dez anos à frente, correspondendo a $P(t_2)\hspace{0.5cm}$.
 
 Para o primeiro grupo etário, @merli1998mortality sugere o emprego da seguinte equação:
 
@@ -415,13 +400,13 @@ $$N_{80+}(t_1+5)^{proj}=N_{75}(t_1)p_{75}+N_{80+}(t_1)p_{75}\hspace{3cm}(3.4)$$
 
 <br>
 
-As equações $(3.3)$ e $(3.4)$ devem ser aplicadas novamente sobre as populações projetadas para $t_1+5$, visando deslocá-las para $t_1+10$ e obtendo-se, assim, a população projetada para $t_2$. Um passo adicional é requerido para estimar a população projetada no último grupo etário em $t_2$. Especificamente, deve-se projetar a população da faixa de 70 a 74 anos — $N_{70}(t_1)$ — para $t_1+5$, utilizando o produto $N_{70}(t_1)p_{70}$, a fim de compor a projeção do grupo etário aberto ($N_{80+}$), conforme estabelecido na equação $(3.4)$.
+As equações $(3.3)$ e $(3.4)$ devem ser aplicadas novamente sobre as populações projetadas para $t_1+5\hspace{0.5cm}$, visando deslocá-las para $t_1+10\hspace{0.5cm}$ e obtendo-se, assim, a população projetada para $t_2$. Um passo adicional é requerido para estimar a população projetada no último grupo etário em $t_2$. Especificamente, deve-se projetar a população da faixa de 70 a 74 anos — $N_{70}(t_1)$ — para $t_1+5\hspace{0.5cm}$, utilizando o produto $N_{70}(t_1)p_{70}\hspace{0.5cm}$, a fim de compor a projeção do grupo etário aberto ($N_{80+}$), conforme estabelecido na equação $(3.4)$.
 
 A função `MII`, apresentada no código abaixo, segue as especificações das Equações $(3.3)$ e $(3.4)$. No caso dos nascimentos, a Equação $(3.3)$ é aplicada de forma recursiva para estimar o contingente populacional do primeiro grupo etário, o qual não estava presente no censo base ($t_1$). Já para o grupo aberto, a função implementa a Equação $(3.4)$, na qual a população com 80 anos ou mais em $t+5$ é composta pelos sobreviventes da coorte de 75-79 anos e pelos sobreviventes daqueles que já pertenciam ao grupo $80+$ no período anterior.
 
 <br>
 
-**Função implementada para o Método Iterativo Intercensal**
+**Função implementada para o Método Iterativo Intercensal:**
 
 ```{r}
 MII <- function(df, t1, t2, n = 5, tol = 1e-6, max_iter = 100) {
@@ -516,10 +501,10 @@ resultados <- MII(data.viet, 1979, 1989, 5)
 
 <br>
 
-A função `MII` inicia-se com a geração de uma tábua de vida via função `DDM`, fundamentada nas taxas de crescimento populacional $(r_x)$, obtidas pela função `r_method` a partir das populações recenseadas em $N(t_1)$ e $N(t_2)$ (Estágio 1, conforme descrito por @muniz2023iterative). A cada iteração, a função projeta $N(t_1)$, com base nas razões de sobrevivência das tábaus de vida geradas por `DDM`, e substitui o valor observado de $N(t_2)$ pelo valor projetado, utilizando-o como entrada para a rodada seguinte do `r_method` (Estágios 2 e 3).
+A função `MII` inicia-se com a geração de uma tábua de vida via função `DDM`, fundamentada nas taxas de crescimento populacional $(r_x)$, obtidas pela função `r_method` a partir das populações recenseadas em $N(t_1)$ e $N(t_2)$ (Estágio 1, conforme descrito por @muniz2023iterative). A cada iteração, a função projeta $N(t_1)\hspace{0.5cm}$, com base nas razões de sobrevivência das tábaus de vida geradas por `DDM`, e substitui o valor observado de $N(t_2)\hspace{0.5cm}$ pelo valor projetado, utilizando-o como entrada para a rodada seguinte do `r_method` (Estágios 2 e 3).
 
 
-Nesse processo iterativo, novas taxas de crescimento ($r_x$) são calculadas, considerando a diferença entre o censo observado em $t_1$ e a projeção teórica para $t_2$. Esse procedimento "limpa" as taxas de crescimento de erros de enumeração diferencial entre os dois levantamentos censitários. No estágio final (Estágio 4), a tábua de vida pelo DDM é atualizada com base nessas novas taxas — agora livres dos efeitos da migração e do sub-registro de óbitos. Essa tábua gera novas razões de sobrevivência, reiniciando o ciclo até que a estabilidade seja alcançada. O processo converge quando a variação na expectativa de vida entre duas iterações torna-se insignificante (inferior a $0,000001$). No exemplo em questão, com os dados do Vietnã, foram necessárias 50 iterações para atingir a convergência.
+Nesse processo iterativo, novas taxas de crescimento ($r_x$) são calculadas, considerando a diferença entre o censo observado em $t_1$ e a projeção teórica para $t_2$. Esse procedimento "limpa" as taxas de crescimento de erros de enumeração diferencial entre os dois levantamentos censitários. No estágio final (Estágio 4), a tábua de vida pelo DDM é atualizada com base nessas novas taxas — agora livres dos efeitos da migração e do sub-registro de óbitos. Essa tábua gera novas razões de sobrevivência, reiniciando o ciclo até que a estabilidade seja alcançada. O processo converge quando a variação na expectativa de vida entre duas iterações torna-se insignificante (inferior a $0,000001\hspace{0.5cm}$). No exemplo em questão, com os dados do Vietnã, foram necessárias 50 iterações para atingir a convergência.
 
 A função `MII` gera os seguintes objetos:
 
@@ -532,13 +517,13 @@ A função `MII` gera os seguintes objetos:
 O código abaixo extrai e exibe os resultados, conforme apresentados por @muniz2023iterative:
 
 ```{r}
-# 1. Acessar a Tábua DDM (após convergência)
+# 1. Acessar a tábua de vida pelo método DDM (após convergência)
 ddm_lt_final <- resultados$DDM_Final
 print(ddm_lt_final)
 ```
 
 ```{r}
-# 2. Acessar a Tábua CBM (após convergência)
+# 2. Acessar a tábua de vida pelo r-method (após convergência)
 r_method_lt_final <- resultados$r_method_Final
 print(r_method_lt_final)
 ```
@@ -549,8 +534,401 @@ comparacao <- resultados$Comparacao
 print(comparacao)
 ```
 
+<br>
+
+### **4. Expectativa de vida por sexo e raça no Brasil entre 2010 e 2022**
+
+O código abaixo carrega diversos arquivos em formato .RData, os quais contêm as seguintes informações:
+
+* `obitos`: Base de dados de óbitos mensais, oriunda dos microdados do SIM/MS, desagregada por sexo, raça e grupos etários quinquenais para o período de julho de 2010 a julho de 2022.
+
+* `pop.censo.10` e `pop.censo.22`: Bases contendo as populações municipais recenseadas em 2010 e 2022, estratificadas por sexo, raça e grupos etários quinquenais.
+
+* `pop.interp`: Bases com as populações municipais interpoladas para o período entre 2010 e 2022, ajustadas pelas respectivas correções de omissão populacional de ambos os censos, conforme a metodologia proposta por @gonzaga2026populacao.
+
+```{r}
+# Carregando a base de óbitos por raça:
+load("C:/Projetos_R/projeto-metodo-iterativo/data/obitos_Brasil_juL2010_juL2022.RDATA")
+obitos <- dados_filtrados
+head(obitos)
+```
+
+```{r}
+# Carregando a base de população por raça do censo 2010:
+load("C:/Projetos_R/projeto-metodo-iterativo/data/Pop_BR_Muni10_Cor_Raca.RDATA")
+pop.censo.10 <- dados_final
+head(pop.censo.10)
+```
+
+```{r}
+# Carregando a base de população por raça do censo 2022:
+load("C:/Projetos_R/projeto-metodo-iterativo/data/Pop_BR_Muni22_Cor_Raca.RDATA")
+pop.censo.22 <- dados_final
+head(pop.censo.22)
+```
+
+```{r}
+# Carregando a base de população interpolada por raça entre 2010 e 2022:
+load("C:/Projetos_R/projeto-metodo-iterativo/data/04_pop_intep_final.RDATA")
+pop.interp <- pop_intep_final
+head(pop.interp)
+```
+
+Observa-se, abaixo, que as populações ajustadas pelas omissões censitárias são superiores às efetivamente recenseadas, com fatores médios de correção de $1,02\hspace{0.5cm}$ em 2010 e $1,04\hspace{0.5cm}$ em 2022. Conforme argumentado por @gonzaga2026populacao, esses ajustes foram realizados para assegurar que os totais populacionais fossem coerentes com a Revisão 2024 das Projeções de População do IBGE [@ibge2024censo]. Ressalta-se, contudo, a limitação de que foram aplicados os mesmos fatores de correção por sexo e grupos etários para todas as categorias de cor/raça [@gonzaga2026populacao].
+
+```{r}
+# População total do censo 2010:
+sum(pop.censo.10$populacao)
+```
+
+```{r}
+# População total do censo 2022:
+sum(pop.censo.22$populacao)
+```
+
+```{r}
+# População ajustada em 2010:
+sum(pop.interp$pop10)
+```
+
+```{r}
+# População ajustada em 2022:
+sum(pop.interp$pop22)
+```
+
+```{r}
+sum(pop.interp$pop10)/sum(pop.censo.10$populacao)
+```
+
+```{r}
+sum(pop.interp$pop22)/sum(pop.censo.22$populacao)
+```
+
+Os dados de entrada devem ser estruturados seguindo o padrão da população masculina do Vietnã, conforme apresentado por @muniz2023iterative.
+
+Embora ajustes possam ser realizados nas fórmulas e funções para incorporar distintos intervalos intercensitários, optou-se por manter esta aplicação restrita a um período de dez anos. Nesse sentido, para a estimação das tábuas de vida por sexo e cor/raça no Brasil, considerou-se o intervalo entre 2012 e 2022. A base pop.interp contém as populações municipais interpoladas para todos os anos civis entre 2010 e 2022, adotando-se o dia 1º de julho como data de referência das estimativas.
+
+<br>
+
+#### **4.1 Organização dos dados de entrada**
+
+O código abaixo organiza a base de dados de óbitos para o período compreendido entre julho de 2012 e julho de 2022, restringindo a análise à população feminina autodeclarada branca, preta e parda.
+
+```{r}
+# Configura a coluna age_x:
+obitos$age_x <- as.numeric(sub("([-+].*)", "", obitos$age.group))
+
+# Filtra da base apenas os óbitos no período julho/2012 a julho/2022:
+D <- obitos %>%
+  filter(Year > 2012 | (Year == 2012 & Month >= 7))
+
+# Média dos óbitos no período por sexo, raça e idade:
+D <- D %>%
+  group_by(SEXO, RACACOR, age_x) %>%
+  summarise(D=mean(obitos))
+
+# Filtra os óbitos apenas para mulheres de raça branca, preta e parda:
+D.branca.f <- D %>% filter(SEXO=='Feminino' & RACACOR=='Branca')
+D.parda.f <- D %>% filter(SEXO=='Feminino' & RACACOR=='Parda')
+D.preta.f <- D %>% filter(SEXO=='Feminino' & RACACOR=='Preta')
+```
+
+Assim, tem-se os seguintes resultados em relação aos óbitos por grupo de análise:
+
+```{r}
+# Óbitos de mulheres brancas
+print(D.branca.f)
+```
+
+```{r}
+# Óbitos de mulheres pardas
+print(D.parda.f)
+```
+
+```{r}
+# Óbitos de mulheres pretas
+print(D.preta.f)
+```
+
+O código abaixo filtra os dados populacionais para cada grupo de análise (mulheres brancas, pretas e pardas) nos anos de 2012 e 2022. Adicionalmente, padroniza os grupos etários para garantir a consistência com a base de dados de óbitos e agrega as populações em nível nacional.
+
+```{r}
+N_t.branca.f <- pop.interp %>%
+  select(codigo_municipio, sexo, cor_raca, idade, pop12, pop22) %>%
+  filter(sexo == 'Feminino', cor_raca == 'Branca') %>%
+  mutate(idade = ifelse(idade >= 80, 80, idade)) %>% 
+  group_by(sexo, cor_raca, idade) %>%
+  summarise(
+    N_t1 = sum(pop12, na.rm = TRUE), 
+    N_t2 = sum(pop22, na.rm = TRUE),
+    .groups = "drop") %>%
+  rename(age_x = idade)
+
+N_t.parda.f <- pop.interp %>%
+  select(codigo_municipio, sexo, cor_raca, idade, pop12, pop22) %>%
+  filter(sexo == 'Feminino', cor_raca == 'Parda') %>%
+  mutate(idade = ifelse(idade >= 80, 80, idade)) %>% 
+  group_by(sexo, cor_raca, idade) %>%
+  summarise(
+    N_t1 = sum(pop12, na.rm = TRUE), 
+    N_t2 = sum(pop22, na.rm = TRUE),
+    .groups = "drop") %>%
+    rename(age_x = idade)
+
+N_t.preta.f <- pop.interp %>%
+  select(codigo_municipio, sexo, cor_raca, idade, pop12, pop22) %>%
+  filter(sexo == 'Feminino', cor_raca == 'Preta') %>%
+  mutate(idade = ifelse(idade >= 80, 80, idade)) %>% 
+  group_by(sexo, cor_raca, idade) %>%
+  summarise(
+    N_t1 = sum(pop12, na.rm = TRUE), 
+    N_t2 = sum(pop22, na.rm = TRUE),
+    .groups = "drop") %>%
+    rename(age_x = idade)
+```
+
+Assim, tem-se os seguintes resultados sobre as populações $N_x(t_1)$ e $N_x(t_2)\hspace{0.5cm}$ em cada grupo de análise:
+
+```{r}
+print(N_t.branca.f)
+```
+`
+```{r}
+print(N_t.parda.f)
+```
+
+```{r}
+print(N_t.preta.f)
+```
+
+Por fim, com base nos dados de população e óbitos previamente organizados, estruturam-se os dados de entrada para as funções r_method, DDM e MII, conforme os códigos apresentados a seguir:
+
+```{r}
+# Mulheres brancas:
+df.branca <- cbind(N_t.branca.f[,3:5], D.branca.f[,4])
+print(df.branca)
+```
+
+```{r}
+# Mulheres pardas:
+df.parda <- cbind(N_t.parda.f[,3:5], D.parda.f[,4])
+print(df.parda)
+```
+
+```{r}
+# Mulheres pretas:
+df.preta <- cbind(N_t.preta.f[,3:5], D.preta.f[,4])
+print(df.preta)
+```
+
+<br>
+
+#### **4.2 Tábuas de vida feminina por raça para o Brasil entre 2012 e 2022**
 
 
+**Método Integrado de Preston (r-method)**
+
+No código a seguir, com base nos dados de entrada previamente organizados, estimam-se as tábuas de vida para a população feminina no Brasil, desagregadas por categoria de cor/raça, utilizando-se a função r_method com os argumentos pertinentes.
+
+```{r}
+r_method_lt_branca <- r_method(df.branca, 2012, 2022, 5)
+print(r_method_lt_branca)
+```
+
+```{r}
+r_method_lt_parda <- r_method(df.parda, 2012, 2022, 5)
+print(r_method_lt_parda)
+```
+
+```{r}
+r_method_lt_preta <- r_method(df.preta, 2012, 2022, 5)
+print(r_method_lt_preta)
+```
+
+A partir dos resultados apresentados, nota-se que as expectativas de vida estimadas por categoria de cor/raça, por meio do Método Integrado de Preston (r-method), mostram-se pouco plausíveis. As expectativas de vida para mulheres brancas encontram-se subestimadas, ao passo que os valores para mulheres pretas estão fortemente sobreestimados. Como o método fundamenta-se estritamente na estrutura etária da população, os diferentes níveis e padrões migratórios por categoria de cor/raça, bem como os fluxos decorrentes da reclassificação racial, impactam significativamente os resultados.
+
+<br>
+
+**Método de Distribuição dos Óbitos (DDM)**
+
+No código a seguir, obtêm-se as tábuas de vida para a população feminina no Brasil, desagregadas por categoria de cor/raça, mediante o emprego da função DDM com os argumentos pertinentes.
+
+```{r}
+DDM_lt_branca <- DDM(df.branca, 2012, 2022, 5)
+print(DDM_lt_branca)
+```
+
+```{r}
+DDM_lt_parda <- DDM(df.parda, 2012, 2022, 5)
+print(DDM_lt_parda)
+```
+
+```{r}
+DDM_lt_preta <- DDM(df.preta, 2012, 2022, 5)
+print(DDM_lt_preta)
+```
+
+A partir dos resultados obtidos pelo Método de Distribuição de Óbitos (DDM), observa-se que as expectativas de vida femininas por cor/raça apresentam maior plausibilidade. No entanto, ainda persistem diferenciais inesperados na expectativa de vida ao nascer entre mulheres brancas e pretas. Dado que estas últimas compõem um grupo com múltiplos marcadores de vulnerabilidade que impactam a saúde e a mortalidade [@silva2024years; @de2015mortalidade; @de2014vidas], seria esperado que apresentassem uma expectativa de vida inferior à das mulheres brancas.
+
+<br>
+
+**Método Iterativo Intercensal (MII)**
+
+Nos códigos a seguir, obtêm-se as tábuas de vida para a população feminina no Brasil, desagregadas por categoria de cor/raça, mediante o emprego da função MII com os argumentos pertinentes.
+
+**Mulheres brancas:**
+
+```{r}
+result.branca <- MII(df.branca, 2012, 2022, 5) #Convergência atingida na iteração: 44
+DDM_MII_branca <- result.branca$DDM_Final
+print(DDM_MII_branca)
+```
+
+```{r}
+r_method_MII_branca <- result.branca$r_method_Final
+print(r_method_MII_branca)
+```
+
+A partir dos resultados apresentados, observa-se que a expectativa de vida para mulheres brancas, estimada pelo método DDM com correção nas taxas de crescimento (ajustadas para migração e reclassificação), apresentou variação marginal, aumentando de $74,3$ para $74,4$ anos (um acréscimo de apenas $0,1$ ano). Em contrapartida, a estimativa obtida pelo r-method com taxas de crescimento corrigidas aproximou-se significativamente daquela produzida pelo método DDM ($74,4$ frente a $71,2$ na estimativa anterior).
+
+O quadro abaixo apresenta as discrepâncias entre as populações de mulheres brancas observadas e projetadas para 2022 $[N_x(t_2)]\hspace{0.5cm}$. Para tanto, utilizaram-se as razões de sobrevivência derivadas do DDM, com taxas de crescimento corrigidas pelos efeitos da reclassificação racial, sub-registro de óbitos e migração. Devido, primordialmente, à reclassificação racial, o contingente populacional projetado excede o observado em $3.088.563$ mulheres — uma diferença de $6,5\%$, concentrada majoritariamente nas faixas etárias abaixo dos 55 anos. 
+
+```{r}
+comparacao_branca <- result.branca$Comparacao
+print(comparacao_branca)
+```
+
+```{r}
+print(sum(comparacao_branca$diferenca))
+```
+
+```{r}
+N_t2_projetada <- sum(comparacao_branca$N_t2_projetada)
+N_t2_observada <- sum(comparacao_branca$N_t2_observada)
+round((N_t2_projetada/N_t2_observada-1)*100, 1)
+```
+
+<br>
+
+**Mulheres pardas:**
+
+```{r}
+result.parda <- MII(df.parda, 2012, 2022, 5) #Convergência atingida na iteração: 36
+DDM_MII_parda <- result.parda$DDM_Final
+print(DDM_MII_parda)
+```
+
+```{r}
+r_method_MII_parda <- result.parda$r_method_Final
+print(r_method_MII_parda)
+```
+
+O quadro abaixo apresenta uma análise análoga das discrepâncias entre as populações de mulheres pardas observadas e projetadas para 2022 $[N_x(t_2)]\hspace{0.5cm}$. Diferentemente do observado para as mulheres brancas, o contingente de mulheres pardas projetado é menor que o observado, apresentando $1.952.350\hspace{0.5cm}$ mulheres pardas a menos — uma redução de $4\%\hspace{0.5cm}$ em relação à população recenseada. Observa-se que essas diferenças concentram-se majoritariamente nos grupos etários de 5 a 14 anos e acima dos 30 anos, com especial ênfase nas idades mais avançadas.
+
+```{r}
+comparacao_parda <- result.parda$Comparacao
+print(comparacao_parda)
+```
+
+```{r}
+print(sum(comparacao_parda$diferenca))
+```
+
+```{r}
+N_t2_projetada <- sum(comparacao_parda$N_t2_projetada)
+N_t2_observada <- sum(comparacao_parda$N_t2_observada)
+round((N_t2_projetada/N_t2_observada-1)*100, 1)
+```
+
+<br>
+
+**Mulheres pretas:**
+
+```{r}
+result.preta <- MII(df.preta, 2012, 2022, 5) #Convergência atingida na iteração: 46
+DDM_MII_preta <- result.preta$DDM_Final
+print(DDM_MII_preta)
+```
+
+```{r}
+r_method_MII_preta <- result.preta$r_method_Final
+print(r_method_MII_preta)
+```
+
+<br>
+
+```{r}
+r_method_MII_preta <- result.preta$r_method_Final
+print(r_method_MII_preta)
+```
+
+Por fim, o quadro abaixo apresenta a análise das discrepâncias entre as populações de mulheres pretas observadas e projetadas para 2022 $[N_x(t_2)]$. O contingente projetado de mulheres pretas é significativamente inferior ao observado, apresentando uma diferença negativa de $2.940.582$ indivíduos — o que representa uma redução de $28\%$. Tal decréscimo ocorre predominantemente entre a população jovem (dos 5 aos 29 anos) e na população idosa.
+
+```{r}
+comparacao_preta <- result.preta$Comparacao
+print(comparacao_preta)
+```
+
+```{r}
+print(sum(comparacao_preta$diferenca))
+```
+
+```{r}
+N_t2_projetada <- sum(comparacao_preta$N_t2_projetada)
+N_t2_observada <- sum(comparacao_preta$N_t2_observada)
+round((N_t2_projetada/N_t2_observada-1)*100, 1)
+```
+
+O Quadro 1 apresenta um resumo das expectativas de vida ao nascer por cor/raça para as mulheres no Brasil no período de 2012 a 2022. As estimativas obtidas via r-method e DDM, dispostas na segunda e terceira colunas, respectivamente, não contemplam a correção nas taxas de crescimento por idade e, portanto, ignoram os efeitos de cobertura, migração e reclassificação racial ocorridos no intervalo intercensitário. Em contrapartida, as estimativas apresentadas nas duas últimas colunas resultam do Método Iterativo Intercensal (MII), que utiliza taxas de crescimento corrigidas e ajustadas para tais efeitos.
+
+Observa-se que as estimativas baseadas em taxas de crescimento corrigidas são mais realistas ao considerar o diferencial entre os grupos de cor/raça, com destaque para os resultados produzidos pelo método DDM. 
+
+
+```{r}
+# Criando o dataframe com um resumo da expectiva de vida
+dados_resumo <- data.frame(
+  Raca_Cor = c("Branca", "Parda", "Preta"),
+  r_method_1 = c(52.5, 79.3, 285.2),
+  DDM_1 = c(74.3, 73.9, 76.4),
+  r_method_2 = c(71.2, 66.7, 63.3),
+  DDM_2 = c(74.4, 71.4, 69.5))
+
+dados_resumo %>%
+  kable(
+    col.names = c("Raça/Cor", "r-method", "DDM", "r-method", "DDM"),
+    align = "lcccc",
+  caption = "Quadro 1: Expectativa de vida ao nascer por raça/cor, Mulheres, Brasil (2012-2022)"
+  ) %>%
+  kable_styling(
+    bootstrap_options = c("striped", "hover", "condensed", "responsive"),
+    full_width = F,
+    position = "center"
+  ) %>%
+  # Adicionando a linha superior de cabeçalho agrupado
+  add_header_above(c(" " = 1, "Sem Iteração" = 2, "Método Iterativo Intercensal" = 2), 
+                   bold = TRUE, 
+                   line = TRUE) %>%
+  # Estilizando a primeira coluna (Raça/Cor)
+  column_spec(1, bold = TRUE, border_right = TRUE) %>%
+  # Estilizando as colunas de dados
+  column_spec(2:5, width = "100px")
+
+```
+
+
+
+
+
+
+<br>
+
+### **5. Discussão**
+
+A implementação do Método Iterativo Intercensal (MII) em ambiente R fomenta a disseminação e a reprodutibilidade desta metodologia em diversas frentes de pesquisa. Com isso, ampliam-se as possibilidades de emprego desta técnica na construção de tábuas de vida por cor/raça, especialmente em contextos onde a reclassificação racial entre censos demográficos impõe desafios analíticos à produção de indicadores que retratem, com fidedignidade, os diferenciais de mortalidade no Brasil.
+
+A análise evidencia que a estimação da mortalidade por cor/raça no país enfrenta obstáculos que transcendem a coleta primária de dados. O cerne da discussão reside na insuficiência dos métodos tradicionais de cálculo de tábuas de vida quando aplicados a contextos de intensa migração e reclassificação racial.
+
+A comparação entre as tábuas de vida estimadas sem correção e aquelas ajustadas pelo MII revela que o recalculo das taxas de crescimento é determinante para a plausibilidade dos resultados. Enquanto os métodos convencionais produzem expectativas de vida pouco razoáveis para mulheres pretas, principalmente em decorrência do inflamento artificial do denominador populacional causado pela mudança de autodeclaração, o processo iterativo permite expurgar os efeitos da reclassificação racial intercensitária. Como resultado, obtêm-se diferenciais de mortalidade que refletem de forma mais precisa a realidade socioeconômica e as vulnerabilidades históricas dos grupos analisados.
 
 
 <br>
