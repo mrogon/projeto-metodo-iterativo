@@ -4,3 +4,8 @@ Este projeto teve como objetivo implementar Método Iterativo Intercensal em amb
 
 O projeto reproduz os resultados publicado por Muniz(2023) e faz uma aplicação para estimar as tábuas de vida femininas por raça/cor no Brasil para o período 2012 a 2022.
 
+Como citar:
+
+Gonzaga, M. R. (2026). Expectativa de vida por raça/cor no Brasil entre 2012 e 2022: aplicação do Método Iterativo Intercensal em ambiente R (v1.0.0). Zenodo. https://doi.org/10.5281/zenodo.19867085
+
+
